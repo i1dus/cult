@@ -30,7 +30,8 @@ var (
 
 type UserRepository interface {
 	SaveUser(ctx context.Context, id uuid.UUID, phone string, passHash []byte) (uuid.UUID, error)
-	User(ctx context.Context, phone string) (domain.User, error)
+	UserByPhone(ctx context.Context, phoneNumber string) (domain.User, error)
+	UserByID(ctx context.Context, userID uuid.UUID) (domain.User, error)
 }
 
 func New(log *slog.Logger, userRepo UserRepository, tokenTTL time.Duration, secret string) *Auth {
@@ -52,7 +53,7 @@ func (a *Auth) Login(ctx context.Context, phoneNumber string, password string) (
 
 	log.Info("attempting to login user")
 
-	user, err := a.userRepository.User(ctx, phoneNumber)
+	user, err := a.userRepository.UserByPhone(ctx, phoneNumber)
 	if err != nil {
 		if errors.Is(err, repository.ErrUserNotFound) {
 			a.log.Warn("user not found", sl.Err(err))
@@ -83,10 +84,10 @@ func (a *Auth) Login(ctx context.Context, phoneNumber string, password string) (
 	return user.ID, token, nil
 }
 
-func (a *Auth) GetUserByPhone(ctx context.Context, phoneNumber string) (*domain.User, error) {
-	const op = "Auth.GetUserByPhone"
+func (a *Auth) GetUserByID(ctx context.Context, userID uuid.UUID) (*domain.User, error) {
+	const op = "Auth.GetUserByID"
 
-	user, err := a.userRepository.User(ctx, phoneNumber)
+	user, err := a.userRepository.UserByID(ctx, userID)
 	if err != nil {
 		if errors.Is(err, repository.ErrUserNotFound) {
 			a.log.Warn("user not found", sl.Err(err))

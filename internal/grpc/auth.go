@@ -13,7 +13,7 @@ import (
 type AuthService interface {
 	Login(ctx context.Context, phoneNumber string, password string) (uuid.UUID, string, error)
 	RegisterNewUser(ctx context.Context, phoneNumber string, password string) (userID uuid.UUID, err error)
-	GetUserByPhone(ctx context.Context, phoneNumber string) (*domain.User, error)
+	GetUserByID(ctx context.Context, userID uuid.UUID) (*domain.User, error)
 }
 
 type ParkingLotService interface {
