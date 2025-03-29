@@ -2,10 +2,17 @@ package grpcapp
 
 import (
 	"context"
+	"crypto/tls"
 	authgrpc "cult/internal/grpc/auth"
+	api "cult/pkg"
+	"errors"
 	"fmt"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"google.golang.org/grpc/credentials/insecure"
 	"log/slog"
 	"net"
+	"net/http"
+	"sync"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
@@ -18,6 +25,7 @@ type App struct {
 	log        *slog.Logger
 	gRPCServer *grpc.Server
 	port       int
+	host       string
 }
 
 // New creates new gRPC server app.
@@ -53,6 +61,7 @@ func New(
 		log:        log,
 		gRPCServer: gRPCServer,
 		port:       port,
+		host:       "localhost:44044",
 	}
 }
 
@@ -73,19 +82,64 @@ func (a *App) MustRun() {
 
 // Run runs gRPC server.
 func (a *App) Run() error {
-	const op = "grpcapp.Run"
+	op := "app.Run"
 
-	l, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
+	// Create a TCP listener for gRPC
+	grpcListener, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	a.log.Info("grpc server started", slog.String("addr", l.Addr().String()))
+	// Create HTTP router for gRPC gateway
+	grpcGatewayMux := runtime.NewServeMux()
 
-	if err := a.gRPCServer.Serve(l); err != nil {
+	// Register gRPC gateway endpoints
+	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	err = api.RegisterParkingAPIHandlerFromEndpoint(
+		context.Background(),
+		grpcGatewayMux,
+		fmt.Sprintf("localhost:%d", a.port),
+		opts,
+	)
+	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
+	httpMux := http.NewServeMux()
+	httpMux.Handle("/", grpcGatewayMux)
+
+	// HTTP server
+	httpServer := &http.Server{
+		Addr:    fmt.Sprintf(":%d", 8080),
+		Handler: httpMux,
+		// Enforce HTTP/1.1
+		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
+	}
+
+	// Use WaitGroup to manage goroutines
+	var wg sync.WaitGroup
+	wg.Add(2)
+
+	// Start gRPC server in goroutine
+	go func() {
+		defer wg.Done()
+		a.log.Info("gRPC server started", slog.String("addr", grpcListener.Addr().String()))
+		if err := a.gRPCServer.Serve(grpcListener); err != nil {
+			a.log.Error("gRPC server failed", slog.String("error", err.Error()))
+		}
+	}()
+
+	// Start HTTP server in goroutine
+	go func() {
+		defer wg.Done()
+		a.log.Info("HTTP server started", slog.String("addr", httpServer.Addr))
+		if err := httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+			a.log.Error("HTTP server failed", slog.String("error", err.Error()))
+		}
+	}()
+
+	// Wait for servers to exit
+	wg.Wait()
 	return nil
 }
 

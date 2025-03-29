@@ -3,23 +3,14 @@ package authgrpc
 import (
 	"context"
 	desc "cult/pkg"
+	"github.com/google/uuid"
 
 	"google.golang.org/grpc"
 )
 
 type Auth interface {
-	Login(
-		ctx context.Context,
-		email string,
-		password string,
-		appID int,
-	) (token string, err error)
-	RegisterNewUser(
-		ctx context.Context,
-		email string,
-		password string,
-	) (userID int64, err error)
-	IsAdmin(ctx context.Context, userID int64) (bool, error)
+	Login(ctx context.Context, phoneNumber string, password string) (uuid.UUID, string, error)
+	RegisterNewUser(ctx context.Context, phoneNumber string, password string) (userID uuid.UUID, err error)
 }
 
 type serverAPI struct {

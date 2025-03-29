@@ -1,22 +1,20 @@
 package jwt
 
 import (
+	"cult/internal/domain"
 	"time"
-
-	"cult/internal/domain/models"
 
 	"github.com/golang-jwt/jwt/v5"
 )
 
 // NewToken creates new JWT token for given user and app.
-func NewToken(user models.User, secret string, duration time.Duration) (string, error) {
+func NewToken(user domain.User, secret string, duration time.Duration) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims["uid"] = user.ID
-	claims["email"] = user.Email
+	claims["uid"] = user.ID.String()
+	claims["phoneNumber"] = user.Phone
 	claims["exp"] = time.Now().Add(duration).Unix()
-	//claims["app_id"] = app.ID
 
 	tokenString, err := token.SignedString([]byte(secret))
 	if err != nil {

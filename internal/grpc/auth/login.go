@@ -3,29 +3,20 @@ package authgrpc
 import (
 	"context"
 	sso "cult/pkg"
-	"errors"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
-func (s *serverAPI) Login(
-	ctx context.Context,
-	in *sso.LoginRequest,
-) (*sso.LoginResponse, error) {
-	if in.Email == "" {
-		return nil, status.Error(codes.InvalidArgument, "email is required")
+func (s *serverAPI) Login(ctx context.Context, in *sso.LoginRequest) (*sso.LoginResponse, error) {
+	if in.PhoneNumber == "" {
+		return nil, status.Error(codes.InvalidArgument, "phone number is required")
 	}
 
 	if in.Password == "" {
 		return nil, status.Error(codes.InvalidArgument, "password is required")
 	}
 
-	if in.GetAppId() == 0 {
-		return nil, status.Error(codes.InvalidArgument, "app_id is required")
-	}
-
-	token, err := s.auth.Login(ctx, in.GetEmail(), in.GetPassword(), int(in.GetAppId()))
+	userID, token, err := s.auth.Login(ctx, in.GetPhoneNumber(), in.GetPassword())
 	if err != nil {
 		//if errors.Is(err, ErrInvalidCredentials) {
 		//	return nil, status.Error(codes.InvalidArgument, "invalid email or password")
@@ -34,5 +25,5 @@ func (s *serverAPI) Login(
 		return nil, status.Error(codes.Internal, "failed to login")
 	}
 
-	return &sso.LoginResponse{Token: token}, nil
+	return &sso.LoginResponse{Token: token, UserID: userID.String()}, nil
 }
