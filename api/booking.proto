@@ -35,9 +35,11 @@ message AddParkingBookingRequest {
   string car_plate = 3  [(google.api.field_behavior) = REQUIRED];
   google.protobuf.Timestamp time_from = 4  [(google.api.field_behavior) = REQUIRED];
   google.protobuf.Timestamp time_to = 5  [(google.api.field_behavior) = REQUIRED];
-
 }
+
 message AddParkingBookingResponse {
   string parking_lot = 1;
 }
+
+
 
