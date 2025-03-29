@@ -36,7 +36,8 @@ type App struct {
 // New creates new gRPC server app.
 func New(
 	log *slog.Logger,
-	authService authgrpc.Auth,
+	authService authgrpc.AuthService,
+	parkingLotService authgrpc.ParkingLotService,
 	port int,
 ) *App {
 	loggingOpts := []logging.Option{
@@ -60,7 +61,7 @@ func New(
 		logging.UnaryServerInterceptor(InterceptorLogger(log), loggingOpts...),
 	))
 
-	authgrpc.Register(gRPCServer, authService)
+	authgrpc.Register(gRPCServer, authService, parkingLotService)
 
 	return &App{
 		log:        log,

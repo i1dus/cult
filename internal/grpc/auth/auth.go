@@ -10,18 +10,23 @@ import (
 	"google.golang.org/grpc"
 )
 
-type Auth interface {
+type AuthService interface {
 	Login(ctx context.Context, phoneNumber string, password string) (uuid.UUID, string, error)
 	RegisterNewUser(ctx context.Context, phoneNumber string, password string) (userID uuid.UUID, err error)
 	GetUserByPhone(ctx context.Context, phoneNumber string) (*domain.User, error)
 }
 
+type ParkingLotService interface {
+	GetAllParkingLots(ctx context.Context) ([]domain.ParkingLot, error)
+}
+
 type serverAPI struct {
 	desc.UnimplementedParkingAPIServer
 
-	auth Auth
+	auth       AuthService
+	parkingLot ParkingLotService
 }
 
-func Register(gRPCServer *grpc.Server, auth Auth) {
-	desc.RegisterParkingAPIServer(gRPCServer, &serverAPI{auth: auth})
+func Register(gRPCServer *grpc.Server, auth AuthService, parkingLot ParkingLotService) {
+	desc.RegisterParkingAPIServer(gRPCServer, &serverAPI{auth: auth, parkingLot: parkingLot})
 }
