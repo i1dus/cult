@@ -1,4 +1,4 @@
-package booking
+package grpc
 
 import "context"
 import desc "cult/pkg"

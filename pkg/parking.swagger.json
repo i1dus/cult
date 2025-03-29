@@ -514,6 +514,48 @@
         }
       }
     },
+    "apiUser": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "UUID"
+        },
+        "name": {
+          "type": "string",
+          "title": "Имя"
+        },
+        "surname": {
+          "type": "string",
+          "title": "Фамилия"
+        },
+        "patronymic": {
+          "type": "string",
+          "title": "Отчество"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        },
+        "userType": {
+          "$ref": "#/definitions/apiUserType",
+          "title": "Тип пользователя"
+        }
+      }
+    },
+    "apiUserType": {
+      "type": "string",
+      "enum": [
+        "UNDEFINED_USER_TYPE",
+        "REGULAR_USER_TYPE",
+        "MANAGING_COMPANY_USER_TYPE",
+        "ADMINISTRATOR_USER_TYPE"
+      ],
+      "default": "UNDEFINED_USER_TYPE",
+      "title": "- UNDEFINED_USER_TYPE: Неизвестный\n - REGULAR_USER_TYPE: Обычный пользователь (Владелец+Арендатор)\n - MANAGING_COMPANY_USER_TYPE: Управляющая компания\n - ADMINISTRATOR_USER_TYPE: Администратор"
+    },
     "protobufAny": {
       "type": "object",
       "properties": {
