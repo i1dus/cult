@@ -19,7 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ParkingAPI_GetParkingLot_FullMethodName = "/api.ParkingAPI/GetParkingLot"
+	ParkingAPI_GetParkingLot_FullMethodName   = "/api.ParkingAPI/GetParkingLot"
+	ParkingAPI_ListParkingLots_FullMethodName = "/api.ParkingAPI/ListParkingLots"
 )
 
 // ParkingAPIClient is the client API for ParkingAPI service.
@@ -27,6 +28,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ParkingAPIClient interface {
 	GetParkingLot(ctx context.Context, in *GetParkingLotRequest, opts ...grpc.CallOption) (*GetParkingLotResponse, error)
+	ListParkingLots(ctx context.Context, in *ListParkingLotsRequest, opts ...grpc.CallOption) (*ListParkingLotsResponse, error)
 }
 
 type parkingAPIClient struct {
@@ -46,11 +48,21 @@ func (c *parkingAPIClient) GetParkingLot(ctx context.Context, in *GetParkingLotR
 	return out, nil
 }
 
+func (c *parkingAPIClient) ListParkingLots(ctx context.Context, in *ListParkingLotsRequest, opts ...grpc.CallOption) (*ListParkingLotsResponse, error) {
+	out := new(ListParkingLotsResponse)
+	err := c.cc.Invoke(ctx, ParkingAPI_ListParkingLots_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ParkingAPIServer is the server API for ParkingAPI service.
 // All implementations must embed UnimplementedParkingAPIServer
 // for forward compatibility
 type ParkingAPIServer interface {
 	GetParkingLot(context.Context, *GetParkingLotRequest) (*GetParkingLotResponse, error)
+	ListParkingLots(context.Context, *ListParkingLotsRequest) (*ListParkingLotsResponse, error)
 	mustEmbedUnimplementedParkingAPIServer()
 }
 
@@ -60,6 +72,9 @@ type UnimplementedParkingAPIServer struct {
 
 func (UnimplementedParkingAPIServer) GetParkingLot(context.Context, *GetParkingLotRequest) (*GetParkingLotResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetParkingLot not implemented")
+}
+func (UnimplementedParkingAPIServer) ListParkingLots(context.Context, *ListParkingLotsRequest) (*ListParkingLotsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListParkingLots not implemented")
 }
 func (UnimplementedParkingAPIServer) mustEmbedUnimplementedParkingAPIServer() {}
 
@@ -92,6 +107,24 @@ func _ParkingAPI_GetParkingLot_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ParkingAPI_ListParkingLots_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListParkingLotsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ParkingAPIServer).ListParkingLots(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ParkingAPI_ListParkingLots_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ParkingAPIServer).ListParkingLots(ctx, req.(*ListParkingLotsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ParkingAPI_ServiceDesc is the grpc.ServiceDesc for ParkingAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -102,6 +135,10 @@ var ParkingAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetParkingLot",
 			Handler:    _ParkingAPI_GetParkingLot_Handler,
+		},
+		{
+			MethodName: "ListParkingLots",
+			Handler:    _ParkingAPI_ListParkingLots_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
