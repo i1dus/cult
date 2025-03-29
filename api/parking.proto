@@ -39,11 +39,25 @@ service ParkingAPI {
   }
 
   // Register registers a new user.
-  rpc Register (RegisterRequest) returns (RegisterResponse);
+  rpc Register (RegisterRequest) returns (RegisterResponse) {
+    option (google.api.http) = {
+      post: "/sso/register"
+    };
+  };
+
   // Login logs in a user and returns an auth token.
-  rpc Login (LoginRequest) returns (LoginResponse);
+  rpc Login (LoginRequest) returns (LoginResponse) {
+    option (google.api.http) = {
+      get: "/sso/login"
+    };
+  };
+
   // IsAdmin checks whether a user is an admin.
-  rpc IsAdmin (IsAdminRequest) returns (IsAdminResponse);
+  rpc IsAdmin (IsAdminRequest) returns (IsAdminResponse) {
+    option (google.api.http) = {
+      get: "/sso/is_admin"
+    };
+  };
 
 }
 
