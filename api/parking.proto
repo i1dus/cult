@@ -1,0 +1,209 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "internal/pb/parking_lot;parking_lot";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+
+service ParkingAPI {
+  rpc GetParkingLot (GetParkingLotRequest) returns (GetParkingLotResponse) {
+    option (google.api.http) = {
+      get: "/parking/get"
+    };
+  };
+
+  rpc ListParkingLots (ListParkingLotsRequest) returns (ListParkingLotsResponse) {
+    option (google.api.http) = {
+      get: "/parking/list/get"
+    };
+  };
+  rpc AddParkingBooking (AddParkingBookingRequest) returns (AddParkingBookingResponse) {
+    option (google.api.http) = {
+      post: "/booking/add"
+    };
+  }
+
+  rpc GetParkingBooking (GetParkingBookingRequest) returns (GetParkingBookingResponse) {
+    option (google.api.http) = {
+      get: "/booking/get"
+    };
+  }
+
+  rpc GetParkingBookingsList (GetParkingBookingsListRequest) returns (GetParkingBookingsListResponse) {
+    option (google.api.http) = {
+      get: "/booking/list"
+    };
+  }
+
+  // Register registers a new user.
+  rpc Register (RegisterRequest) returns (RegisterResponse);
+  // Login logs in a user and returns an auth token.
+  rpc Login (LoginRequest) returns (LoginResponse);
+  // IsAdmin checks whether a user is an admin.
+  rpc IsAdmin (IsAdminRequest) returns (IsAdminResponse);
+
+}
+
+message RegisterRequest {
+  // Номер телефона
+  string phone_number = 1;
+  // Пароль
+  string password = 2;
+}
+
+message RegisterResponse {
+  // ID пользователя в формате UUID
+  string user_id = 1;
+}
+
+message LoginRequest {
+  // Номер телефона
+  string phone_number = 1;
+  // Пароль
+  string password = 2;
+}
+
+message LoginResponse {
+  // Авторизационный токен
+  string token = 1;
+}
+
+message IsAdminRequest {
+  // ID пользователя в формате UUID
+  string user_id = 1;
+}
+
+message IsAdminResponse {
+  bool is_admin = 1;
+}
+
+
+message GetParkingLotRequest {
+  int64 number = 1;
+}
+
+message GetParkingLotResponse {
+  ParkingLot parking_lot = 1;
+}
+
+message ListParkingLotsRequest {
+  int64 page = 1;
+  int64 per_page = 2;
+}
+
+message ListParkingLotsResponse {
+  repeated ParkingLot parking_lot = 1;
+  int64 total = 2;
+}
+
+message ParkingLot {
+  int64 number = 1;
+  // Тип парковочного места: для инвалидов, спец. назначения и др.
+  ParkingType type = 2;
+  // Статус парковочного места (забронировано, доступно)
+  ParkingLotStatus status = 3;
+  // Машина на парковочном месте
+  optional Vehicle vehicle = 4;
+  // Владелец парковочного места
+  optional User owner = 5;
+}
+
+enum ParkingLotStatus {
+  UNDEFINED_PARKING_LOT_STATUS = 0;
+  AVAILABLE_PARKING_LOT_STATUS = 1;
+  BOOKED_PARKING_LOT_STATUS = 2;
+  BOOKED_BY_ME_PARKING_LOT_STATUS = 3;
+}
+
+enum ParkingType {
+  // Неизвестный тип парковочного места
+  UNDEFINED_PARKING_TYPE = 0;
+  // Тип постоянного парковочного места
+  PERMANENT_PARKING_TYPE = 1;
+  // Тип временного парковочного места
+  RENT_PARKING_TYPE = 2;
+  // Тип парковочного места для спец. назначения (скорая, пожарные и т.д.)
+  SPECIAL_PARKING_TYPE = 3;
+  // Тип парковочного места для инвалидов
+  INCLUSIVE_PARKING_TYPE = 4;
+  // etc
+}
+
+message User {
+  // UUID
+  string id = 1;
+  // Имя
+  string name = 2;
+  // Фамилия
+  string surname = 3;
+  // Отчество
+  string patronymic = 4;
+  string phone_number = 5;
+  string address = 6;
+  // Тип пользователя
+  UserType user_type = 7;
+}
+
+enum UserType {
+  // Неизвестный
+  UNDEFINED_USER_TYPE = 0;
+  // Обычный пользователь (Владелец+Арендатор)
+  REGULAR_USER_TYPE = 1;
+  // Управляющая компания
+  MANAGING_COMPANY_USER_TYPE = 2;
+  // Администратор
+  ADMINISTRATOR_USER_TYPE = 3;
+}
+
+message Vehicle {
+  // UUID
+  string id = 1;
+  // Гос. номер машины
+  string number = 2;
+  // ID владельца машины
+  string user_id = 3;
+}
+
+message ParkingBooking {
+  string parking_lot = 1;
+  string phone_number = 2 [(google.api.field_behavior) = REQUIRED];
+  string name = 3;
+  string car_plate = 4  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_from = 5  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_to = 6  [(google.api.field_behavior) = REQUIRED];
+}
+
+message AddParkingBookingRequest {
+  ParkingBooking booking = 2 [(google.api.field_behavior) = REQUIRED];;
+}
+
+message AddParkingBookingResponse {
+  string parking_lot = 1;
+}
+
+message GetParkingBookingRequest {
+  string parking_lot = 1;
+}
+
+message GetParkingBookingResponse {
+  ParkingBooking booking = 1;
+}
+
+message GetParkingBookingsListRequest {
+  string filter = 1;
+  int64 limit = 2; // opt
+  int64 offset = 3; // opt
+}
+
+message GetParkingBookingsListResponse {
+  repeated ParkingBooking bookings = 1;
+  int64 total = 2;
+}
+
+
+
+
+
