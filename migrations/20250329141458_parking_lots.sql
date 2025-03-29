@@ -1,11 +1,10 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE IF NOT EXISTS parking_lots
+CREATE TABLE parking_lots
 (
-    id             INTEGER PRIMARY KEY,
+    id             TEXT PRIMARY KEY,
     parking_type   TEXT NOT NULL,
     parking_status TEXT NOT NULL,
-    vehicle_id     UUID,
     owner_id       UUID
 );
 -- +goose StatementEnd

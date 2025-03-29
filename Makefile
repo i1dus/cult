@@ -7,7 +7,7 @@ MIGRATION_FOLDER=$(CURDIR)/migrations
 
 OUT_PATH:=$(CURDIR)/pkg
 PROTOS_PATH=./api/*.proto
-LOCAL_BIN:=/Users/mabdurasulkyzy/go/bin
+LOCAL_BIN:=$(CURDIR)/bin
 BUILD_DIR := ./build
 
 all: bin-deps generate db-up migration-create run
@@ -50,7 +50,7 @@ generate:
 bin-deps: .vendor-proto
 	GOBIN=$(LOCAL_BIN) go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 	GOBIN=$(LOCAL_BIN) go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-	GOBIN=$(LOCAL_BIN) go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-gateway@latest
+	GOBIN=$(LOCAL_BIN) go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-grpc-gateway@latest
 	GOBIN=$(LOCAL_BIN) go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
 	GOBIN=$(LOCAL_BIN) go install github.com/envoyproxy/protoc-gen-validate@latest
 	GOBIN=$(LOCAL_BIN) go install github.com/rakyll/statik@latest
