@@ -3,13 +3,12 @@ package authgrpc
 import (
 	"context"
 	"cult/internal/repository"
+	sso "cult/pkg"
 	"errors"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
-
-import "cult/pkg"
 
 func (s *serverAPI) IsAdmin(
 	ctx context.Context,

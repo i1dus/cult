@@ -2,7 +2,7 @@ package booking
 
 import (
 	"context"
-	desc "cult/internal/gen/booking"
+	desc "cult/pkg"
 )
 
 func (s *parkingAPI) GetBooking(ctx context.Context, in desc.AddParkingBookingRequest) (*desc.AddParkingBookingResponse, error) {

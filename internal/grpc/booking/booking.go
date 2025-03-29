@@ -1,6 +1,6 @@
 package booking
 
-import desc "cult/internal/gen/booking"
+import desc "cult/pkg"
 
 type Booking interface {
 }

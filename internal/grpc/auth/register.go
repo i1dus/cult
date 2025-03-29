@@ -13,7 +13,7 @@ func (s *serverAPI) Register(
 	ctx context.Context,
 	in *sso.RegisterRequest,
 ) (*sso.RegisterResponse, error) {
-	if in.Email == "" {
+	if in.PhoneNumber == "" {
 		return nil, status.Error(codes.InvalidArgument, "email is required")
 	}
 
@@ -21,7 +21,7 @@ func (s *serverAPI) Register(
 		return nil, status.Error(codes.InvalidArgument, "password is required")
 	}
 
-	uid, err := s.auth.RegisterNewUser(ctx, in.GetEmail(), in.GetPassword())
+	uid, err := s.auth.RegisterNewUser(ctx, in.PhoneNumber(), in.GetPassword())
 	if err != nil {
 		if errors.Is(err, repository.ErrUserExists) {
 			return nil, status.Error(codes.AlreadyExists, "user already exists")

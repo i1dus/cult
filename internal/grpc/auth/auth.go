@@ -2,8 +2,7 @@ package authgrpc
 
 import (
 	"context"
-	"cult/internal/gen/parking_lot"
-	"cult/internal/gen/sso"
+	desc "cult/pkg"
 
 	"google.golang.org/grpc"
 )
@@ -24,13 +23,11 @@ type Auth interface {
 }
 
 type serverAPI struct {
-	sso.UnimplementedAuthServer
-	parking_lot.UnimplementedParkingAPIServer
+	desc.UnimplementedParkingAPIServer
 
 	auth Auth
 }
 
 func Register(gRPCServer *grpc.Server, auth Auth) {
-	sso.RegisterAuthServer(gRPCServer, &serverAPI{auth: auth})
-	parking_lot.RegisterParkingAPIServer(gRPCServer, &serverAPI{auth: auth})
+	desc.RegisterParkingAPIServer(gRPCServer, &serverAPI{auth: auth})
 }

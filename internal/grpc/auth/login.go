@@ -1,12 +1,8 @@
 package authgrpc
 
-import "context"
-
 import (
 	"context"
-	"cult/internal/gen/parking_lot"
-	"cult/internal/gen/sso"
-	"cult/internal/repository"
+	sso "cult/pkg"
 	"errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
