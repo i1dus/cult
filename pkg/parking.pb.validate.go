@@ -1732,17 +1732,25 @@ func (m *User) validate(all bool) error {
 
 	// no validation rules for Id
 
-	// no validation rules for Name
-
-	// no validation rules for Surname
-
-	// no validation rules for Patronymic
-
 	// no validation rules for PhoneNumber
 
-	// no validation rules for Address
-
 	// no validation rules for UserType
+
+	if m.Name != nil {
+		// no validation rules for Name
+	}
+
+	if m.Surname != nil {
+		// no validation rules for Surname
+	}
+
+	if m.Patronymic != nil {
+		// no validation rules for Patronymic
+	}
+
+	if m.Address != nil {
+		// no validation rules for Address
+	}
 
 	if len(errors) > 0 {
 		return UserMultiError(errors)

@@ -169,13 +169,13 @@ message User {
   // UUID
   string id = 1;
   // Имя
-  string name = 2;
+  optional string name = 2;
   // Фамилия
-  string surname = 3;
+  optional string surname = 3;
   // Отчество
-  string patronymic = 4;
+  optional string patronymic = 4;
   string phone_number = 5;
-  string address = 6;
+  optional string address = 6;
   // Тип пользователя
   UserType user_type = 7;
 }

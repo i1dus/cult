@@ -905,13 +905,13 @@ type User struct {
 	// UUID
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	// Имя
-	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	Name *string `protobuf:"bytes,2,opt,name=name,proto3,oneof" json:"name,omitempty"`
 	// Фамилия
-	Surname string `protobuf:"bytes,3,opt,name=surname,proto3" json:"surname,omitempty"`
+	Surname *string `protobuf:"bytes,3,opt,name=surname,proto3,oneof" json:"surname,omitempty"`
 	// Отчество
-	Patronymic  string `protobuf:"bytes,4,opt,name=patronymic,proto3" json:"patronymic,omitempty"`
-	PhoneNumber string `protobuf:"bytes,5,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
-	Address     string `protobuf:"bytes,6,opt,name=address,proto3" json:"address,omitempty"`
+	Patronymic  *string `protobuf:"bytes,4,opt,name=patronymic,proto3,oneof" json:"patronymic,omitempty"`
+	PhoneNumber string  `protobuf:"bytes,5,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	Address     *string `protobuf:"bytes,6,opt,name=address,proto3,oneof" json:"address,omitempty"`
 	// Тип пользователя
 	UserType      UserType `protobuf:"varint,7,opt,name=user_type,json=userType,proto3,enum=api.UserType" json:"user_type,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -956,22 +956,22 @@ func (x *User) GetId() string {
 }
 
 func (x *User) GetName() string {
-	if x != nil {
-		return x.Name
+	if x != nil && x.Name != nil {
+		return *x.Name
 	}
 	return ""
 }
 
 func (x *User) GetSurname() string {
-	if x != nil {
-		return x.Surname
+	if x != nil && x.Surname != nil {
+		return *x.Surname
 	}
 	return ""
 }
 
 func (x *User) GetPatronymic() string {
-	if x != nil {
-		return x.Patronymic
+	if x != nil && x.Patronymic != nil {
+		return *x.Patronymic
 	}
 	return ""
 }
@@ -984,8 +984,8 @@ func (x *User) GetPhoneNumber() string {
 }
 
 func (x *User) GetAddress() string {
-	if x != nil {
-		return x.Address
+	if x != nil && x.Address != nil {
+		return *x.Address
 	}
 	return ""
 }
@@ -1475,17 +1475,23 @@ const file_parking_proto_rawDesc = "" +
 	"ParkingLot\x12\x16\n" +
 	"\x06number\x18\x01 \x01(\x03R\x06number\x12$\n" +
 	"\x04type\x18\x02 \x01(\x0e2\x10.api.ParkingTypeR\x04type\x12-\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x15.api.ParkingLotStatusR\x06status\"\xcd\x01\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x15.api.ParkingLotStatusR\x06status\"\x91\x02\n" +
 	"\x04User\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
-	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
-	"\asurname\x18\x03 \x01(\tR\asurname\x12\x1e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
+	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1d\n" +
+	"\asurname\x18\x03 \x01(\tH\x01R\asurname\x88\x01\x01\x12#\n" +
 	"\n" +
-	"patronymic\x18\x04 \x01(\tR\n" +
-	"patronymic\x12!\n" +
-	"\fphone_number\x18\x05 \x01(\tR\vphoneNumber\x12\x18\n" +
-	"\aaddress\x18\x06 \x01(\tR\aaddress\x12*\n" +
-	"\tuser_type\x18\a \x01(\x0e2\r.api.UserTypeR\buserType\"J\n" +
+	"patronymic\x18\x04 \x01(\tH\x02R\n" +
+	"patronymic\x88\x01\x01\x12!\n" +
+	"\fphone_number\x18\x05 \x01(\tR\vphoneNumber\x12\x1d\n" +
+	"\aaddress\x18\x06 \x01(\tH\x03R\aaddress\x88\x01\x01\x12*\n" +
+	"\tuser_type\x18\a \x01(\x0e2\r.api.UserTypeR\buserTypeB\a\n" +
+	"\x05_nameB\n" +
+	"\n" +
+	"\b_surnameB\r\n" +
+	"\v_patronymicB\n" +
+	"\n" +
+	"\b_address\"J\n" +
 	"\aVehicle\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06number\x18\x02 \x01(\tR\x06number\x12\x17\n" +
@@ -1631,6 +1637,7 @@ func file_parking_proto_init() {
 	if File_parking_proto != nil {
 		return
 	}
+	file_parking_proto_msgTypes[15].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
