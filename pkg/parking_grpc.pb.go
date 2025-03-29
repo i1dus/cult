@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	ParkingAPI_GetParkingLot_FullMethodName          = "/api.ParkingAPI/GetParkingLot"
+	ParkingAPI_GetParkingLotsByUserID_FullMethodName = "/api.ParkingAPI/GetParkingLotsByUserID"
 	ParkingAPI_ListParkingLots_FullMethodName        = "/api.ParkingAPI/ListParkingLots"
 	ParkingAPI_AddParkingBooking_FullMethodName      = "/api.ParkingAPI/AddParkingBooking"
 	ParkingAPI_GetParkingBooking_FullMethodName      = "/api.ParkingAPI/GetParkingBooking"
@@ -35,6 +36,7 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ParkingAPIClient interface {
 	GetParkingLot(ctx context.Context, in *GetParkingLotRequest, opts ...grpc.CallOption) (*GetParkingLotResponse, error)
+	GetParkingLotsByUserID(ctx context.Context, in *GetParkingLotsByUserIDRequest, opts ...grpc.CallOption) (*GetParkingLotsByUserIDResponse, error)
 	ListParkingLots(ctx context.Context, in *ListParkingLotsRequest, opts ...grpc.CallOption) (*ListParkingLotsResponse, error)
 	AddParkingBooking(ctx context.Context, in *AddParkingBookingRequest, opts ...grpc.CallOption) (*AddParkingBookingResponse, error)
 	GetParkingBooking(ctx context.Context, in *GetParkingBookingRequest, opts ...grpc.CallOption) (*GetParkingBookingResponse, error)
@@ -61,6 +63,16 @@ func (c *parkingAPIClient) GetParkingLot(ctx context.Context, in *GetParkingLotR
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetParkingLotResponse)
 	err := c.cc.Invoke(ctx, ParkingAPI_GetParkingLot_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *parkingAPIClient) GetParkingLotsByUserID(ctx context.Context, in *GetParkingLotsByUserIDRequest, opts ...grpc.CallOption) (*GetParkingLotsByUserIDResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetParkingLotsByUserIDResponse)
+	err := c.cc.Invoke(ctx, ParkingAPI_GetParkingLotsByUserID_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -152,6 +164,7 @@ func (c *parkingAPIClient) GetUserByID(ctx context.Context, in *GetUserByIDReque
 // for forward compatibility.
 type ParkingAPIServer interface {
 	GetParkingLot(context.Context, *GetParkingLotRequest) (*GetParkingLotResponse, error)
+	GetParkingLotsByUserID(context.Context, *GetParkingLotsByUserIDRequest) (*GetParkingLotsByUserIDResponse, error)
 	ListParkingLots(context.Context, *ListParkingLotsRequest) (*ListParkingLotsResponse, error)
 	AddParkingBooking(context.Context, *AddParkingBookingRequest) (*AddParkingBookingResponse, error)
 	GetParkingBooking(context.Context, *GetParkingBookingRequest) (*GetParkingBookingResponse, error)
@@ -176,6 +189,9 @@ type UnimplementedParkingAPIServer struct{}
 
 func (UnimplementedParkingAPIServer) GetParkingLot(context.Context, *GetParkingLotRequest) (*GetParkingLotResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetParkingLot not implemented")
+}
+func (UnimplementedParkingAPIServer) GetParkingLotsByUserID(context.Context, *GetParkingLotsByUserIDRequest) (*GetParkingLotsByUserIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetParkingLotsByUserID not implemented")
 }
 func (UnimplementedParkingAPIServer) ListParkingLots(context.Context, *ListParkingLotsRequest) (*ListParkingLotsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListParkingLots not implemented")
@@ -236,6 +252,24 @@ func _ParkingAPI_GetParkingLot_Handler(srv interface{}, ctx context.Context, dec
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ParkingAPIServer).GetParkingLot(ctx, req.(*GetParkingLotRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ParkingAPI_GetParkingLotsByUserID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetParkingLotsByUserIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ParkingAPIServer).GetParkingLotsByUserID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ParkingAPI_GetParkingLotsByUserID_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ParkingAPIServer).GetParkingLotsByUserID(ctx, req.(*GetParkingLotsByUserIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -394,6 +428,10 @@ var ParkingAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetParkingLot",
 			Handler:    _ParkingAPI_GetParkingLot_Handler,
+		},
+		{
+			MethodName: "GetParkingLotsByUserID",
+			Handler:    _ParkingAPI_GetParkingLotsByUserID_Handler,
 		},
 		{
 			MethodName: "ListParkingLots",

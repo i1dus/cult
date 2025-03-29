@@ -1122,6 +1122,248 @@ var _ interface {
 	ErrorName() string
 } = GetParkingLotResponseValidationError{}
 
+// Validate checks the field values on GetParkingLotsByUserIDRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetParkingLotsByUserIDRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetParkingLotsByUserIDRequest with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// GetParkingLotsByUserIDRequestMultiError, or nil if none found.
+func (m *GetParkingLotsByUserIDRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetParkingLotsByUserIDRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for UserId
+
+	if len(errors) > 0 {
+		return GetParkingLotsByUserIDRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetParkingLotsByUserIDRequestMultiError is an error wrapping multiple
+// validation errors returned by GetParkingLotsByUserIDRequest.ValidateAll()
+// if the designated constraints aren't met.
+type GetParkingLotsByUserIDRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetParkingLotsByUserIDRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetParkingLotsByUserIDRequestMultiError) AllErrors() []error { return m }
+
+// GetParkingLotsByUserIDRequestValidationError is the validation error
+// returned by GetParkingLotsByUserIDRequest.Validate if the designated
+// constraints aren't met.
+type GetParkingLotsByUserIDRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetParkingLotsByUserIDRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetParkingLotsByUserIDRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetParkingLotsByUserIDRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetParkingLotsByUserIDRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetParkingLotsByUserIDRequestValidationError) ErrorName() string {
+	return "GetParkingLotsByUserIDRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetParkingLotsByUserIDRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetParkingLotsByUserIDRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetParkingLotsByUserIDRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetParkingLotsByUserIDRequestValidationError{}
+
+// Validate checks the field values on GetParkingLotsByUserIDResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetParkingLotsByUserIDResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetParkingLotsByUserIDResponse with
+// the rules defined in the proto definition for this message. If any rules
+// are violated, the result is a list of violation errors wrapped in
+// GetParkingLotsByUserIDResponseMultiError, or nil if none found.
+func (m *GetParkingLotsByUserIDResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetParkingLotsByUserIDResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	for idx, item := range m.GetParkingLot() {
+		_, _ = idx, item
+
+		if all {
+			switch v := interface{}(item).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, GetParkingLotsByUserIDResponseValidationError{
+						field:  fmt.Sprintf("ParkingLot[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, GetParkingLotsByUserIDResponseValidationError{
+						field:  fmt.Sprintf("ParkingLot[%v]", idx),
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(item).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return GetParkingLotsByUserIDResponseValidationError{
+					field:  fmt.Sprintf("ParkingLot[%v]", idx),
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if len(errors) > 0 {
+		return GetParkingLotsByUserIDResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetParkingLotsByUserIDResponseMultiError is an error wrapping multiple
+// validation errors returned by GetParkingLotsByUserIDResponse.ValidateAll()
+// if the designated constraints aren't met.
+type GetParkingLotsByUserIDResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetParkingLotsByUserIDResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetParkingLotsByUserIDResponseMultiError) AllErrors() []error { return m }
+
+// GetParkingLotsByUserIDResponseValidationError is the validation error
+// returned by GetParkingLotsByUserIDResponse.Validate if the designated
+// constraints aren't met.
+type GetParkingLotsByUserIDResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetParkingLotsByUserIDResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetParkingLotsByUserIDResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetParkingLotsByUserIDResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetParkingLotsByUserIDResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetParkingLotsByUserIDResponseValidationError) ErrorName() string {
+	return "GetParkingLotsByUserIDResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetParkingLotsByUserIDResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetParkingLotsByUserIDResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetParkingLotsByUserIDResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetParkingLotsByUserIDResponseValidationError{}
+
 // Validate checks the field values on ListParkingLotsRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

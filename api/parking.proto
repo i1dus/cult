@@ -15,6 +15,12 @@ service ParkingAPI {
     };
   };
 
+  rpc GetParkingLotsByUserID (GetParkingLotsByUserIDRequest) returns (GetParkingLotsByUserIDResponse) {
+    option (google.api.http) = {
+      get: "/parking/get_by_user_id"
+    };
+  };
+
   rpc ListParkingLots (ListParkingLotsRequest) returns (ListParkingLotsResponse) {
     option (google.api.http) = {
       get: "/parking/list"
@@ -48,7 +54,7 @@ service ParkingAPI {
   // Login logs in a user and returns an auth token.
   rpc Login (LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
-      get: "/sso/login"
+      post: "/sso/login"
     };
   };
 
@@ -117,6 +123,14 @@ message GetParkingLotRequest {
 
 message GetParkingLotResponse {
   ParkingLot parking_lot = 1;
+}
+
+message GetParkingLotsByUserIDRequest {
+  string user_id = 1;
+}
+
+message GetParkingLotsByUserIDResponse {
+  repeated ParkingLot parking_lot = 1;
 }
 
 message ListParkingLotsRequest {}

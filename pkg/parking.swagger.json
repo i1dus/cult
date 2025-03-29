@@ -185,6 +185,36 @@
         ]
       }
     },
+    "/parking/get_by_user_id": {
+      "get": {
+        "operationId": "ParkingAPI_GetParkingLotsByUserID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetParkingLotsByUserIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
     "/parking/list": {
       "get": {
         "operationId": "ParkingAPI_ListParkingLots",
@@ -271,7 +301,7 @@
       }
     },
     "/sso/login": {
-      "get": {
+      "post": {
         "summary": "Login logs in a user and returns an auth token.",
         "operationId": "ParkingAPI_Login",
         "responses": {
@@ -387,6 +417,18 @@
       "properties": {
         "parkingLot": {
           "$ref": "#/definitions/apiParkingLot"
+        }
+      }
+    },
+    "apiGetParkingLotsByUserIDResponse": {
+      "type": "object",
+      "properties": {
+        "parkingLot": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiParkingLot"
+          }
         }
       }
     },
