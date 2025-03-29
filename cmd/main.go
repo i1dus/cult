@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"cult/internal/app"
 	"cult/internal/config"
 	"cult/internal/lib/logger/handlers/slogpretty"
@@ -17,11 +18,12 @@ const (
 )
 
 func main() {
+	ctx := context.Background()
 	cfg := config.MustLoad()
 
 	log := setupLogger(cfg.Env)
 
-	application := app.New(log, cfg.GRPC.Port, cfg.StoragePath, cfg.TokenTTL)
+	application := app.New(ctx, log, cfg.GRPC.Port, cfg.DatabaseURL, cfg.TokenTTL)
 
 	go func() {
 		application.GRPCServer.MustRun()

@@ -14,7 +14,7 @@ MIGRATION_FOLDER=$(CURDIR)/migrations
 OUT_PATH:=$(CURDIR)/pkg
 PROTOS_PATH=./api/*.proto
 
-all: bin-deps generate run
+all: bin-deps generate db-up migration-create run
 
 db-up:
 	docker-compose up
@@ -40,10 +40,6 @@ run:
 
 test:
 	go test ./...
-
-#generate:
-#	protoc -I api api/parking_lot.proto --go_out=./internal/gen/parking_lot --go_opt=paths=source_relative --go-grpc_out=./internal/gen/parking_lot --go-grpc_opt=paths=source_relative
-#	protoc -I api api/sso.proto --go_out=./internal/gen/sso --go_opt=paths=source_relative --go-grpc_out=./internal/gen/sso --go-grpc_opt=paths=source_relative
 
 generate:
 	mkdir -p $(OUT_PATH)
