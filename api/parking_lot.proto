@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "internal/pb/parking_lot;parking_lot";
+
+service ParkingAPI {
+  rpc GetParkingLot (GetParkingLotRequest) returns (GetParkingLotResponse);
+}
+
+message GetParkingLotRequest {
+  int64 parking_id = 1;
+}
+message GetParkingLotResponse {
+  int64 parking_id = 1;
+}

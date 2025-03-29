@@ -29,3 +29,6 @@ run:
 
 test:
 	go test ./...
+
+generate:
+	protoc -I api api/parking_lot.proto --go_out=./internal/gen/parking_lot --go_opt=paths=source_relative --go-grpc_out=./internal/gen/parking_lot --go-grpc_opt=paths=source_relative
