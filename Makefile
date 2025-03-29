@@ -7,6 +7,8 @@ MIGRATION_FOLDER=$(CURDIR)/migrations
 
 OUT_PATH:=$(CURDIR)/pkg
 PROTOS_PATH=./api/*.proto
+LOCAL_BIN:=/Users/mabdurasulkyzy/go/bin
+BUILD_DIR := ./build
 
 all: bin-deps generate db-up migration-create run
 

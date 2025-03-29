@@ -12,23 +12,57 @@ import "google/protobuf/timestamp.proto";
 service BookingAPI {
   rpc AddParkingBooking (AddParkingBookingRequest) returns (AddParkingBookingResponse) {
     option (google.api.http) = {
-      post: "/parking/add"
+      post: "/booking/add"
     };
   }
 
+  rpc GetParkingBooking (GetParkingBookingRequest) returns (GetParkingBookingResponse) {
+    option (google.api.http) = {
+      get: "/booking/get"
+    };
+  }
+
+  rpc GetParkingBookingsList (GetParkingBookingsListRequest) returns (GetParkingBookingsListResponse) {
+    option (google.api.http) = {
+      get: "/booking/list"
+    };
+  }
+}
+
+message ParkingBooking {
+  string parking_lot = 1;
+  string phone_number = 2 [(google.api.field_behavior) = REQUIRED];
+  string name = 3;
+  string car_plate = 4  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_from = 5  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_to = 6  [(google.api.field_behavior) = REQUIRED];
 }
 
 message AddParkingBookingRequest {
-  string phone_number = 1  [(google.api.field_behavior) = REQUIRED];
-  string name = 2;
-  string car_plate = 3  [(google.api.field_behavior) = REQUIRED];
-  google.protobuf.Timestamp time_from = 4  [(google.api.field_behavior) = REQUIRED];
-  google.protobuf.Timestamp time_to = 5  [(google.api.field_behavior) = REQUIRED];
+  ParkingBooking booking = 2 [(google.api.field_behavior) = REQUIRED];;
 }
 
 message AddParkingBookingResponse {
   string parking_lot = 1;
 }
 
+message GetParkingBookingRequest {
+  string parking_lot = 1;
+}
+
+message GetParkingBookingResponse {
+  ParkingBooking booking = 1;
+}
+
+message GetParkingBookingsListRequest {
+  string filter = 1;
+  int64 limit = 2; // opt
+  int64 offset = 3; // opt
+}
+
+message GetParkingBookingsListResponse {
+  repeated ParkingBooking bookings = 1;
+  int64 total = 2;
+}
 
 
