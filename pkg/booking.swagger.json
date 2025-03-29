@@ -1,0 +1,251 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "booking.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "BookingAPI"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/booking/add": {
+      "post": {
+        "operationId": "BookingAPI_AddParkingBooking",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiAddParkingBookingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "booking.parkingLot",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "booking.phoneNumber",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "booking.name",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "booking.carPlate",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "booking.timeFrom",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "booking.timeTo",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "tags": [
+          "BookingAPI"
+        ]
+      }
+    },
+    "/booking/get": {
+      "get": {
+        "operationId": "BookingAPI_GetParkingBooking",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetParkingBookingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parkingLot",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "BookingAPI"
+        ]
+      }
+    },
+    "/booking/list": {
+      "get": {
+        "operationId": "BookingAPI_GetParkingBookingsList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetParkingBookingsListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "description": "opt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "description": "opt",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "BookingAPI"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "apiAddParkingBookingResponse": {
+      "type": "object",
+      "properties": {
+        "parkingLot": {
+          "type": "string"
+        }
+      }
+    },
+    "apiGetParkingBookingResponse": {
+      "type": "object",
+      "properties": {
+        "booking": {
+          "$ref": "#/definitions/apiParkingBooking"
+        }
+      }
+    },
+    "apiGetParkingBookingsListResponse": {
+      "type": "object",
+      "properties": {
+        "bookings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiParkingBooking"
+          }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "apiParkingBooking": {
+      "type": "object",
+      "properties": {
+        "parkingLot": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "carPlate": {
+          "type": "string"
+        },
+        "timeFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timeTo": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "phoneNumber",
+        "carPlate",
+        "timeFrom",
+        "timeTo"
+      ]
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
