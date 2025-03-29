@@ -10,7 +10,7 @@ import (
 
 type Config struct {
 	Env            string     `yaml:"env" env-default:"local"`
-	StoragePath    string     `yaml:"storage_path" env-required:"true"`
+	DatabaseURL    string     `yaml:"database_url" env-required:"true"`
 	GRPC           GRPCConfig `yaml:"grpc"`
 	MigrationsPath string
 	TokenTTL       time.Duration `yaml:"token_ttl" env-default:"1h"`
@@ -55,8 +55,8 @@ func fetchConfigPath() string {
 	flag.Parse()
 
 	if res == "" {
-		res = "/Users/elegant/ITMO/sso/config/config.yaml"
-		//res = os.Getenv("CONFIG_PATH")
+		//res = "/Users/elegant/ITMO/sso/config/config.yaml"
+		res = os.Getenv("CONFIG_PATH")
 	}
 
 	return res

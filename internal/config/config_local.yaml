@@ -1,5 +1,5 @@
 env: "local"
-storage_path: "./storage/sso.db"
+database_url: "postgresql://postgres:password@localhost:5432/cult?sslmode=disable"
 grpc:
   port: 44044
   timeout: 10h
