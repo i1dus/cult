@@ -21,9 +21,69 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
+type ParkingType int32
+
+const (
+	// Неизвестный тип парковочного места
+	ParkingType_UNDEFINED ParkingType = 0
+	// Тип постоянного парковочного места
+	ParkingType_PERMANENT ParkingType = 1
+	// Тип временного парковочного места
+	ParkingType_RENT ParkingType = 2
+	// Тип парковочного места для спец. назначения (скорая, пожарные и т.д.)
+	ParkingType_SPECIAL ParkingType = 3
+	// Тип парковочного места для инвалидов
+	ParkingType_INCLUSIVE ParkingType = 4 // etc
+)
+
+// Enum value maps for ParkingType.
+var (
+	ParkingType_name = map[int32]string{
+		0: "UNDEFINED",
+		1: "PERMANENT",
+		2: "RENT",
+		3: "SPECIAL",
+		4: "INCLUSIVE",
+	}
+	ParkingType_value = map[string]int32{
+		"UNDEFINED": 0,
+		"PERMANENT": 1,
+		"RENT":      2,
+		"SPECIAL":   3,
+		"INCLUSIVE": 4,
+	}
+)
+
+func (x ParkingType) Enum() *ParkingType {
+	p := new(ParkingType)
+	*p = x
+	return p
+}
+
+func (x ParkingType) String() string {
+	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
+}
+
+func (ParkingType) Descriptor() protoreflect.EnumDescriptor {
+	return file_parking_lot_proto_enumTypes[0].Descriptor()
+}
+
+func (ParkingType) Type() protoreflect.EnumType {
+	return &file_parking_lot_proto_enumTypes[0]
+}
+
+func (x ParkingType) Number() protoreflect.EnumNumber {
+	return protoreflect.EnumNumber(x)
+}
+
+// Deprecated: Use ParkingType.Descriptor instead.
+func (ParkingType) EnumDescriptor() ([]byte, []int) {
+	return file_parking_lot_proto_rawDescGZIP(), []int{0}
+}
+
 type GetParkingLotRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ParkingId     int64                  `protobuf:"varint,1,opt,name=parking_id,json=parkingId,proto3" json:"parking_id,omitempty"`
+	Number        int64                  `protobuf:"varint,1,opt,name=number,proto3" json:"number,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -58,16 +118,16 @@ func (*GetParkingLotRequest) Descriptor() ([]byte, []int) {
 	return file_parking_lot_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetParkingLotRequest) GetParkingId() int64 {
+func (x *GetParkingLotRequest) GetNumber() int64 {
 	if x != nil {
-		return x.ParkingId
+		return x.Number
 	}
 	return 0
 }
 
 type GetParkingLotResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ParkingId     int64                  `protobuf:"varint,1,opt,name=parking_id,json=parkingId,proto3" json:"parking_id,omitempty"`
+	ParkingLot    *ParkingLot            `protobuf:"bytes,1,opt,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -102,27 +162,345 @@ func (*GetParkingLotResponse) Descriptor() ([]byte, []int) {
 	return file_parking_lot_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetParkingLotResponse) GetParkingId() int64 {
+func (x *GetParkingLotResponse) GetParkingLot() *ParkingLot {
 	if x != nil {
-		return x.ParkingId
+		return x.ParkingLot
+	}
+	return nil
+}
+
+type ListParkingLotsRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Page          int64                  `protobuf:"varint,1,opt,name=page,proto3" json:"page,omitempty"`
+	PerPage       int64                  `protobuf:"varint,2,opt,name=per_page,json=perPage,proto3" json:"per_page,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListParkingLotsRequest) Reset() {
+	*x = ListParkingLotsRequest{}
+	mi := &file_parking_lot_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListParkingLotsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListParkingLotsRequest) ProtoMessage() {}
+
+func (x *ListParkingLotsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_parking_lot_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListParkingLotsRequest.ProtoReflect.Descriptor instead.
+func (*ListParkingLotsRequest) Descriptor() ([]byte, []int) {
+	return file_parking_lot_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ListParkingLotsRequest) GetPage() int64 {
+	if x != nil {
+		return x.Page
 	}
 	return 0
+}
+
+func (x *ListParkingLotsRequest) GetPerPage() int64 {
+	if x != nil {
+		return x.PerPage
+	}
+	return 0
+}
+
+type ListParkingLotsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ParkingLot    []*ParkingLot          `protobuf:"bytes,1,rep,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
+	Total         int64                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListParkingLotsResponse) Reset() {
+	*x = ListParkingLotsResponse{}
+	mi := &file_parking_lot_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListParkingLotsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListParkingLotsResponse) ProtoMessage() {}
+
+func (x *ListParkingLotsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_parking_lot_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListParkingLotsResponse.ProtoReflect.Descriptor instead.
+func (*ListParkingLotsResponse) Descriptor() ([]byte, []int) {
+	return file_parking_lot_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *ListParkingLotsResponse) GetParkingLot() []*ParkingLot {
+	if x != nil {
+		return x.ParkingLot
+	}
+	return nil
+}
+
+func (x *ListParkingLotsResponse) GetTotal() int64 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+type ParkingLot struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Number        int64                  `protobuf:"varint,1,opt,name=number,proto3" json:"number,omitempty"`
+	Type          ParkingType            `protobuf:"varint,2,opt,name=type,proto3,enum=api.ParkingType" json:"type,omitempty"`
+	Vehicle       *Vehicle               `protobuf:"bytes,3,opt,name=vehicle,proto3,oneof" json:"vehicle,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ParkingLot) Reset() {
+	*x = ParkingLot{}
+	mi := &file_parking_lot_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ParkingLot) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ParkingLot) ProtoMessage() {}
+
+func (x *ParkingLot) ProtoReflect() protoreflect.Message {
+	mi := &file_parking_lot_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ParkingLot.ProtoReflect.Descriptor instead.
+func (*ParkingLot) Descriptor() ([]byte, []int) {
+	return file_parking_lot_proto_rawDescGZIP(), []int{4}
+}
+
+func (x *ParkingLot) GetNumber() int64 {
+	if x != nil {
+		return x.Number
+	}
+	return 0
+}
+
+func (x *ParkingLot) GetType() ParkingType {
+	if x != nil {
+		return x.Type
+	}
+	return ParkingType_UNDEFINED
+}
+
+func (x *ParkingLot) GetVehicle() *Vehicle {
+	if x != nil {
+		return x.Vehicle
+	}
+	return nil
+}
+
+type Owner struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// UUID
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Имя
+	Name string `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	// Фамилия
+	Surname string `protobuf:"bytes,3,opt,name=surname,proto3" json:"surname,omitempty"`
+	// Квартира (todo: уточнить в каком виде)
+	Apartment     string `protobuf:"bytes,4,opt,name=apartment,proto3" json:"apartment,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Owner) Reset() {
+	*x = Owner{}
+	mi := &file_parking_lot_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Owner) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Owner) ProtoMessage() {}
+
+func (x *Owner) ProtoReflect() protoreflect.Message {
+	mi := &file_parking_lot_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Owner.ProtoReflect.Descriptor instead.
+func (*Owner) Descriptor() ([]byte, []int) {
+	return file_parking_lot_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *Owner) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Owner) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Owner) GetSurname() string {
+	if x != nil {
+		return x.Surname
+	}
+	return ""
+}
+
+func (x *Owner) GetApartment() string {
+	if x != nil {
+		return x.Apartment
+	}
+	return ""
+}
+
+type Vehicle struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// UUID
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Гос. номер машины
+	Number        string `protobuf:"bytes,2,opt,name=number,proto3" json:"number,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Vehicle) Reset() {
+	*x = Vehicle{}
+	mi := &file_parking_lot_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Vehicle) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Vehicle) ProtoMessage() {}
+
+func (x *Vehicle) ProtoReflect() protoreflect.Message {
+	mi := &file_parking_lot_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Vehicle.ProtoReflect.Descriptor instead.
+func (*Vehicle) Descriptor() ([]byte, []int) {
+	return file_parking_lot_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *Vehicle) GetId() string {
+	if x != nil {
+		return x.Id
+	}
+	return ""
+}
+
+func (x *Vehicle) GetNumber() string {
+	if x != nil {
+		return x.Number
+	}
+	return ""
 }
 
 var File_parking_lot_proto protoreflect.FileDescriptor
 
 const file_parking_lot_proto_rawDesc = "" +
 	"\n" +
-	"\x11parking_lot.proto\x12\x03api\"5\n" +
-	"\x14GetParkingLotRequest\x12\x1d\n" +
+	"\x11parking_lot.proto\x12\x03api\".\n" +
+	"\x14GetParkingLotRequest\x12\x16\n" +
+	"\x06number\x18\x01 \x01(\x03R\x06number\"I\n" +
+	"\x15GetParkingLotResponse\x120\n" +
+	"\vparking_lot\x18\x01 \x01(\v2\x0f.api.ParkingLotR\n" +
+	"parkingLot\"G\n" +
+	"\x16ListParkingLotsRequest\x12\x12\n" +
+	"\x04page\x18\x01 \x01(\x03R\x04page\x12\x19\n" +
+	"\bper_page\x18\x02 \x01(\x03R\aperPage\"a\n" +
+	"\x17ListParkingLotsResponse\x120\n" +
+	"\vparking_lot\x18\x01 \x03(\v2\x0f.api.ParkingLotR\n" +
+	"parkingLot\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\x83\x01\n" +
 	"\n" +
-	"parking_id\x18\x01 \x01(\x03R\tparkingId\"6\n" +
-	"\x15GetParkingLotResponse\x12\x1d\n" +
+	"ParkingLot\x12\x16\n" +
+	"\x06number\x18\x01 \x01(\x03R\x06number\x12$\n" +
+	"\x04type\x18\x02 \x01(\x0e2\x10.api.ParkingTypeR\x04type\x12+\n" +
+	"\avehicle\x18\x03 \x01(\v2\f.api.VehicleH\x00R\avehicle\x88\x01\x01B\n" +
 	"\n" +
-	"parking_id\x18\x01 \x01(\x03R\tparkingId2T\n" +
+	"\b_vehicle\"c\n" +
+	"\x05Owner\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
+	"\asurname\x18\x03 \x01(\tR\asurname\x12\x1c\n" +
+	"\tapartment\x18\x04 \x01(\tR\tapartment\"1\n" +
+	"\aVehicle\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
+	"\x06number\x18\x02 \x01(\tR\x06number*Q\n" +
+	"\vParkingType\x12\r\n" +
+	"\tUNDEFINED\x10\x00\x12\r\n" +
+	"\tPERMANENT\x10\x01\x12\b\n" +
+	"\x04RENT\x10\x02\x12\v\n" +
+	"\aSPECIAL\x10\x03\x12\r\n" +
+	"\tINCLUSIVE\x10\x042\xa2\x01\n" +
 	"\n" +
 	"ParkingAPI\x12F\n" +
-	"\rGetParkingLot\x12\x19.api.GetParkingLotRequest\x1a\x1a.api.GetParkingLotResponseB%Z#internal/pb/parking_lot;parking_lotb\x06proto3"
+	"\rGetParkingLot\x12\x19.api.GetParkingLotRequest\x1a\x1a.api.GetParkingLotResponse\x12L\n" +
+	"\x0fListParkingLots\x12\x1b.api.ListParkingLotsRequest\x1a\x1c.api.ListParkingLotsResponseB%Z#internal/pb/parking_lot;parking_lotb\x06proto3"
 
 var (
 	file_parking_lot_proto_rawDescOnce sync.Once
@@ -136,19 +514,32 @@ func file_parking_lot_proto_rawDescGZIP() []byte {
 	return file_parking_lot_proto_rawDescData
 }
 
-var file_parking_lot_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_parking_lot_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
+var file_parking_lot_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_parking_lot_proto_goTypes = []any{
-	(*GetParkingLotRequest)(nil),  // 0: api.GetParkingLotRequest
-	(*GetParkingLotResponse)(nil), // 1: api.GetParkingLotResponse
+	(ParkingType)(0),                // 0: api.ParkingType
+	(*GetParkingLotRequest)(nil),    // 1: api.GetParkingLotRequest
+	(*GetParkingLotResponse)(nil),   // 2: api.GetParkingLotResponse
+	(*ListParkingLotsRequest)(nil),  // 3: api.ListParkingLotsRequest
+	(*ListParkingLotsResponse)(nil), // 4: api.ListParkingLotsResponse
+	(*ParkingLot)(nil),              // 5: api.ParkingLot
+	(*Owner)(nil),                   // 6: api.Owner
+	(*Vehicle)(nil),                 // 7: api.Vehicle
 }
 var file_parking_lot_proto_depIdxs = []int32{
-	0, // 0: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
-	1, // 1: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
-	1, // [1:2] is the sub-list for method output_type
-	0, // [0:1] is the sub-list for method input_type
-	0, // [0:0] is the sub-list for extension type_name
-	0, // [0:0] is the sub-list for extension extendee
-	0, // [0:0] is the sub-list for field type_name
+	5, // 0: api.GetParkingLotResponse.parking_lot:type_name -> api.ParkingLot
+	5, // 1: api.ListParkingLotsResponse.parking_lot:type_name -> api.ParkingLot
+	0, // 2: api.ParkingLot.type:type_name -> api.ParkingType
+	7, // 3: api.ParkingLot.vehicle:type_name -> api.Vehicle
+	1, // 4: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
+	3, // 5: api.ParkingAPI.ListParkingLots:input_type -> api.ListParkingLotsRequest
+	2, // 6: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
+	4, // 7: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
+	6, // [6:8] is the sub-list for method output_type
+	4, // [4:6] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_parking_lot_proto_init() }
@@ -156,18 +547,20 @@ func file_parking_lot_proto_init() {
 	if File_parking_lot_proto != nil {
 		return
 	}
+	file_parking_lot_proto_msgTypes[4].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_parking_lot_proto_rawDesc), len(file_parking_lot_proto_rawDesc)),
-			NumEnums:      0,
-			NumMessages:   2,
+			NumEnums:      1,
+			NumMessages:   7,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
 		GoTypes:           file_parking_lot_proto_goTypes,
 		DependencyIndexes: file_parking_lot_proto_depIdxs,
+		EnumInfos:         file_parking_lot_proto_enumTypes,
 		MessageInfos:      file_parking_lot_proto_msgTypes,
 	}.Build()
 	File_parking_lot_proto = out.File
