@@ -202,22 +202,6 @@
             }
           }
         },
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "perPage",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
         "tags": [
           "ParkingAPI"
         ]
@@ -495,14 +479,6 @@
         "status": {
           "$ref": "#/definitions/apiParkingLotStatus",
           "title": "Статус парковочного места (забронировано, доступно)"
-        },
-        "vehicle": {
-          "$ref": "#/definitions/apiVehicle",
-          "title": "Машина на парковочном месте"
-        },
-        "owner": {
-          "$ref": "#/definitions/apiUser",
-          "title": "Владелец парковочного места"
         }
       }
     },
@@ -535,65 +511,6 @@
         "userId": {
           "type": "string",
           "title": "ID пользователя в формате UUID"
-        }
-      }
-    },
-    "apiUser": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "title": "UUID"
-        },
-        "name": {
-          "type": "string",
-          "title": "Имя"
-        },
-        "surname": {
-          "type": "string",
-          "title": "Фамилия"
-        },
-        "patronymic": {
-          "type": "string",
-          "title": "Отчество"
-        },
-        "phoneNumber": {
-          "type": "string"
-        },
-        "address": {
-          "type": "string"
-        },
-        "userType": {
-          "$ref": "#/definitions/apiUserType",
-          "title": "Тип пользователя"
-        }
-      }
-    },
-    "apiUserType": {
-      "type": "string",
-      "enum": [
-        "UNDEFINED_USER_TYPE",
-        "REGULAR_USER_TYPE",
-        "MANAGING_COMPANY_USER_TYPE",
-        "ADMINISTRATOR_USER_TYPE"
-      ],
-      "default": "UNDEFINED_USER_TYPE",
-      "title": "- UNDEFINED_USER_TYPE: Неизвестный\n - REGULAR_USER_TYPE: Обычный пользователь (Владелец+Арендатор)\n - MANAGING_COMPANY_USER_TYPE: Управляющая компания\n - ADMINISTRATOR_USER_TYPE: Администратор"
-    },
-    "apiVehicle": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "title": "UUID"
-        },
-        "number": {
-          "type": "string",
-          "title": "Гос. номер машины"
-        },
-        "userId": {
-          "type": "string",
-          "title": "ID владельца машины"
         }
       }
     },
