@@ -1,3 +1,4 @@
-build
-vendor.protogen
+/.idea/
 bin
+vendor.protogen
+build
