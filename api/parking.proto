@@ -38,19 +38,27 @@ service ParkingAPI {
     };
   }
 
+  // Register registers a new user.
   rpc Register (RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
       post: "/sso/register"
-      body: "*"
     };
   };
 
+  // Login logs in a user and returns an auth token.
   rpc Login (LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
-      post: "/sso/login"
-      body: "*"
+      get: "/sso/login"
     };
   };
+
+  // IsAdmin checks whether a user is an admin.
+  rpc IsAdmin (IsAdminRequest) returns (IsAdminResponse) {
+    option (google.api.http) = {
+      get: "/sso/is_admin"
+    };
+  };
+
 }
 
 message RegisterRequest {
@@ -75,9 +83,17 @@ message LoginRequest {
 message LoginResponse {
   // Авторизационный токен
   string token = 1;
-  // ID пользователя в виде UUID
-  string userID = 2;
 }
+
+message IsAdminRequest {
+  // ID пользователя в формате UUID
+  string user_id = 1;
+}
+
+message IsAdminResponse {
+  bool is_admin = 1;
+}
+
 
 message GetParkingLotRequest {
   int64 number = 1;
