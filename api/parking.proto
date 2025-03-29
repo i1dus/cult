@@ -12,7 +12,6 @@ service ParkingAPI {
   rpc GetParkingLot (GetParkingLotRequest) returns (GetParkingLotResponse) {
     option (google.api.http) = {
       get: "/parking/get"
-      body:"*"
     };
   };
 
@@ -84,6 +83,7 @@ message LoginRequest {
 message LoginResponse {
   // Авторизационный токен
   string token = 1;
+  string userID = 2;
 }
 
 message IsAdminRequest {
