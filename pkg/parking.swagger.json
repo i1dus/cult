@@ -185,7 +185,7 @@
         ]
       }
     },
-    "/parking/list": {
+    "/parking/list/get": {
       "get": {
         "operationId": "ParkingAPI_ListParkingLots",
         "responses": {
@@ -405,9 +405,6 @@
         "token": {
           "type": "string",
           "title": "Авторизационный токен"
-        },
-        "userID": {
-          "type": "string"
         }
       }
     },

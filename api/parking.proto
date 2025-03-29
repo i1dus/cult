@@ -17,7 +17,7 @@ service ParkingAPI {
 
   rpc ListParkingLots (ListParkingLotsRequest) returns (ListParkingLotsResponse) {
     option (google.api.http) = {
-      get: "/parking/list"
+      get: "/parking/list/get"
     };
   };
   rpc AddParkingBooking (AddParkingBookingRequest) returns (AddParkingBookingResponse) {
@@ -83,8 +83,17 @@ message LoginRequest {
 message LoginResponse {
   // Авторизационный токен
   string token = 1;
-  string userID = 2;
 }
+
+message IsAdminRequest {
+  // ID пользователя в формате UUID
+  string user_id = 1;
+}
+
+message IsAdminResponse {
+  bool is_admin = 1;
+}
+
 
 message GetParkingLotRequest {
   int64 number = 1;
