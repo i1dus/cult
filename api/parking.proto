@@ -18,7 +18,7 @@ service ParkingAPI {
 
   rpc ListParkingLots (ListParkingLotsRequest) returns (ListParkingLotsResponse) {
     option (google.api.http) = {
-      get: "/parking/list/get"
+      get: "/parking/list"
     };
   };
   rpc AddParkingBooking (AddParkingBookingRequest) returns (AddParkingBookingResponse) {
