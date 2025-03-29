@@ -6,11 +6,62 @@ option go_package = "internal/pb/parking_lot;parking_lot";
 
 service ParkingAPI {
   rpc GetParkingLot (GetParkingLotRequest) returns (GetParkingLotResponse);
+  rpc ListParkingLots (ListParkingLotsRequest) returns (ListParkingLotsResponse);
 }
 
 message GetParkingLotRequest {
-  int64 parking_id = 1;
+  int64 number = 1;
 }
+
 message GetParkingLotResponse {
-  int64 parking_id = 1;
+  ParkingLot parking_lot = 1;
 }
+
+message ListParkingLotsRequest {
+  int64 page = 1;
+  int64 per_page = 2;
+}
+
+message ListParkingLotsResponse {
+  repeated ParkingLot parking_lot = 1;
+  int64 total = 2;
+}
+
+message ParkingLot {
+  int64 number = 1;
+  ParkingType type = 2;
+  optional Vehicle vehicle = 3;
+}
+
+enum ParkingType {
+  // Неизвестный тип парковочного места
+  UNDEFINED = 0;
+  // Тип постоянного парковочного места
+  PERMANENT = 1;
+  // Тип временного парковочного места
+  RENT = 2;
+  // Тип парковочного места для спец. назначения (скорая, пожарные и т.д.)
+  SPECIAL = 3;
+  // Тип парковочного места для инвалидов
+  INCLUSIVE = 4;
+  // etc
+}
+
+message Owner {
+  // UUID
+  string id = 1;
+  // Имя
+  string name = 2;
+  // Фамилия
+  string surname = 3;
+  // Квартира (todo: уточнить в каком виде)
+  string apartment = 4;
+}
+
+message Vehicle {
+  // UUID
+  string id = 1;
+  // Гос. номер машины
+  string number = 2;
+}
+
