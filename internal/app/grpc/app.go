@@ -6,6 +6,7 @@ import (
 	authgrpc "cult/internal/grpc"
 	api "cult/pkg"
 	"fmt"
+	"github.com/rs/cors"
 	"log/slog"
 	"net"
 	"net/http"
@@ -123,7 +124,7 @@ func (a *App) Run() error {
 
 	httpServer := &http.Server{
 		Addr:         fmt.Sprintf(":%d", 8080),
-		Handler:      httpMux,
+		Handler:      cors.AllowAll().Handler(httpMux),
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
 
