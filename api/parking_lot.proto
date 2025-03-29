@@ -4,9 +4,20 @@ package api;
 
 option go_package = "internal/pb/parking_lot;parking_lot";
 
+import "google/api/annotations.proto";
+
 service ParkingAPI {
-  rpc GetParkingLot (GetParkingLotRequest) returns (GetParkingLotResponse);
-  rpc ListParkingLots (ListParkingLotsRequest) returns (ListParkingLotsResponse);
+  rpc GetParkingLot (GetParkingLotRequest) returns (GetParkingLotResponse) {
+    option (google.api.http) = {
+      get: "/parking/get"
+    };
+  };
+
+  rpc ListParkingLots (ListParkingLotsRequest) returns (ListParkingLotsResponse) {
+    option (google.api.http) = {
+      get: "/parking/list/get"
+    };
+  };
 }
 
 message GetParkingLotRequest {
@@ -30,8 +41,16 @@ message ListParkingLotsResponse {
 message ParkingLot {
   int64 number = 1;
   ParkingType type = 2;
-  optional Vehicle vehicle = 3;
+  ParkingLotStatus status = 3;
+  optional Vehicle vehicle = 4;
 }
+
+enum ParkingLotStatus {
+  AVAILABLE = 0;
+  BOOKED = 1;
+  BOOKED_BY_ME = 2;
+}
+
 
 enum ParkingType {
   // Неизвестный тип парковочного места

@@ -16,17 +16,6 @@ service ParkingAPI {
     };
   }
 
-  rpc GetParkingLot (GetParkingLotRequest) returns (GetParkingLotResponse) {
-    option (google.api.http) = {
-      get: "//"
-    };
-  }
-
-  rpc GetParkingLot (GetParkingLotRequest) returns (GetParkingLotResponse) {
-    option (google.api.http) = {
-      get: "//"
-    };
-  }
 }
 
 message AddParkingBookingRequest {
