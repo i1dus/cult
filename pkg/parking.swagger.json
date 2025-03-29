@@ -210,12 +210,12 @@
     "/sso/get/user": {
       "get": {
         "summary": "IsAdmin checks whether a user is an admin.",
-        "operationId": "ParkingAPI_GetUserByPhone",
+        "operationId": "ParkingAPI_GetUserByID",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetUserByPhoneResponse"
+              "$ref": "#/definitions/apiGetUserByIDResponse"
             }
           },
           "default": {
@@ -227,7 +227,7 @@
         },
         "parameters": [
           {
-            "name": "phoneNumber",
+            "name": "userId",
             "in": "query",
             "required": true,
             "type": "string"
@@ -390,7 +390,7 @@
         }
       }
     },
-    "apiGetUserByPhoneResponse": {
+    "apiGetUserByIDResponse": {
       "type": "object",
       "properties": {
         "user": {

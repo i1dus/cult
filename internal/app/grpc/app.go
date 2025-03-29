@@ -30,10 +30,8 @@ type App struct {
 	log        *slog.Logger
 	gRPCServer *grpc.Server
 	port       int
-	host       string
 }
 
-// New creates new gRPC server app.
 func New(
 	log *slog.Logger,
 	authService authgrpc.AuthService,
@@ -42,16 +40,13 @@ func New(
 ) *App {
 	loggingOpts := []logging.Option{
 		logging.WithLogOnEvents(
-			//logging.StartCall, logging.FinishCall,
 			logging.PayloadReceived, logging.PayloadSent,
 		),
-		// Add any other option (check functions starting with logging.With).
 	}
 
 	recoveryOpts := []recovery.Option{
 		recovery.WithRecoveryHandler(func(p interface{}) (err error) {
 			log.Error("Recovered from panic", slog.Any("panic", p))
-
 			return status.Errorf(codes.Internal, "internal error")
 		}),
 	}
@@ -67,45 +62,34 @@ func New(
 		log:        log,
 		gRPCServer: gRPCServer,
 		port:       port,
-		host:       "localhost:44044",
 	}
 }
 
-// InterceptorLogger adapts slog logger to interceptor logger.
-// This code is simple enough to be copied and not imported.
 func InterceptorLogger(l *slog.Logger) logging.Logger {
 	return logging.LoggerFunc(func(ctx context.Context, lvl logging.Level, msg string, fields ...any) {
 		l.Log(ctx, slog.Level(lvl), msg, fields...)
 	})
 }
 
-// MustRun runs gRPC server and panics if any error occurs.
 func (a *App) MustRun() {
 	if err := a.Run(); err != nil {
 		panic(err)
 	}
 }
 
-// Run runs gRPC server.
 func (a *App) Run() error {
-	op := "app.Run"
+	const op = "app.Run"
 
-	ctx := context.Background()
-
-	// Create context for graceful shutdown
-	ctx, cancel := context.WithCancel(ctx)
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	// Error channel to collect server errors
-	errChan := make(chan error, 3)
+	errChan := make(chan error, 2)
 
-	// Create TCP listener for gRPC
 	grpcListener, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	// Create HTTP router for gRPC gateway
 	grpcGatewayMux := runtime.NewServeMux()
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	err = api.RegisterParkingAPIHandlerFromEndpoint(
@@ -118,16 +102,9 @@ func (a *App) Run() error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	// Main HTTP server
 	httpMux := http.NewServeMux()
 	httpMux.Handle("/", grpcGatewayMux)
-	httpServer := &http.Server{
-		Addr:         fmt.Sprintf(":%d", 8080),
-		Handler:      httpMux,
-		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
-	}
 
-	// Swagger server
 	swaggerMux := chi.NewMux()
 	swaggerMux.HandleFunc("/swagger/doc.json", func(w http.ResponseWriter, r *http.Request) {
 		b, err := os.ReadFile("pkg/parking.swagger.json")
@@ -138,13 +115,18 @@ func (a *App) Run() error {
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(b)
 	})
-	swaggerMux.HandleFunc("/swagger/*", httpSwagger.WrapHandler)
-	swaggerServer := &http.Server{
-		Addr:    ":8081", // Changed to standard port
-		Handler: swaggerMux,
+	swaggerMux.HandleFunc("/swagger/*", httpSwagger.Handler(
+		httpSwagger.URL("/swagger/doc.json"),
+	))
+
+	httpMux.Handle("/swagger/", swaggerMux)
+
+	httpServer := &http.Server{
+		Addr:         fmt.Sprintf(":%d", 8080),
+		Handler:      httpMux,
+		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
 
-	// Start servers in goroutines
 	go func() {
 		a.log.Info("gRPC server starting", slog.String("addr", grpcListener.Addr().String()))
 		if err := a.gRPCServer.Serve(grpcListener); err != nil && err != grpc.ErrServerStopped {
@@ -159,13 +141,6 @@ func (a *App) Run() error {
 		}
 	}()
 
-	go func() {
-		a.log.Info("Swagger UI available", slog.String("addr", swaggerServer.Addr))
-		if err := swaggerServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			errChan <- fmt.Errorf("Swagger server error: %w", err)
-		}
-	}()
-
 	select {
 	case <-ctx.Done():
 		a.log.Info("shutdown signal received")
@@ -175,31 +150,21 @@ func (a *App) Run() error {
 	}
 
 	a.log.Info("shutting down servers")
-
 	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer shutdownCancel()
 
 	var shutdownErr error
-
 	if err := httpServer.Shutdown(shutdownCtx); err != nil {
 		shutdownErr = fmt.Errorf("HTTP server shutdown error: %w", err)
 	}
 
-	if err := swaggerServer.Shutdown(shutdownCtx); err != nil {
-		shutdownErr = fmt.Errorf("Swagger server shutdown error: %w", err)
-	}
-
-	a.gRPCServer.GracefulStop() // Graceful stop for gRPC
-
+	a.gRPCServer.GracefulStop()
 	return shutdownErr
 }
 
-// Stop stops gRPC server.
 func (a *App) Stop() {
 	const op = "grpcapp.Stop"
-
 	a.log.With(slog.String("op", op)).
 		Info("stopping gRPC server", slog.Int("port", a.port))
-
 	a.gRPCServer.GracefulStop()
 }

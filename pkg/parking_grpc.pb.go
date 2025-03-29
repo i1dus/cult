@@ -27,7 +27,7 @@ const (
 	ParkingAPI_Register_FullMethodName               = "/api.ParkingAPI/Register"
 	ParkingAPI_Login_FullMethodName                  = "/api.ParkingAPI/Login"
 	ParkingAPI_IsAdmin_FullMethodName                = "/api.ParkingAPI/IsAdmin"
-	ParkingAPI_GetUserByPhone_FullMethodName         = "/api.ParkingAPI/GetUserByPhone"
+	ParkingAPI_GetUserByID_FullMethodName            = "/api.ParkingAPI/GetUserByID"
 )
 
 // ParkingAPIClient is the client API for ParkingAPI service.
@@ -46,7 +46,7 @@ type ParkingAPIClient interface {
 	// IsAdmin checks whether a user is an admin.
 	IsAdmin(ctx context.Context, in *IsAdminRequest, opts ...grpc.CallOption) (*IsAdminResponse, error)
 	// IsAdmin checks whether a user is an admin.
-	GetUserByPhone(ctx context.Context, in *GetUserByPhoneRequest, opts ...grpc.CallOption) (*GetUserByPhoneResponse, error)
+	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
 }
 
 type parkingAPIClient struct {
@@ -137,10 +137,10 @@ func (c *parkingAPIClient) IsAdmin(ctx context.Context, in *IsAdminRequest, opts
 	return out, nil
 }
 
-func (c *parkingAPIClient) GetUserByPhone(ctx context.Context, in *GetUserByPhoneRequest, opts ...grpc.CallOption) (*GetUserByPhoneResponse, error) {
+func (c *parkingAPIClient) GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetUserByPhoneResponse)
-	err := c.cc.Invoke(ctx, ParkingAPI_GetUserByPhone_FullMethodName, in, out, cOpts...)
+	out := new(GetUserByIDResponse)
+	err := c.cc.Invoke(ctx, ParkingAPI_GetUserByID_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -163,7 +163,7 @@ type ParkingAPIServer interface {
 	// IsAdmin checks whether a user is an admin.
 	IsAdmin(context.Context, *IsAdminRequest) (*IsAdminResponse, error)
 	// IsAdmin checks whether a user is an admin.
-	GetUserByPhone(context.Context, *GetUserByPhoneRequest) (*GetUserByPhoneResponse, error)
+	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
 	mustEmbedUnimplementedParkingAPIServer()
 }
 
@@ -198,8 +198,8 @@ func (UnimplementedParkingAPIServer) Login(context.Context, *LoginRequest) (*Log
 func (UnimplementedParkingAPIServer) IsAdmin(context.Context, *IsAdminRequest) (*IsAdminResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsAdmin not implemented")
 }
-func (UnimplementedParkingAPIServer) GetUserByPhone(context.Context, *GetUserByPhoneRequest) (*GetUserByPhoneResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetUserByPhone not implemented")
+func (UnimplementedParkingAPIServer) GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByID not implemented")
 }
 func (UnimplementedParkingAPIServer) mustEmbedUnimplementedParkingAPIServer() {}
 func (UnimplementedParkingAPIServer) testEmbeddedByValue()                    {}
@@ -366,20 +366,20 @@ func _ParkingAPI_IsAdmin_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ParkingAPI_GetUserByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetUserByPhoneRequest)
+func _ParkingAPI_GetUserByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByIDRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(ParkingAPIServer).GetUserByPhone(ctx, in)
+		return srv.(ParkingAPIServer).GetUserByID(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: ParkingAPI_GetUserByPhone_FullMethodName,
+		FullMethod: ParkingAPI_GetUserByID_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ParkingAPIServer).GetUserByPhone(ctx, req.(*GetUserByPhoneRequest))
+		return srv.(ParkingAPIServer).GetUserByID(ctx, req.(*GetUserByIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -424,8 +424,8 @@ var ParkingAPI_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ParkingAPI_IsAdmin_Handler,
 		},
 		{
-			MethodName: "GetUserByPhone",
-			Handler:    _ParkingAPI_GetUserByPhone_Handler,
+			MethodName: "GetUserByID",
+			Handler:    _ParkingAPI_GetUserByID_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

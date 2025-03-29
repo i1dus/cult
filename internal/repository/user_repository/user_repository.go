@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
+	"github.com/samber/lo"
 	"log/slog"
 
 	"github.com/jackc/pgx/v5"
@@ -47,22 +48,38 @@ func (r *UserRepository) SaveUser(ctx context.Context, _ uuid.UUID, phone string
 	return userID, nil
 }
 
-// User implements UserProvider interface
-func (r *UserRepository) User(ctx context.Context, phone string) (domain.User, error) {
-	const op = "UserRepository.User"
+// UserByID implements UserProvider interface
+func (r *UserRepository) UserByID(ctx context.Context, userID uuid.UUID) (domain.User, error) {
+	const op = "UserRepository.UserByID"
 
 	query := `
-		SELECT id, phone, pass_hash
-		FROM users
-		WHERE phone = $1
-	`
+        SELECT 
+            id, 
+            phone, 
+            name,
+            surname,
+            patronymic,
+            address,
+            user_type,
+            pass_hash
+        FROM users
+        WHERE id = $1
+    `
 
 	var user domain.User
-	err := r.db.QueryRow(ctx, query, phone).Scan(
+	var patronymic, address *string
+
+	err := r.db.QueryRow(ctx, query, userID).Scan(
 		&user.ID,
 		&user.Phone,
+		&user.Name,
+		&user.Surname,
+		&patronymic,
+		&address,
+		&user.UserType,
 		&user.PassHash,
 	)
+
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return domain.User{}, fmt.Errorf("%s: %w", op, repository.ErrUserNotFound)
@@ -70,10 +87,56 @@ func (r *UserRepository) User(ctx context.Context, phone string) (domain.User, e
 		return domain.User{}, fmt.Errorf("%s: %w", op, err)
 	}
 
+	user.Patronymic = lo.FromPtr(patronymic)
+	user.Address = lo.FromPtr(address)
+
 	return user, nil
 }
 
-// IsAdmin implements UserProvider interface
+func (r *UserRepository) UserByPhone(ctx context.Context, phoneNumber string) (domain.User, error) {
+	const op = "UserRepository.UserByPhone"
+
+	query := `
+        SELECT 
+            id, 
+            phone, 
+            name,
+            surname,
+            patronymic,
+            address,
+            user_type,
+            pass_hash
+        FROM users
+        WHERE phone = $1 
+    `
+
+	var user domain.User
+	var patronymic, address *string
+
+	err := r.db.QueryRow(ctx, query, phoneNumber).Scan(
+		&user.ID,
+		&user.Phone,
+		&user.Name,
+		&user.Surname,
+		&patronymic,
+		&address,
+		&user.UserType,
+		&user.PassHash,
+	)
+
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return domain.User{}, fmt.Errorf("%s: %w", op, repository.ErrUserNotFound)
+		}
+		return domain.User{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	user.Patronymic = lo.FromPtr(patronymic)
+	user.Address = lo.FromPtr(address)
+
+	return user, nil
+}
+
 func (r *UserRepository) IsAdmin(ctx context.Context, userID uuid.UUID) (bool, error) {
 	const op = "UserRepository.IsAdmin"
 

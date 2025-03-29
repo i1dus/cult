@@ -191,27 +191,27 @@ func (UserType) EnumDescriptor() ([]byte, []int) {
 	return file_parking_proto_rawDescGZIP(), []int{2}
 }
 
-type GetUserByPhoneRequest struct {
+type GetUserByIDRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	PhoneNumber   string                 `protobuf:"bytes,1,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserByPhoneRequest) Reset() {
-	*x = GetUserByPhoneRequest{}
+func (x *GetUserByIDRequest) Reset() {
+	*x = GetUserByIDRequest{}
 	mi := &file_parking_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserByPhoneRequest) String() string {
+func (x *GetUserByIDRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserByPhoneRequest) ProtoMessage() {}
+func (*GetUserByIDRequest) ProtoMessage() {}
 
-func (x *GetUserByPhoneRequest) ProtoReflect() protoreflect.Message {
+func (x *GetUserByIDRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_parking_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -223,39 +223,39 @@ func (x *GetUserByPhoneRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserByPhoneRequest.ProtoReflect.Descriptor instead.
-func (*GetUserByPhoneRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserByIDRequest.ProtoReflect.Descriptor instead.
+func (*GetUserByIDRequest) Descriptor() ([]byte, []int) {
 	return file_parking_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetUserByPhoneRequest) GetPhoneNumber() string {
+func (x *GetUserByIDRequest) GetUserId() string {
 	if x != nil {
-		return x.PhoneNumber
+		return x.UserId
 	}
 	return ""
 }
 
-type GetUserByPhoneResponse struct {
+type GetUserByIDResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	User          *User                  `protobuf:"bytes,1,opt,name=user,proto3" json:"user,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetUserByPhoneResponse) Reset() {
-	*x = GetUserByPhoneResponse{}
+func (x *GetUserByIDResponse) Reset() {
+	*x = GetUserByIDResponse{}
 	mi := &file_parking_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetUserByPhoneResponse) String() string {
+func (x *GetUserByIDResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetUserByPhoneResponse) ProtoMessage() {}
+func (*GetUserByIDResponse) ProtoMessage() {}
 
-func (x *GetUserByPhoneResponse) ProtoReflect() protoreflect.Message {
+func (x *GetUserByIDResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_parking_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -267,12 +267,12 @@ func (x *GetUserByPhoneResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetUserByPhoneResponse.ProtoReflect.Descriptor instead.
-func (*GetUserByPhoneResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use GetUserByIDResponse.ProtoReflect.Descriptor instead.
+func (*GetUserByIDResponse) Descriptor() ([]byte, []int) {
 	return file_parking_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *GetUserByPhoneResponse) GetUser() *User {
+func (x *GetUserByIDResponse) GetUser() *User {
 	if x != nil {
 		return x.User
 	}
@@ -1348,10 +1348,10 @@ var File_parking_proto protoreflect.FileDescriptor
 
 const file_parking_proto_rawDesc = "" +
 	"\n" +
-	"\rparking.proto\x12\x03api\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"?\n" +
-	"\x15GetUserByPhoneRequest\x12&\n" +
-	"\fphone_number\x18\x01 \x01(\tB\x03\xe0A\x02R\vphoneNumber\"7\n" +
-	"\x16GetUserByPhoneResponse\x12\x1d\n" +
+	"\rparking.proto\x12\x03api\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/api/field_behavior.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"2\n" +
+	"\x12GetUserByIDRequest\x12\x1c\n" +
+	"\auser_id\x18\x01 \x01(\tB\x03\xe0A\x02R\x06userId\"4\n" +
+	"\x13GetUserByIDResponse\x12\x1d\n" +
 	"\x04user\x18\x01 \x01(\v2\t.api.UserR\x04user\"P\n" +
 	"\x0fRegisterRequest\x12!\n" +
 	"\fphone_number\x18\x01 \x01(\tR\vphoneNumber\x12\x1a\n" +
@@ -1437,7 +1437,7 @@ const file_parking_proto_rawDesc = "" +
 	"\x13UNDEFINED_USER_TYPE\x10\x00\x12\x15\n" +
 	"\x11REGULAR_USER_TYPE\x10\x01\x12\x1e\n" +
 	"\x1aMANAGING_COMPANY_USER_TYPE\x10\x02\x12\x1b\n" +
-	"\x17ADMINISTRATOR_USER_TYPE\x10\x032\xe0\x06\n" +
+	"\x17ADMINISTRATOR_USER_TYPE\x10\x032\xd7\x06\n" +
 	"\n" +
 	"ParkingAPI\x12\\\n" +
 	"\rGetParkingLot\x12\x19.api.GetParkingLotRequest\x1a\x1a.api.GetParkingLotResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/parking/get\x12c\n" +
@@ -1448,8 +1448,8 @@ const file_parking_proto_rawDesc = "" +
 	"\bRegister\x12\x14.api.RegisterRequest\x1a\x15.api.RegisterResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\"\r/sso/register\x12B\n" +
 	"\x05Login\x12\x11.api.LoginRequest\x1a\x12.api.LoginResponse\"\x12\x82\xd3\xe4\x93\x02\f\x12\n" +
 	"/sso/login\x12K\n" +
-	"\aIsAdmin\x12\x13.api.IsAdminRequest\x1a\x14.api.IsAdminResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/sso/is_admin\x12`\n" +
-	"\x0eGetUserByPhone\x12\x1a.api.GetUserByPhoneRequest\x1a\x1b.api.GetUserByPhoneResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/sso/get/userB%Z#internal/pb/parking_lot;parking_lotb\x06proto3"
+	"\aIsAdmin\x12\x13.api.IsAdminRequest\x1a\x14.api.IsAdminResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/sso/is_admin\x12W\n" +
+	"\vGetUserByID\x12\x17.api.GetUserByIDRequest\x1a\x18.api.GetUserByIDResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/sso/get/userB%Z#internal/pb/parking_lot;parking_lotb\x06proto3"
 
 var (
 	file_parking_proto_rawDescOnce sync.Once
@@ -1469,8 +1469,8 @@ var file_parking_proto_goTypes = []any{
 	(ParkingLotStatus)(0),                  // 0: api.ParkingLotStatus
 	(ParkingType)(0),                       // 1: api.ParkingType
 	(UserType)(0),                          // 2: api.UserType
-	(*GetUserByPhoneRequest)(nil),          // 3: api.GetUserByPhoneRequest
-	(*GetUserByPhoneResponse)(nil),         // 4: api.GetUserByPhoneResponse
+	(*GetUserByIDRequest)(nil),             // 3: api.GetUserByIDRequest
+	(*GetUserByIDResponse)(nil),            // 4: api.GetUserByIDResponse
 	(*RegisterRequest)(nil),                // 5: api.RegisterRequest
 	(*RegisterResponse)(nil),               // 6: api.RegisterResponse
 	(*LoginRequest)(nil),                   // 7: api.LoginRequest
@@ -1494,7 +1494,7 @@ var file_parking_proto_goTypes = []any{
 	(*timestamppb.Timestamp)(nil),          // 25: google.protobuf.Timestamp
 }
 var file_parking_proto_depIdxs = []int32{
-	16, // 0: api.GetUserByPhoneResponse.user:type_name -> api.User
+	16, // 0: api.GetUserByIDResponse.user:type_name -> api.User
 	15, // 1: api.GetParkingLotResponse.parking_lot:type_name -> api.ParkingLot
 	15, // 2: api.ListParkingLotsResponse.parking_lot:type_name -> api.ParkingLot
 	1,  // 3: api.ParkingLot.type:type_name -> api.ParkingType
@@ -1513,7 +1513,7 @@ var file_parking_proto_depIdxs = []int32{
 	5,  // 16: api.ParkingAPI.Register:input_type -> api.RegisterRequest
 	7,  // 17: api.ParkingAPI.Login:input_type -> api.LoginRequest
 	9,  // 18: api.ParkingAPI.IsAdmin:input_type -> api.IsAdminRequest
-	3,  // 19: api.ParkingAPI.GetUserByPhone:input_type -> api.GetUserByPhoneRequest
+	3,  // 19: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
 	12, // 20: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
 	14, // 21: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
 	20, // 22: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
@@ -1522,7 +1522,7 @@ var file_parking_proto_depIdxs = []int32{
 	6,  // 25: api.ParkingAPI.Register:output_type -> api.RegisterResponse
 	8,  // 26: api.ParkingAPI.Login:output_type -> api.LoginResponse
 	10, // 27: api.ParkingAPI.IsAdmin:output_type -> api.IsAdminResponse
-	4,  // 28: api.ParkingAPI.GetUserByPhone:output_type -> api.GetUserByPhoneResponse
+	4,  // 28: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
 	20, // [20:29] is the sub-list for method output_type
 	11, // [11:20] is the sub-list for method input_type
 	11, // [11:11] is the sub-list for extension type_name
