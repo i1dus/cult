@@ -1,0 +1,18 @@
+version: '3.1'
+
+volumes:
+  postgresql_data:
+
+services:
+  postgres_db:
+    container_name: postgres_cult_db
+    image: postgres:15-alpine
+    ports:
+      - "5432:5432"
+    restart: always
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=cult
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
