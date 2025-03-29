@@ -7,12 +7,19 @@ import (
 	api "cult/pkg"
 	"errors"
 	"fmt"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"google.golang.org/grpc/credentials/insecure"
+	"log"
 	"log/slog"
 	"net"
 	"net/http"
+	"os"
 	"sync"
+
+	"github.com/go-chi/chi/v5"
+	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+
+	"google.golang.org/grpc/credentials/insecure"
+
+	httpSwagger "github.com/swaggo/http-swagger"
 
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/logging"
 	"github.com/grpc-ecosystem/go-grpc-middleware/v2/interceptors/recovery"
@@ -140,6 +147,30 @@ func (a *App) Run() error {
 
 	// Wait for servers to exit
 	wg.Wait()
+
+	a.log.Info("Запуск Swagger по адресу localhost:8081")
+
+	mux := chi.NewMux()
+	mux.HandleFunc("/swagger/doc.json", func(w http.ResponseWriter, r *http.Request) {
+		b, err := os.ReadFile("/cult/pkg/parking.swagger.json")
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(b)
+	})
+	mux.HandleFunc("/swagger/*", httpSwagger.WrapHandler)
+
+	srv := &http.Server{
+		Addr:    "localhost:7002",
+		Handler: mux,
+	}
+
+	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
+		log.Fatal(err)
+	}
+
 	return nil
 }
 
