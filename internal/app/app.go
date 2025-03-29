@@ -1,7 +1,10 @@
 package app
 
 import (
+	"context"
 	grpcapp "cult/internal/app/grpc"
+	"cult/internal/services/auth"
+	"github.com/jackc/pgx/v5"
 	"log/slog"
 	"time"
 )
@@ -11,19 +14,21 @@ type App struct {
 }
 
 func New(
+	ctx context.Context,
 	log *slog.Logger,
 	grpcPort int,
-	storagePath string,
+	databaseURL string,
 	tokenTTL time.Duration,
 ) *App {
-	//storage, err := sqlite.New(storagePath)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//
-	//authService := auth.New(log, storage, storage, storage, tokenTTL)
+	conn, err := pgx.Connect(ctx, databaseURL)
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close(ctx)
 
-	grpcApp := grpcapp.New(log, nil, grpcPort)
+	authService := auth.New(log, nil, nil, nil, tokenTTL)
+
+	grpcApp := grpcapp.New(log, authService, grpcPort)
 
 	return &App{
 		GRPCServer: grpcApp,

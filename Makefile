@@ -5,6 +5,8 @@ endif
 DATABASE_URL=postgresql://postgres:password@localhost:5434/hotel_management?sslmode=disable
 MIGRATION_FOLDER=$(CURDIR)/migrations
 
+all: db-up migration-create
+
 db-up:
 	docker-compose up
 
