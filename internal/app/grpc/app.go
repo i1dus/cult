@@ -7,9 +7,6 @@ import (
 	api "cult/pkg"
 	"errors"
 	"fmt"
-	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/rs/cors"
-	"google.golang.org/grpc/credentials/insecure"
 	"log"
 	"log/slog"
 	"net"
@@ -121,7 +118,7 @@ func (a *App) Run() error {
 	// HTTP server
 	httpServer := &http.Server{
 		Addr:    fmt.Sprintf(":%d", 8080),
-		Handler: cors.AllowAll().Handler(httpMux),
+		Handler: httpMux,
 		// Enforce HTTP/1.1
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
