@@ -60,21 +60,6 @@ service ParkingAPI {
     };
   };
 
-  // IsAdmin checks whether a user is an admin.
-  rpc GetUserByID (GetUserByIDRequest) returns (GetUserByIDResponse) {
-    option (google.api.http) = {
-      get: "/sso/get/user"
-    };
-  };
-
-}
-
-message GetUserByIDRequest {
-  string user_id = 1 [(google.api.field_behavior) = REQUIRED];
-}
-
-message GetUserByIDResponse {
-  User user = 1;
 }
 
 message RegisterRequest {
@@ -119,7 +104,10 @@ message GetParkingLotResponse {
   ParkingLot parking_lot = 1;
 }
 
-message ListParkingLotsRequest {}
+message ListParkingLotsRequest {
+  int64 page = 1;
+  int64 per_page = 2;
+}
 
 message ListParkingLotsResponse {
   repeated ParkingLot parking_lot = 1;
@@ -132,6 +120,10 @@ message ParkingLot {
   ParkingType type = 2;
   // Статус парковочного места (забронировано, доступно)
   ParkingLotStatus status = 3;
+  // Машина на парковочном месте
+  optional Vehicle vehicle = 4;
+  // Владелец парковочного места
+  optional User owner = 5;
 }
 
 enum ParkingLotStatus {
