@@ -23,7 +23,7 @@ func main() {
 
 	log := setupLogger(cfg.Env)
 
-	application := app.New(ctx, log, cfg.GRPC.Port, cfg.DatabaseURL, cfg.TokenTTL)
+	application := app.New(ctx, log, cfg.GRPC.Port, cfg.DatabaseURL, cfg.TokenTTL, cfg.Secret)
 
 	go func() {
 		application.GRPCServer.MustRun()
