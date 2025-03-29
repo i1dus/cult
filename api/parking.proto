@@ -59,6 +59,21 @@ service ParkingAPI {
     };
   };
 
+  // IsAdmin checks whether a user is an admin.
+  rpc GetUserByPhone (GetUserByPhoneRequest) returns (GetUserByPhoneResponse) {
+    option (google.api.http) = {
+      get: "/sso/get/user"
+    };
+  };
+
+}
+
+message GetUserByPhoneRequest {
+  string phone_number = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetUserByPhoneResponse {
+  User user = 1;
 }
 
 message RegisterRequest {

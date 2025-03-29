@@ -223,6 +223,37 @@
         ]
       }
     },
+    "/sso/get/user": {
+      "get": {
+        "summary": "IsAdmin checks whether a user is an admin.",
+        "operationId": "ParkingAPI_GetUserByPhone",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetUserByPhoneResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "phoneNumber",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
     "/sso/is_admin": {
       "get": {
         "summary": "IsAdmin checks whether a user is an admin.",
@@ -372,6 +403,14 @@
       "properties": {
         "parkingLot": {
           "$ref": "#/definitions/apiParkingLot"
+        }
+      }
+    },
+    "apiGetUserByPhoneResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/apiUser"
         }
       }
     },

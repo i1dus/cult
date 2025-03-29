@@ -5,9 +5,10 @@ import (
 	"cult/internal/domain"
 	"errors"
 	"fmt"
-	"github.com/google/uuid"
 	"log/slog"
 	"time"
+
+	"github.com/google/uuid"
 
 	"cult/internal/lib/jwt"
 	"cult/internal/lib/logger/sl"
@@ -80,6 +81,25 @@ func (a *Auth) Login(ctx context.Context, phoneNumber string, password string) (
 	}
 
 	return user.ID, token, nil
+}
+
+func (a *Auth) GetUserByPhone(ctx context.Context, phoneNumber string) (*domain.User, error) {
+	const op = "Auth.GetUserByPhone"
+
+	user, err := a.userRepository.User(ctx, phoneNumber)
+	if err != nil {
+		if errors.Is(err, repository.ErrUserNotFound) {
+			a.log.Warn("user not found", sl.Err(err))
+
+			return nil, fmt.Errorf("%s: %w", op, ErrInvalidCredentials)
+		}
+
+		a.log.Error("failed to get user", sl.Err(err))
+
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return &user, nil
 }
 
 // RegisterNewUser registers new user in the system and returns user ID.
