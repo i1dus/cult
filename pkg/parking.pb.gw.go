@@ -331,7 +331,7 @@ func RegisterParkingAPIHandlerServer(ctx context.Context, mux *runtime.ServeMux,
 		var stream runtime.ServerTransportStream
 		ctx = grpc.NewContextWithServerTransportStream(ctx, &stream)
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.ParkingAPI/ListParkingLots", runtime.WithHTTPPathPattern("/parking/list/get"))
+		annotatedContext, err := runtime.AnnotateIncomingContext(ctx, mux, req, "/api.ParkingAPI/ListParkingLots", runtime.WithHTTPPathPattern("/parking/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -526,7 +526,7 @@ func RegisterParkingAPIHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 		ctx, cancel := context.WithCancel(req.Context())
 		defer cancel()
 		inboundMarshaler, outboundMarshaler := runtime.MarshalerForRequest(mux, req)
-		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.ParkingAPI/ListParkingLots", runtime.WithHTTPPathPattern("/parking/list/get"))
+		annotatedContext, err := runtime.AnnotateContext(ctx, mux, req, "/api.ParkingAPI/ListParkingLots", runtime.WithHTTPPathPattern("/parking/list"))
 		if err != nil {
 			runtime.HTTPError(ctx, mux, outboundMarshaler, w, req, err)
 			return
@@ -646,7 +646,7 @@ func RegisterParkingAPIHandlerClient(ctx context.Context, mux *runtime.ServeMux,
 
 var (
 	pattern_ParkingAPI_GetParkingLot_0          = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"parking", "get"}, ""))
-	pattern_ParkingAPI_ListParkingLots_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 2, 2}, []string{"parking", "list", "get"}, ""))
+	pattern_ParkingAPI_ListParkingLots_0        = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"parking", "list"}, ""))
 	pattern_ParkingAPI_AddParkingBooking_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"booking", "add"}, ""))
 	pattern_ParkingAPI_GetParkingBooking_0      = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"booking", "get"}, ""))
 	pattern_ParkingAPI_GetParkingBookingsList_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1}, []string{"booking", "list"}, ""))
