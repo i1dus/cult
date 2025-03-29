@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "internal/pb/parking_lot;parking_lot";
+
+import "google/api/annotations.proto";
+import "google/api/field_behavior.proto";
+import "google/protobuf/timestamp.proto";
+
+
+service ParkingAPI {
+  rpc AddParkingBooking (AddParkingBookingRequest) returns (AddParkingBookingResponse) {
+    option (google.api.http) = {
+      post: "/parking/add"
+    };
+  }
+
+}
+
+message AddParkingBookingRequest {
+  string phone_number = 1  [(google.api.field_behavior) = REQUIRED];
+  string name = 2;
+  string car_plate = 3  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_from = 4  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_to = 5  [(google.api.field_behavior) = REQUIRED];
+}
+
+message AddParkingBookingResponse {
+  string parking_lot = 1;
+}
+
+
+
