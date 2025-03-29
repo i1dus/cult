@@ -1,9 +1,3 @@
-ifeq ($(OS),Windows_NT)
-  EXT := .exe
-else
-  EXT :=
-endif
-
 ifeq ($(POSTGRES_SETUP),)
 	POSTGRES_SETUP := user=postgres password=password dbname=cult host=localhost port=5432 sslmode=disable
 endif
