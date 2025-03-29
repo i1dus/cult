@@ -13,6 +13,7 @@ require (
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgx/v5 v5.7.4
+	github.com/lib/pq v1.10.9
 	github.com/swaggo/http-swagger v1.3.4
 	golang.org/x/crypto v0.33.0
 	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8

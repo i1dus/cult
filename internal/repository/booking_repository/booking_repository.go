@@ -5,6 +5,7 @@ import (
 	"cult/internal/domain"
 	"cult/internal/repository"
 	desc "cult/pkg"
+	"database/sql"
 	"errors"
 	"fmt"
 	"log/slog"
@@ -13,6 +14,7 @@ import (
 	"github.com/jackc/pgx/v5/pgconn"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+    "github.com/lib/pq"
 	"github.com/jackc/pgx/v5"
 )
 
@@ -81,6 +83,73 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot string) e
 	}
 
 	return user, nil
+}
+
+
+// GetBookingsByFilter implements
+func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, db *sql.DB, filter domain.Filter) ([]domain.Booking, error) {
+	query := `
+        SELECT b.parking_lot_id, b.user_id, b.vehicle_id, b.start_at, b.end_at
+        FROM bookings b
+        JOIN parking_lots pl ON b.parking_lot_id = pl.id::TEXT
+        WHERE pl.owner_id = $1 OR $2 IS NULL
+          AND (
+              ($3::timestamp IS NULL AND $4::timestamp IS NULL) OR
+              (b.start_at <= $4 AND b.end_at >= $3)
+          )
+          AND ($5::int[] IS NULL OR b.parking_lot_id::int = ANY($5::int[]))
+        ORDER BY b.start_at
+    `
+
+	var from, to interface{}
+	if filter.From.IsZero() {
+		from = nil
+	} else {
+		from = filter.From
+	}
+
+	if filter.To.IsZero() {
+		to = nil
+	} else {
+		to = filter.To
+	}
+
+	var parkingLots interface{}
+	if len(filter.ParkingLots) == 0 {
+		parkingLots = nil
+	} else {
+		parkingLots = pq.Array(filter.ParkingLots)
+	}
+
+	rows, err := db.QueryContext(ctx, query,
+		filter.UserID,
+		from,
+		to,
+		parkingLots,
+	)
+
+	if err != nil {
+		return nil, fmt.Errorf("querying bookings: %w", err)
+	}
+	defer rows.Close()
+
+	var bookings []domain.Booking
+	for rows.Next() {
+		var b domain.Booking
+		err := rows.Scan(
+			&b.ParkingLot,
+			&b.UserID,
+			&b.Vehicle,
+			&b.From,
+			&b.To,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("scanning booking: %w", err)
+		}
+		bookings = append(bookings, b)
+	}
+
+	return bookings, nil
 }
 
 // IsAdmin implements UserProvider interface

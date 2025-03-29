@@ -1,6 +1,12 @@
 package domain
 
 import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
+import (
 	sso "cult/pkg"
 	"github.com/google/uuid"
 )
@@ -30,6 +36,21 @@ const (
 	SpecialParkingType   ParkingType = "SPECIAL_PARKING_TYPE"
 	InclusiveParkingType ParkingType = "INCLUSIVE_PARKING_TYPE"
 )
+
+type Filter struct {
+	UserID      uuid.UUID
+	From        time.Time
+	To          time.Time
+	ParkingLots []int
+}
+
+type Booking struct {
+	UserID     uuid.UUID
+	ParkingLot int
+	From       time.Time
+	To         time.Time
+	Vehicle    string
+}
 
 func (p ParkingType) GetPBType() sso.ParkingType {
 	switch p {
