@@ -14,6 +14,7 @@ require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgx/v5 v5.7.4
 	github.com/lib/pq v1.10.9
+	github.com/samber/lo v1.49.1
 	github.com/swaggo/http-swagger v1.3.4
 	golang.org/x/crypto v0.33.0
 	golang.org/x/exp v0.0.0-20240325151524-a685a6edb6d8
@@ -39,8 +40,6 @@ require (
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
 	github.com/swaggo/files v0.0.0-20220610200504-28940afbdbfe // indirect
 	github.com/swaggo/swag v1.8.1 // indirect
-	github.com/rs/cors v1.11.1 // indirect
-	github.com/samber/lo v1.49.1 // indirect
 	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/text v0.22.0 // indirect

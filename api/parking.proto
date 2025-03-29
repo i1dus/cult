@@ -183,12 +183,11 @@ message Vehicle {
 }
 
 message ParkingBooking {
-  string parking_lot = 1;
-  string phone_number = 2 [(google.api.field_behavior) = REQUIRED];
-  string name = 3;
-  string car_plate = 4  [(google.api.field_behavior) = REQUIRED];
-  google.protobuf.Timestamp time_from = 5  [(google.api.field_behavior) = REQUIRED];
-  google.protobuf.Timestamp time_to = 6  [(google.api.field_behavior) = REQUIRED];
+  string user_id = 1;
+  int64 parking_lot = 2;
+  string vehicle = 3  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_from = 4  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_to = 5  [(google.api.field_behavior) = REQUIRED];
 }
 
 message AddParkingBookingRequest {
@@ -196,11 +195,11 @@ message AddParkingBookingRequest {
 }
 
 message AddParkingBookingResponse {
-  string parking_lot = 1;
+  int64 parking_lot = 1;
 }
 
 message GetParkingBookingRequest {
-  string parking_lot = 1;
+  int64 parking_lot = 1;
 }
 
 message GetParkingBookingResponse {
@@ -208,9 +207,16 @@ message GetParkingBookingResponse {
 }
 
 message GetParkingBookingsListRequest {
-  string filter = 1;
+  Filter filter = 1;
   int64 limit = 2; // opt
   int64 offset = 3; // opt
+}
+
+message Filter {
+  string owner_id = 1;
+  google.protobuf.Timestamp time_from = 2  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_to = 3  [(google.api.field_behavior) = REQUIRED];
+  repeated string vehicles = 4;
 }
 
 message GetParkingBookingsListResponse {

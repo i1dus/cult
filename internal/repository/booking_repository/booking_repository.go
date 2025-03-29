@@ -4,18 +4,15 @@ import (
 	"context"
 	"cult/internal/domain"
 	"cult/internal/repository"
-	desc "cult/pkg"
-	"database/sql"
 	"errors"
 	"fmt"
 	"log/slog"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
-	"google.golang.org/protobuf/types/known/timestamppb"
 
-    "github.com/lib/pq"
 	"github.com/jackc/pgx/v5"
+	"github.com/lib/pq"
 )
 
 type BookingRepository struct {
@@ -31,7 +28,7 @@ func NewBookingRepository(db *pgx.Conn, log *slog.Logger) *BookingRepository {
 }
 
 // AddBooking implements UserSaver interface
-func (r *BookingRepository) AddBooking(ctx context.Context, parkingLot, carPlate string, userId int64, from, to timestamppb.Timestamp) error {
+func (r *BookingRepository) AddBooking(ctx context.Context, booking domain.Booking) error {
 	const op = "BookingRepository.AddBooking"
 
 	query := `
@@ -39,7 +36,7 @@ func (r *BookingRepository) AddBooking(ctx context.Context, parkingLot, carPlate
 		VALUES ($1, $2, $3, $4, $5)
 	`
 
-	err := r.db.QueryRow(ctx, query, parkingLot, userId, carPlate, userId, from, to).Scan()
+	err := r.db.QueryRow(ctx, query, booking.ParkingLot, booking.UserID, booking.Vehicle, booking.From, booking.To).Scan()
 	if err != nil {
 		if isUniqueViolation(err) {
 			return fmt.Errorf("%s: %w", op, repository.ErrBookingExists)
@@ -51,16 +48,8 @@ func (r *BookingRepository) AddBooking(ctx context.Context, parkingLot, carPlate
 }
 
 // GetBooking implements
-func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot string) error {
+func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (domain.Booking, error) {
 	const op = "BookingRepository.GetBooking"
-
-	desc.GetParkingBookingRequest{ParkingLot: desc.ParkingLot{
-		Number:  0,
-		Type:    0,
-		Status:  0,
-		Vehicle: nil,
-		Owner:   nil,
-	}}
 
 	query := `
 		SELECT user_id, vehicle_id, start_at, end_at
@@ -69,25 +58,25 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot string) e
 		  AND NOW() BETWEEN start_at AND end_at
 	`
 
-	var user domain.User
+	var booking domain.Booking
 	err := r.db.QueryRow(ctx, query, parkingLot).Scan(
-		&user.ID,
-		&user.,
-		&user.PassHash,
+		&booking.UserID,
+		&booking.Vehicle,
+		&booking.From,
+		&booking.To,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return domain.User{}, fmt.Errorf("%s: %w", op, repository.ErrUserNotFound)
+			return domain.Booking{}, fmt.Errorf("%s: %w", op, repository.ErrBookingNotFound)
 		}
-		return domain.User{}, fmt.Errorf("%s: %w", op, err)
+		return domain.Booking{}, fmt.Errorf("%s: %w", op, err)
 	}
 
-	return user, nil
+	return booking, nil
 }
 
-
 // GetBookingsByFilter implements
-func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, db *sql.DB, filter domain.Filter) ([]domain.Booking, error) {
+func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Booking, error) {
 	query := `
         SELECT b.parking_lot_id, b.user_id, b.vehicle_id, b.start_at, b.end_at
         FROM bookings b
@@ -121,7 +110,7 @@ func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, db *sql.DB,
 		parkingLots = pq.Array(filter.ParkingLots)
 	}
 
-	rows, err := db.QueryContext(ctx, query,
+	rows, err := r.db.Query(ctx, query,
 		filter.UserID,
 		from,
 		to,

@@ -7,5 +7,6 @@ var (
 	ErrUserNotFound = errors.New("user not found")
 	ErrAppNotFound  = errors.New("app not found")
 
-	ErrBookingExists = errors.New("booking already exists")
+	ErrBookingExists   = errors.New("booking already exists")
+	ErrBookingNotFound = errors.New("booking not found")
 )

@@ -35,25 +35,20 @@
         },
         "parameters": [
           {
+            "name": "booking.userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
             "name": "booking.parkingLot",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           {
-            "name": "booking.phoneNumber",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "booking.name",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "booking.carPlate",
+            "name": "booking.vehicle",
             "in": "query",
             "required": true,
             "type": "string"
@@ -100,7 +95,8 @@
             "name": "parkingLot",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -127,10 +123,34 @@
         },
         "parameters": [
           {
-            "name": "filter",
+            "name": "filter.ownerId",
             "in": "query",
             "required": false,
             "type": "string"
+          },
+          {
+            "name": "filter.timeFrom",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.timeTo",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.vehicles",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           },
           {
             "name": "limit",
@@ -202,145 +222,20 @@
             }
           }
         },
-        "tags": [
-          "ParkingAPI"
-        ]
-      }
-    },
-    "/sso/get/user": {
-      "get": {
-        "summary": "IsAdmin checks whether a user is an admin.",
-        "operationId": "ParkingAPI_GetUserByID",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetUserByIDResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
         "parameters": [
           {
-            "name": "userId",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "ParkingAPI"
-        ]
-      }
-    },
-    "/sso/is_admin": {
-      "get": {
-        "summary": "IsAdmin checks whether a user is an admin.",
-        "operationId": "ParkingAPI_IsAdmin",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiIsAdminResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "userId",
-            "description": "ID пользователя в формате UUID",
+            "name": "page",
             "in": "query",
             "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "ParkingAPI"
-        ]
-      }
-    },
-    "/sso/login": {
-      "get": {
-        "summary": "Login logs in a user and returns an auth token.",
-        "operationId": "ParkingAPI_Login",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiLoginResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "phoneNumber",
-            "description": "Номер телефона",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           },
           {
-            "name": "password",
-            "description": "Пароль",
+            "name": "perPage",
             "in": "query",
             "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "ParkingAPI"
-        ]
-      }
-    },
-    "/sso/register": {
-      "post": {
-        "summary": "Register registers a new user.",
-        "operationId": "ParkingAPI_Register",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiRegisterResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "phoneNumber",
-            "description": "Номер телефона",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "description": "Пароль",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -464,9 +359,36 @@
       "type": "object",
       "properties": {
         "parkingLot": {
-          "type": "string"
+          "type": "string",
+          "format": "int64"
         }
       }
+    },
+    "apiFilter": {
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string"
+        },
+        "timeFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timeTo": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "vehicles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "timeFrom",
+        "timeTo"
+      ]
     },
     "apiGetParkingBookingResponse": {
       "type": "object",
@@ -497,14 +419,6 @@
       "properties": {
         "parkingLot": {
           "$ref": "#/definitions/apiParkingLot"
-        }
-      }
-    },
-    "apiGetUserByIDResponse": {
-      "type": "object",
-      "properties": {
-        "user": {
-          "$ref": "#/definitions/apiUser"
         }
       }
     },
@@ -544,16 +458,14 @@
     "apiParkingBooking": {
       "type": "object",
       "properties": {
+        "userId": {
+          "type": "string"
+        },
         "parkingLot": {
-          "type": "string"
+          "type": "string",
+          "format": "int64"
         },
-        "phoneNumber": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "carPlate": {
+        "vehicle": {
           "type": "string"
         },
         "timeFrom": {
@@ -566,8 +478,7 @@
         }
       },
       "required": [
-        "phoneNumber",
-        "carPlate",
+        "vehicle",
         "timeFrom",
         "timeTo"
       ]
@@ -586,6 +497,14 @@
         "status": {
           "$ref": "#/definitions/apiParkingLotStatus",
           "title": "Статус парковочного места (забронировано, доступно)"
+        },
+        "vehicle": {
+          "$ref": "#/definitions/apiVehicle",
+          "title": "Машина на парковочном месте"
+        },
+        "owner": {
+          "$ref": "#/definitions/apiUser",
+          "title": "Владелец парковочного места"
         }
       }
     },
@@ -662,6 +581,23 @@
       ],
       "default": "UNDEFINED_USER_TYPE",
       "title": "- UNDEFINED_USER_TYPE: Неизвестный\n - REGULAR_USER_TYPE: Обычный пользователь (Владелец+Арендатор)\n - MANAGING_COMPANY_USER_TYPE: Управляющая компания\n - ADMINISTRATOR_USER_TYPE: Администратор"
+    },
+    "apiVehicle": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "UUID"
+        },
+        "number": {
+          "type": "string",
+          "title": "Гос. номер машины"
+        },
+        "userId": {
+          "type": "string",
+          "title": "ID владельца машины"
+        }
+      }
     },
     "protobufAny": {
       "type": "object",

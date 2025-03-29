@@ -8,7 +8,6 @@ import (
 
 import (
 	sso "cult/pkg"
-	"github.com/google/uuid"
 )
 
 type ParkingLot struct {
@@ -46,7 +45,7 @@ type Filter struct {
 
 type Booking struct {
 	UserID     uuid.UUID
-	ParkingLot int
+	ParkingLot int64
 	From       time.Time
 	To         time.Time
 	Vehicle    string

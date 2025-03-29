@@ -35,241 +35,6 @@ var (
 	_ = sort.Sort
 )
 
-// Validate checks the field values on GetUserByIDRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetUserByIDRequest) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetUserByIDRequest with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetUserByIDRequestMultiError, or nil if none found.
-func (m *GetUserByIDRequest) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetUserByIDRequest) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	// no validation rules for UserId
-
-	if len(errors) > 0 {
-		return GetUserByIDRequestMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetUserByIDRequestMultiError is an error wrapping multiple validation errors
-// returned by GetUserByIDRequest.ValidateAll() if the designated constraints
-// aren't met.
-type GetUserByIDRequestMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetUserByIDRequestMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetUserByIDRequestMultiError) AllErrors() []error { return m }
-
-// GetUserByIDRequestValidationError is the validation error returned by
-// GetUserByIDRequest.Validate if the designated constraints aren't met.
-type GetUserByIDRequestValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetUserByIDRequestValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetUserByIDRequestValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetUserByIDRequestValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetUserByIDRequestValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetUserByIDRequestValidationError) ErrorName() string {
-	return "GetUserByIDRequestValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetUserByIDRequestValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetUserByIDRequest.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetUserByIDRequestValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetUserByIDRequestValidationError{}
-
-// Validate checks the field values on GetUserByIDResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the first error encountered is returned, or nil if there are no violations.
-func (m *GetUserByIDResponse) Validate() error {
-	return m.validate(false)
-}
-
-// ValidateAll checks the field values on GetUserByIDResponse with the rules
-// defined in the proto definition for this message. If any rules are
-// violated, the result is a list of violation errors wrapped in
-// GetUserByIDResponseMultiError, or nil if none found.
-func (m *GetUserByIDResponse) ValidateAll() error {
-	return m.validate(true)
-}
-
-func (m *GetUserByIDResponse) validate(all bool) error {
-	if m == nil {
-		return nil
-	}
-
-	var errors []error
-
-	if all {
-		switch v := interface{}(m.GetUser()).(type) {
-		case interface{ ValidateAll() error }:
-			if err := v.ValidateAll(); err != nil {
-				errors = append(errors, GetUserByIDResponseValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		case interface{ Validate() error }:
-			if err := v.Validate(); err != nil {
-				errors = append(errors, GetUserByIDResponseValidationError{
-					field:  "User",
-					reason: "embedded message failed validation",
-					cause:  err,
-				})
-			}
-		}
-	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
-		if err := v.Validate(); err != nil {
-			return GetUserByIDResponseValidationError{
-				field:  "User",
-				reason: "embedded message failed validation",
-				cause:  err,
-			}
-		}
-	}
-
-	if len(errors) > 0 {
-		return GetUserByIDResponseMultiError(errors)
-	}
-
-	return nil
-}
-
-// GetUserByIDResponseMultiError is an error wrapping multiple validation
-// errors returned by GetUserByIDResponse.ValidateAll() if the designated
-// constraints aren't met.
-type GetUserByIDResponseMultiError []error
-
-// Error returns a concatenation of all the error messages it wraps.
-func (m GetUserByIDResponseMultiError) Error() string {
-	msgs := make([]string, 0, len(m))
-	for _, err := range m {
-		msgs = append(msgs, err.Error())
-	}
-	return strings.Join(msgs, "; ")
-}
-
-// AllErrors returns a list of validation violation errors.
-func (m GetUserByIDResponseMultiError) AllErrors() []error { return m }
-
-// GetUserByIDResponseValidationError is the validation error returned by
-// GetUserByIDResponse.Validate if the designated constraints aren't met.
-type GetUserByIDResponseValidationError struct {
-	field  string
-	reason string
-	cause  error
-	key    bool
-}
-
-// Field function returns field value.
-func (e GetUserByIDResponseValidationError) Field() string { return e.field }
-
-// Reason function returns reason value.
-func (e GetUserByIDResponseValidationError) Reason() string { return e.reason }
-
-// Cause function returns cause value.
-func (e GetUserByIDResponseValidationError) Cause() error { return e.cause }
-
-// Key function returns key value.
-func (e GetUserByIDResponseValidationError) Key() bool { return e.key }
-
-// ErrorName returns error name.
-func (e GetUserByIDResponseValidationError) ErrorName() string {
-	return "GetUserByIDResponseValidationError"
-}
-
-// Error satisfies the builtin error interface
-func (e GetUserByIDResponseValidationError) Error() string {
-	cause := ""
-	if e.cause != nil {
-		cause = fmt.Sprintf(" | caused by: %v", e.cause)
-	}
-
-	key := ""
-	if e.key {
-		key = "key for "
-	}
-
-	return fmt.Sprintf(
-		"invalid %sGetUserByIDResponse.%s: %s%s",
-		key,
-		e.field,
-		e.reason,
-		cause)
-}
-
-var _ error = GetUserByIDResponseValidationError{}
-
-var _ interface {
-	Field() string
-	Reason() string
-	Key() bool
-	Cause() error
-	ErrorName() string
-} = GetUserByIDResponseValidationError{}
-
 // Validate checks the field values on RegisterRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
@@ -1144,6 +909,10 @@ func (m *ListParkingLotsRequest) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for Page
+
+	// no validation rules for PerPage
+
 	if len(errors) > 0 {
 		return ListParkingLotsRequestMultiError(errors)
 	}
@@ -1389,6 +1158,72 @@ func (m *ParkingLot) validate(all bool) error {
 	// no validation rules for Type
 
 	// no validation rules for Status
+
+	if m.Vehicle != nil {
+
+		if all {
+			switch v := interface{}(m.GetVehicle()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ParkingLotValidationError{
+						field:  "Vehicle",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ParkingLotValidationError{
+						field:  "Vehicle",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetVehicle()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ParkingLotValidationError{
+					field:  "Vehicle",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
+
+	if m.Owner != nil {
+
+		if all {
+			switch v := interface{}(m.GetOwner()).(type) {
+			case interface{ ValidateAll() error }:
+				if err := v.ValidateAll(); err != nil {
+					errors = append(errors, ParkingLotValidationError{
+						field:  "Owner",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			case interface{ Validate() error }:
+				if err := v.Validate(); err != nil {
+					errors = append(errors, ParkingLotValidationError{
+						field:  "Owner",
+						reason: "embedded message failed validation",
+						cause:  err,
+					})
+				}
+			}
+		} else if v, ok := interface{}(m.GetOwner()).(interface{ Validate() error }); ok {
+			if err := v.Validate(); err != nil {
+				return ParkingLotValidationError{
+					field:  "Owner",
+					reason: "embedded message failed validation",
+					cause:  err,
+				}
+			}
+		}
+
+	}
 
 	if len(errors) > 0 {
 		return ParkingLotMultiError(errors)
@@ -1705,13 +1540,11 @@ func (m *ParkingBooking) validate(all bool) error {
 
 	var errors []error
 
+	// no validation rules for UserId
+
 	// no validation rules for ParkingLot
 
-	// no validation rules for PhoneNumber
-
-	// no validation rules for Name
-
-	// no validation rules for CarPlate
+	// no validation rules for Vehicle
 
 	if all {
 		switch v := interface{}(m.GetTimeFrom()).(type) {
@@ -2341,7 +2174,34 @@ func (m *GetParkingBookingsListRequest) validate(all bool) error {
 
 	var errors []error
 
-	// no validation rules for Filter
+	if all {
+		switch v := interface{}(m.GetFilter()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetParkingBookingsListRequestValidationError{
+					field:  "Filter",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetParkingBookingsListRequestValidationError{
+					field:  "Filter",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetFilter()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetParkingBookingsListRequestValidationError{
+				field:  "Filter",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
 
 	// no validation rules for Limit
 
@@ -2427,6 +2287,164 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetParkingBookingsListRequestValidationError{}
+
+// Validate checks the field values on Filter with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Filter) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Filter with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in FilterMultiError, or nil if none found.
+func (m *Filter) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Filter) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for OwnerId
+
+	if all {
+		switch v := interface{}(m.GetTimeFrom()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "TimeFrom",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "TimeFrom",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimeFrom()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return FilterValidationError{
+				field:  "TimeFrom",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetTimeTo()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "TimeTo",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, FilterValidationError{
+					field:  "TimeTo",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimeTo()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return FilterValidationError{
+				field:  "TimeTo",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return FilterMultiError(errors)
+	}
+
+	return nil
+}
+
+// FilterMultiError is an error wrapping multiple validation errors returned by
+// Filter.ValidateAll() if the designated constraints aren't met.
+type FilterMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m FilterMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m FilterMultiError) AllErrors() []error { return m }
+
+// FilterValidationError is the validation error returned by Filter.Validate if
+// the designated constraints aren't met.
+type FilterValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e FilterValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e FilterValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e FilterValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e FilterValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e FilterValidationError) ErrorName() string { return "FilterValidationError" }
+
+// Error satisfies the builtin error interface
+func (e FilterValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sFilter.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = FilterValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = FilterValidationError{}
 
 // Validate checks the field values on GetParkingBookingsListResponse with the
 // rules defined in the proto definition for this message. If any rules are

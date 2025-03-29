@@ -36,6 +36,7 @@ func New(
 	log *slog.Logger,
 	authService authgrpc.AuthService,
 	parkingLotService authgrpc.ParkingLotService,
+	bookingService authgrpc.BookingService,
 	port int,
 ) *App {
 	loggingOpts := []logging.Option{
@@ -56,7 +57,7 @@ func New(
 		logging.UnaryServerInterceptor(InterceptorLogger(log), loggingOpts...),
 	))
 
-	authgrpc.Register(gRPCServer, authService, parkingLotService)
+	authgrpc.Register(gRPCServer, authService, parkingLotService, bookingService)
 
 	return &App{
 		log:        log,
