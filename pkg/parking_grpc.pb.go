@@ -27,6 +27,7 @@ const (
 	ParkingAPI_Register_FullMethodName               = "/api.ParkingAPI/Register"
 	ParkingAPI_Login_FullMethodName                  = "/api.ParkingAPI/Login"
 	ParkingAPI_IsAdmin_FullMethodName                = "/api.ParkingAPI/IsAdmin"
+	ParkingAPI_GetUserByPhone_FullMethodName         = "/api.ParkingAPI/GetUserByPhone"
 )
 
 // ParkingAPIClient is the client API for ParkingAPI service.
@@ -44,6 +45,8 @@ type ParkingAPIClient interface {
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	// IsAdmin checks whether a user is an admin.
 	IsAdmin(ctx context.Context, in *IsAdminRequest, opts ...grpc.CallOption) (*IsAdminResponse, error)
+	// IsAdmin checks whether a user is an admin.
+	GetUserByPhone(ctx context.Context, in *GetUserByPhoneRequest, opts ...grpc.CallOption) (*GetUserByPhoneResponse, error)
 }
 
 type parkingAPIClient struct {
@@ -134,6 +137,16 @@ func (c *parkingAPIClient) IsAdmin(ctx context.Context, in *IsAdminRequest, opts
 	return out, nil
 }
 
+func (c *parkingAPIClient) GetUserByPhone(ctx context.Context, in *GetUserByPhoneRequest, opts ...grpc.CallOption) (*GetUserByPhoneResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserByPhoneResponse)
+	err := c.cc.Invoke(ctx, ParkingAPI_GetUserByPhone_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ParkingAPIServer is the server API for ParkingAPI service.
 // All implementations must embed UnimplementedParkingAPIServer
 // for forward compatibility.
@@ -149,6 +162,8 @@ type ParkingAPIServer interface {
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// IsAdmin checks whether a user is an admin.
 	IsAdmin(context.Context, *IsAdminRequest) (*IsAdminResponse, error)
+	// IsAdmin checks whether a user is an admin.
+	GetUserByPhone(context.Context, *GetUserByPhoneRequest) (*GetUserByPhoneResponse, error)
 	mustEmbedUnimplementedParkingAPIServer()
 }
 
@@ -182,6 +197,9 @@ func (UnimplementedParkingAPIServer) Login(context.Context, *LoginRequest) (*Log
 }
 func (UnimplementedParkingAPIServer) IsAdmin(context.Context, *IsAdminRequest) (*IsAdminResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method IsAdmin not implemented")
+}
+func (UnimplementedParkingAPIServer) GetUserByPhone(context.Context, *GetUserByPhoneRequest) (*GetUserByPhoneResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByPhone not implemented")
 }
 func (UnimplementedParkingAPIServer) mustEmbedUnimplementedParkingAPIServer() {}
 func (UnimplementedParkingAPIServer) testEmbeddedByValue()                    {}
@@ -348,6 +366,24 @@ func _ParkingAPI_IsAdmin_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ParkingAPI_GetUserByPhone_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByPhoneRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ParkingAPIServer).GetUserByPhone(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ParkingAPI_GetUserByPhone_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ParkingAPIServer).GetUserByPhone(ctx, req.(*GetUserByPhoneRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ParkingAPI_ServiceDesc is the grpc.ServiceDesc for ParkingAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -386,6 +422,10 @@ var ParkingAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "IsAdmin",
 			Handler:    _ParkingAPI_IsAdmin_Handler,
+		},
+		{
+			MethodName: "GetUserByPhone",
+			Handler:    _ParkingAPI_GetUserByPhone_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

@@ -35,6 +35,241 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on GetUserByPhoneRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUserByPhoneRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUserByPhoneRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUserByPhoneRequestMultiError, or nil if none found.
+func (m *GetUserByPhoneRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUserByPhoneRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for PhoneNumber
+
+	if len(errors) > 0 {
+		return GetUserByPhoneRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserByPhoneRequestMultiError is an error wrapping multiple validation
+// errors returned by GetUserByPhoneRequest.ValidateAll() if the designated
+// constraints aren't met.
+type GetUserByPhoneRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserByPhoneRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserByPhoneRequestMultiError) AllErrors() []error { return m }
+
+// GetUserByPhoneRequestValidationError is the validation error returned by
+// GetUserByPhoneRequest.Validate if the designated constraints aren't met.
+type GetUserByPhoneRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserByPhoneRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserByPhoneRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserByPhoneRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserByPhoneRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserByPhoneRequestValidationError) ErrorName() string {
+	return "GetUserByPhoneRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUserByPhoneRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserByPhoneRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserByPhoneRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserByPhoneRequestValidationError{}
+
+// Validate checks the field values on GetUserByPhoneResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *GetUserByPhoneResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetUserByPhoneResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetUserByPhoneResponseMultiError, or nil if none found.
+func (m *GetUserByPhoneResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetUserByPhoneResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetUser()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetUserByPhoneResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetUserByPhoneResponseValidationError{
+					field:  "User",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetUser()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetUserByPhoneResponseValidationError{
+				field:  "User",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetUserByPhoneResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetUserByPhoneResponseMultiError is an error wrapping multiple validation
+// errors returned by GetUserByPhoneResponse.ValidateAll() if the designated
+// constraints aren't met.
+type GetUserByPhoneResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetUserByPhoneResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetUserByPhoneResponseMultiError) AllErrors() []error { return m }
+
+// GetUserByPhoneResponseValidationError is the validation error returned by
+// GetUserByPhoneResponse.Validate if the designated constraints aren't met.
+type GetUserByPhoneResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetUserByPhoneResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetUserByPhoneResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetUserByPhoneResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetUserByPhoneResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetUserByPhoneResponseValidationError) ErrorName() string {
+	return "GetUserByPhoneResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetUserByPhoneResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetUserByPhoneResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetUserByPhoneResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetUserByPhoneResponseValidationError{}
+
 // Validate checks the field values on RegisterRequest with the rules defined
 // in the proto definition for this message. If any rules are violated, the
 // first error encountered is returned, or nil if there are no violations.
