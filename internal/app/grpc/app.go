@@ -3,7 +3,7 @@ package grpcapp
 import (
 	"context"
 	"crypto/tls"
-	authgrpc "cult/internal/grpc/auth"
+	authgrpc "cult/internal/grpc"
 	api "cult/pkg"
 	"fmt"
 	"log/slog"
