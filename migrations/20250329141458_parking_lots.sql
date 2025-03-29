@@ -2,55 +2,134 @@
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS parking_lots
 (
-    id             TEXT PRIMARY KEY,
-    parking_type   TEXT NOT NULL,
-    vehicle_id     UUID,
-    owner_id       UUID
+    id           TEXT PRIMARY KEY,
+    parking_type TEXT NOT NULL,
+    owner_id     UUID
 );
 
--- Insert parking lots with specified distribution
-INSERT INTO parking_lots (id, parking_type, vehicle_id, owner_id)
-WITH
--- First 100 lots: 80% Permanent (80), 20% Rent (20) in random order
-permanent_rent AS (
-    SELECT
-        seq::text AS id,
-        CASE WHEN row_number() OVER (ORDER BY random()) <= 80
-                 THEN 'PERMANENT_PARKING_TYPE'
-             ELSE 'RENT_PARKING_TYPE' END AS parking_type
-    FROM generate_series(1, 100) AS seq
-),
--- Next 10 lots: Special
-special AS (
-    SELECT generate_series(101, 110)::text AS id,
-           'SPECIAL_PARKING_TYPE' AS parking_type
-),
--- Last 10 lots: Inclusive
-inclusive AS (
-    SELECT generate_series(111, 120)::text AS id,
-           'INCLUSIVE_PARKING_TYPE' AS parking_type
-),
--- Combine all lots
-all_lots AS (
-    SELECT * FROM permanent_rent
-    UNION ALL
-    SELECT * FROM special
-    UNION ALL
-    SELECT * FROM inclusive
-),
--- Add random UUID flags (50% chance to populate)
-lots_with_uuids AS (
-    SELECT *,
-           random() < 0.3 AS populate_uuid
-    FROM all_lots
-)
-SELECT
-    id,
-    parking_type,
-    CASE WHEN populate_uuid THEN gen_random_uuid() END AS vehicle_id,
-    CASE WHEN populate_uuid THEN gen_random_uuid() END AS owner_id
-FROM lots_with_uuids
-ORDER BY id::integer;
+INSERT INTO parking_lots (id, parking_type, owner_id)
+VALUES ('1', 'RENT_PARKING_TYPE', NULL),
+       ('2', 'PERMANENT_PARKING_TYPE', NULL),
+       ('3', 'PERMANENT_PARKING_TYPE', '728e23c2-1353-47fc-825b-459c05adb6bf'),
+       ('4', 'PERMANENT_PARKING_TYPE', NULL),
+       ('5', 'PERMANENT_PARKING_TYPE', 'a1dc7ef8-e63d-45e9-b53a-dcb8a4b80506'),
+       ('6', 'PERMANENT_PARKING_TYPE', NULL),
+       ('7', 'PERMANENT_PARKING_TYPE', 'a0cc75cb-605c-47bb-b109-034f339835b3'),
+       ('8', 'PERMANENT_PARKING_TYPE', NULL),
+       ('9', 'PERMANENT_PARKING_TYPE', NULL),
+       ('10', 'PERMANENT_PARKING_TYPE', NULL),
+       ('11', 'RENT_PARKING_TYPE', NULL),
+       ('12', 'PERMANENT_PARKING_TYPE', NULL),
+       ('13', 'PERMANENT_PARKING_TYPE', 'bae6f3e1-a46d-45ae-8530-5f9fc1679854'),
+       ('14', 'PERMANENT_PARKING_TYPE', NULL),
+       ('15', 'PERMANENT_PARKING_TYPE', NULL),
+       ('16', 'RENT_PARKING_TYPE', NULL),
+       ('17', 'PERMANENT_PARKING_TYPE', NULL),
+       ('18', 'PERMANENT_PARKING_TYPE', NULL),
+       ('19', 'PERMANENT_PARKING_TYPE', '7adc2318-f6af-4346-93cf-18b2cd3c467c'),
+       ('20', 'PERMANENT_PARKING_TYPE', NULL),
+       ('21', 'PERMANENT_PARKING_TYPE', NULL),
+       ('22', 'PERMANENT_PARKING_TYPE', NULL),
+       ('23', 'RENT_PARKING_TYPE', NULL),
+       ('24', 'RENT_PARKING_TYPE', NULL),
+       ('25', 'PERMANENT_PARKING_TYPE', NULL),
+       ('26', 'PERMANENT_PARKING_TYPE', '767e7a7b-bb83-4f3f-8e80-76a5f7414f11'),
+       ('27', 'PERMANENT_PARKING_TYPE', NULL),
+       ('28', 'PERMANENT_PARKING_TYPE', NULL),
+       ('29', 'RENT_PARKING_TYPE', '01385f91-bf9c-4d7c-9b04-1d15a378a45c'),
+       ('30', 'PERMANENT_PARKING_TYPE', NULL),
+       ('31', 'PERMANENT_PARKING_TYPE', NULL),
+       ('32', 'PERMANENT_PARKING_TYPE', NULL),
+       ('33', 'PERMANENT_PARKING_TYPE', 'd97c7a0a-54df-4a1a-85b3-3e3b4750522c'),
+       ('34', 'PERMANENT_PARKING_TYPE', NULL),
+       ('35', 'PERMANENT_PARKING_TYPE', NULL),
+       ('36', 'RENT_PARKING_TYPE', '8b281350-d8ad-4cc8-8a30-302c6b2cebf6'),
+       ('37', 'PERMANENT_PARKING_TYPE', '2edd8a77-c918-4211-a2a8-067ffedec8d2'),
+       ('38', 'PERMANENT_PARKING_TYPE', '0dc32255-961c-4918-a606-da5d0181a815'),
+       ('39', 'PERMANENT_PARKING_TYPE', NULL),
+       ('40', 'RENT_PARKING_TYPE', NULL),
+       ('41', 'PERMANENT_PARKING_TYPE', NULL),
+       ('42', 'RENT_PARKING_TYPE', NULL),
+       ('43', 'PERMANENT_PARKING_TYPE', 'a2d968ee-4fb9-41da-b973-3625b8e96691'),
+       ('44', 'PERMANENT_PARKING_TYPE', NULL),
+       ('45', 'PERMANENT_PARKING_TYPE', NULL),
+       ('46', 'PERMANENT_PARKING_TYPE', 'd3f59325-9fb0-4924-a1c6-0d068922e63d'),
+       ('47', 'RENT_PARKING_TYPE', NULL),
+       ('48', 'PERMANENT_PARKING_TYPE', NULL),
+       ('49', 'PERMANENT_PARKING_TYPE', NULL),
+       ('50', 'RENT_PARKING_TYPE', '6e212768-1f74-4ac1-852b-08395335693f'),
+       ('51', 'PERMANENT_PARKING_TYPE', NULL),
+       ('52', 'RENT_PARKING_TYPE', NULL),
+       ('53', 'PERMANENT_PARKING_TYPE', NULL),
+       ('54', 'RENT_PARKING_TYPE', 'b22bd0dc-cc10-4329-a191-42441d17f226'),
+       ('55', 'RENT_PARKING_TYPE', '9d2485c2-9479-491b-a0ca-e74268bc57bd'),
+       ('56', 'PERMANENT_PARKING_TYPE', NULL),
+       ('57', 'PERMANENT_PARKING_TYPE', NULL),
+       ('58', 'PERMANENT_PARKING_TYPE', NULL),
+       ('59', 'PERMANENT_PARKING_TYPE', '2736b98c-ff55-486e-a1cc-687feb9c591b'),
+       ('60', 'PERMANENT_PARKING_TYPE', NULL),
+       ('61', 'PERMANENT_PARKING_TYPE', NULL),
+       ('62', 'PERMANENT_PARKING_TYPE', NULL),
+       ('63', 'RENT_PARKING_TYPE', 'f24795ce-421a-40da-b2b0-f8ac691c3f53'),
+       ('64', 'PERMANENT_PARKING_TYPE', NULL),
+       ('65', 'PERMANENT_PARKING_TYPE', '2081c536-6f5f-4970-a57d-54636c4bfdff'),
+       ('66', 'PERMANENT_PARKING_TYPE', '21dc6ec8-992f-460b-92d1-44a8a1d37583'),
+       ('67', 'PERMANENT_PARKING_TYPE', NULL),
+       ('68', 'PERMANENT_PARKING_TYPE', NULL),
+       ('69', 'PERMANENT_PARKING_TYPE', NULL),
+       ('70', 'PERMANENT_PARKING_TYPE', 'c110d39a-7ffc-483c-b8bf-32b938b8b4bf'),
+       ('71', 'RENT_PARKING_TYPE', NULL),
+       ('72', 'PERMANENT_PARKING_TYPE', NULL),
+       ('73', 'PERMANENT_PARKING_TYPE', NULL),
+       ('74', 'PERMANENT_PARKING_TYPE', NULL),
+       ('75', 'PERMANENT_PARKING_TYPE', NULL),
+       ('76', 'RENT_PARKING_TYPE', '6da90cab-8656-404b-a606-825493d395bc'),
+       ('77', 'PERMANENT_PARKING_TYPE', NULL),
+       ('78', 'PERMANENT_PARKING_TYPE', '2ba8f9d4-13a0-4890-892c-7155817fc37f'),
+       ('79', 'PERMANENT_PARKING_TYPE', NULL),
+       ('80', 'PERMANENT_PARKING_TYPE', NULL),
+       ('81', 'RENT_PARKING_TYPE', NULL),
+       ('82', 'PERMANENT_PARKING_TYPE', '14ee3b85-afcd-4b6b-a0b7-6167c7c4eb9f'),
+       ('83', 'PERMANENT_PARKING_TYPE', '276ca75b-2c7a-4dfd-b578-debeda908ac0'),
+       ('84', 'PERMANENT_PARKING_TYPE', NULL),
+       ('85', 'PERMANENT_PARKING_TYPE', NULL),
+       ('86', 'PERMANENT_PARKING_TYPE', '31e34771-ca4d-4430-bbfc-fe82494df811'),
+       ('87', 'PERMANENT_PARKING_TYPE', NULL),
+       ('88', 'PERMANENT_PARKING_TYPE', NULL),
+       ('89', 'PERMANENT_PARKING_TYPE', NULL),
+       ('90', 'PERMANENT_PARKING_TYPE', NULL),
+       ('91', 'PERMANENT_PARKING_TYPE', NULL),
+       ('92', 'RENT_PARKING_TYPE', NULL),
+       ('93', 'PERMANENT_PARKING_TYPE', NULL),
+       ('94', 'PERMANENT_PARKING_TYPE', '976ea31d-4573-4a78-9747-1800a541e4f7'),
+       ('95', 'PERMANENT_PARKING_TYPE', NULL),
+       ('96', 'PERMANENT_PARKING_TYPE', NULL),
+       ('97', 'PERMANENT_PARKING_TYPE', NULL),
+       ('98', 'PERMANENT_PARKING_TYPE', NULL),
+       ('99', 'RENT_PARKING_TYPE', '7523d966-a0c9-4b85-bea5-ca24d5eb26a9'),
+       ('100', 'PERMANENT_PARKING_TYPE', '344878f6-1a54-4015-9a5b-40b943ed8929'),
+       ('101', 'SPECIAL_PARKING_TYPE', NULL),
+       ('102', 'SPECIAL_PARKING_TYPE', NULL),
+       ('103', 'SPECIAL_PARKING_TYPE', NULL),
+       ('104', 'SPECIAL_PARKING_TYPE', NULL),
+       ('105', 'SPECIAL_PARKING_TYPE', NULL),
+       ('106', 'SPECIAL_PARKING_TYPE', NULL),
+       ('107', 'SPECIAL_PARKING_TYPE', NULL),
+       ('108', 'SPECIAL_PARKING_TYPE', '4f8d4d2c-719c-4fad-a7d5-27cd5b515a56'),
+       ('109', 'SPECIAL_PARKING_TYPE', '5900944d-1172-4b21-94ce-0a362c732c78'),
+       ('110', 'SPECIAL_PARKING_TYPE', NULL),
+       ('111', 'INCLUSIVE_PARKING_TYPE', 'bd0c713b-3601-497d-9c96-e59fbc360182'),
+       ('112', 'INCLUSIVE_PARKING_TYPE', NULL),
+       ('113', 'INCLUSIVE_PARKING_TYPE', NULL),
+       ('114', 'INCLUSIVE_PARKING_TYPE', NULL),
+       ('115', 'INCLUSIVE_PARKING_TYPE', NULL),
+       ('116', 'INCLUSIVE_PARKING_TYPE', NULL),
+       ('117', 'INCLUSIVE_PARKING_TYPE', '14dd6ec3-c6e1-4e50-8bd1-b3daf5e3267b'),
+       ('118', 'INCLUSIVE_PARKING_TYPE', NULL),
+       ('119', 'INCLUSIVE_PARKING_TYPE', NULL),
+       ('120', 'INCLUSIVE_PARKING_TYPE', NULL);
+
+
 -- +goose StatementEnd
 
 -- +goose Down

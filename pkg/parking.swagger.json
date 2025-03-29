@@ -35,42 +35,12 @@
         },
         "parameters": [
           {
-            "name": "booking.parkingLot",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "booking.phoneNumber",
-            "in": "query",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "booking.name",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "booking.carPlate",
-            "in": "query",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "booking.timeFrom",
-            "in": "query",
-            "required": true,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "name": "booking.timeTo",
-            "in": "query",
-            "required": true,
-            "type": "string",
-            "format": "date-time"
+            "schema": {
+              "$ref": "#/definitions/apiAddParkingBookingRequest"
+            }
           }
         ],
         "tags": [
@@ -268,38 +238,6 @@
         ]
       }
     },
-    "/sso/is_admin": {
-      "get": {
-        "summary": "IsAdmin checks whether a user is an admin.",
-        "operationId": "ParkingAPI_IsAdmin",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiIsAdminResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "userId",
-            "description": "ID пользователя в формате UUID",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "tags": [
-          "ParkingAPI"
-        ]
-      }
-    },
     "/sso/login": {
       "post": {
         "summary": "Login logs in a user and returns an auth token.",
@@ -320,18 +258,12 @@
         },
         "parameters": [
           {
-            "name": "phoneNumber",
-            "description": "Номер телефона",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "description": "Пароль",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiLoginRequest"
+            }
           }
         ],
         "tags": [
@@ -359,18 +291,12 @@
         },
         "parameters": [
           {
-            "name": "phoneNumber",
-            "description": "Номер телефона",
-            "in": "query",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "description": "Пароль",
-            "in": "query",
-            "required": false,
-            "type": "string"
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiRegisterRequest"
+            }
           }
         ],
         "tags": [
@@ -380,6 +306,17 @@
     }
   },
   "definitions": {
+    "apiAddParkingBookingRequest": {
+      "type": "object",
+      "properties": {
+        "booking": {
+          "$ref": "#/definitions/apiParkingBooking"
+        }
+      },
+      "required": [
+        "booking"
+      ]
+    },
     "apiAddParkingBookingResponse": {
       "type": "object",
       "properties": {
@@ -440,14 +377,6 @@
         }
       }
     },
-    "apiIsAdminResponse": {
-      "type": "object",
-      "properties": {
-        "isAdmin": {
-          "type": "boolean"
-        }
-      }
-    },
     "apiListParkingLotsResponse": {
       "type": "object",
       "properties": {
@@ -461,6 +390,19 @@
         "total": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "apiLoginRequest": {
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "string",
+          "title": "Номер телефона"
+        },
+        "password": {
+          "type": "string",
+          "title": "Пароль"
         }
       }
     },
@@ -546,6 +488,19 @@
       "default": "UNDEFINED_PARKING_TYPE",
       "description": "etc",
       "title": "- UNDEFINED_PARKING_TYPE: Неизвестный тип парковочного места\n - PERMANENT_PARKING_TYPE: Тип постоянного парковочного места\n - RENT_PARKING_TYPE: Тип временного парковочного места\n - SPECIAL_PARKING_TYPE: Тип парковочного места для спец. назначения (скорая, пожарные и т.д.)\n - INCLUSIVE_PARKING_TYPE: Тип парковочного места для инвалидов"
+    },
+    "apiRegisterRequest": {
+      "type": "object",
+      "properties": {
+        "phoneNumber": {
+          "type": "string",
+          "title": "Номер телефона"
+        },
+        "password": {
+          "type": "string",
+          "title": "Пароль"
+        }
+      }
     },
     "apiRegisterResponse": {
       "type": "object",

@@ -40,3 +40,21 @@ func getRandomParkingStatus(index int) sso.ParkingLotStatus {
 	}
 	panic("undefined parking lot status")
 }
+
+//func (s *serverAPI) GetParkingLot(ctx context.Context, in *sso.GetParkingLotRequest) (*sso.GetParkingLotResponse, error) {
+//	lots, err := s.parkingLot.GetAllParkingLots(ctx)
+//	if err != nil {
+//		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get list parking lots: %s", err.Error()))
+//	}
+//
+//	return &sso.ListParkingLotsResponse{
+//		ParkingLot: lo.Map(lots, func(item domain.ParkingLot, index int) *sso.ParkingLot {
+//			return &sso.ParkingLot{
+//				Number: int64(lo.Must(strconv.Atoi(item.ID))),
+//				Type:   item.ParkingType.GetPBType(),
+//				Status: getRandomParkingStatus(index),
+//			}
+//		}),
+//		Total: int64(len(lots)),
+//	}, nil
+//}

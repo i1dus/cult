@@ -29,6 +29,7 @@ service ParkingAPI {
   rpc AddParkingBooking (AddParkingBookingRequest) returns (AddParkingBookingResponse) {
     option (google.api.http) = {
       post: "/booking/add"
+      body: "*"
     };
   }
 
@@ -48,6 +49,7 @@ service ParkingAPI {
   rpc Register (RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
       post: "/sso/register"
+      body: "*"
     };
   };
 
@@ -55,13 +57,7 @@ service ParkingAPI {
   rpc Login (LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/sso/login"
-    };
-  };
-
-  // IsAdmin checks whether a user is an admin.
-  rpc IsAdmin (IsAdminRequest) returns (IsAdminResponse) {
-    option (google.api.http) = {
-      get: "/sso/is_admin"
+      body: "*"
     };
   };
 

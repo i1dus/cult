@@ -8,23 +8,19 @@ import (
 	"log/slog"
 )
 
-type ParkingLotRepository interface {
-	GetAllParkingLots(ctx context.Context) ([]domain.ParkingLot, error)
-}
-
-type parkingLotRepo struct {
+type ParkingLotRepo struct {
 	db  *pgx.Conn
 	log *slog.Logger
 }
 
-func NewParkingLotRepository(db *pgx.Conn, log *slog.Logger) ParkingLotRepository {
-	return &parkingLotRepo{
+func NewParkingLotRepository(db *pgx.Conn, log *slog.Logger) *ParkingLotRepo {
+	return &ParkingLotRepo{
 		db:  db,
 		log: log,
 	}
 }
 
-func (r *parkingLotRepo) GetAllParkingLots(ctx context.Context) ([]domain.ParkingLot, error) {
+func (r *ParkingLotRepo) GetAllParkingLots(ctx context.Context) ([]domain.ParkingLot, error) {
 	const op = "parkingLotRepo.GetAllParkingLots"
 
 	query := `

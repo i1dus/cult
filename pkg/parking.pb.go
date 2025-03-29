@@ -1530,19 +1530,18 @@ const file_parking_proto_rawDesc = "" +
 	"\x13UNDEFINED_USER_TYPE\x10\x00\x12\x15\n" +
 	"\x11REGULAR_USER_TYPE\x10\x01\x12\x1e\n" +
 	"\x1aMANAGING_COMPANY_USER_TYPE\x10\x02\x12\x1b\n" +
-	"\x17ADMINISTRATOR_USER_TYPE\x10\x032\xdc\a\n" +
+	"\x17ADMINISTRATOR_USER_TYPE\x10\x032\x98\a\n" +
 	"\n" +
 	"ParkingAPI\x12\\\n" +
 	"\rGetParkingLot\x12\x19.api.GetParkingLotRequest\x1a\x1a.api.GetParkingLotResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/parking/get\x12\x82\x01\n" +
 	"\x16GetParkingLotsByUserID\x12\".api.GetParkingLotsByUserIDRequest\x1a#.api.GetParkingLotsByUserIDResponse\"\x1f\x82\xd3\xe4\x93\x02\x19\x12\x17/parking/get_by_user_id\x12c\n" +
-	"\x0fListParkingLots\x12\x1b.api.ListParkingLotsRequest\x1a\x1c.api.ListParkingLotsResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/parking/list\x12h\n" +
-	"\x11AddParkingBooking\x12\x1d.api.AddParkingBookingRequest\x1a\x1e.api.AddParkingBookingResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\"\f/booking/add\x12h\n" +
+	"\x0fListParkingLots\x12\x1b.api.ListParkingLotsRequest\x1a\x1c.api.ListParkingLotsResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/parking/list\x12k\n" +
+	"\x11AddParkingBooking\x12\x1d.api.AddParkingBookingRequest\x1a\x1e.api.AddParkingBookingResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/booking/add\x12h\n" +
 	"\x11GetParkingBooking\x12\x1d.api.GetParkingBookingRequest\x1a\x1e.api.GetParkingBookingResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/booking/get\x12x\n" +
-	"\x16GetParkingBookingsList\x12\".api.GetParkingBookingsListRequest\x1a#.api.GetParkingBookingsListResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/booking/list\x12N\n" +
-	"\bRegister\x12\x14.api.RegisterRequest\x1a\x15.api.RegisterResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\"\r/sso/register\x12B\n" +
-	"\x05Login\x12\x11.api.LoginRequest\x1a\x12.api.LoginResponse\"\x12\x82\xd3\xe4\x93\x02\f\"\n" +
-	"/sso/login\x12K\n" +
-	"\aIsAdmin\x12\x13.api.IsAdminRequest\x1a\x14.api.IsAdminResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/sso/is_admin\x12W\n" +
+	"\x16GetParkingBookingsList\x12\".api.GetParkingBookingsListRequest\x1a#.api.GetParkingBookingsListResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/booking/list\x12Q\n" +
+	"\bRegister\x12\x14.api.RegisterRequest\x1a\x15.api.RegisterResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/sso/register\x12E\n" +
+	"\x05Login\x12\x11.api.LoginRequest\x1a\x12.api.LoginResponse\"\x15\x82\xd3\xe4\x93\x02\x0f:\x01*\"\n" +
+	"/sso/login\x12W\n" +
 	"\vGetUserByID\x12\x17.api.GetUserByIDRequest\x1a\x18.api.GetUserByIDResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/sso/get/userB%Z#internal/pb/parking_lot;parking_lotb\x06proto3"
 
 var (
@@ -1610,20 +1609,18 @@ var file_parking_proto_depIdxs = []int32{
 	25, // 17: api.ParkingAPI.GetParkingBookingsList:input_type -> api.GetParkingBookingsListRequest
 	5,  // 18: api.ParkingAPI.Register:input_type -> api.RegisterRequest
 	7,  // 19: api.ParkingAPI.Login:input_type -> api.LoginRequest
-	9,  // 20: api.ParkingAPI.IsAdmin:input_type -> api.IsAdminRequest
-	3,  // 21: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
-	12, // 22: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
-	14, // 23: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
-	16, // 24: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
-	22, // 25: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
-	24, // 26: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
-	26, // 27: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
-	6,  // 28: api.ParkingAPI.Register:output_type -> api.RegisterResponse
-	8,  // 29: api.ParkingAPI.Login:output_type -> api.LoginResponse
-	10, // 30: api.ParkingAPI.IsAdmin:output_type -> api.IsAdminResponse
-	4,  // 31: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
-	22, // [22:32] is the sub-list for method output_type
-	12, // [12:22] is the sub-list for method input_type
+	3,  // 20: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
+	12, // 21: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
+	14, // 22: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
+	16, // 23: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
+	22, // 24: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
+	24, // 25: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
+	26, // 26: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
+	6,  // 27: api.ParkingAPI.Register:output_type -> api.RegisterResponse
+	8,  // 28: api.ParkingAPI.Login:output_type -> api.LoginResponse
+	4,  // 29: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
+	21, // [21:30] is the sub-list for method output_type
+	12, // [12:21] is the sub-list for method input_type
 	12, // [12:12] is the sub-list for extension type_name
 	12, // [12:12] is the sub-list for extension extendee
 	0,  // [0:12] is the sub-list for field type_name
