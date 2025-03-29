@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	grpcapp "cult/internal/app/grpc"
+	"cult/internal/repository/user_repository"
 	"cult/internal/services/auth"
 	"github.com/jackc/pgx/v5"
 	"log/slog"
@@ -22,7 +23,9 @@ func New(
 	}
 	defer conn.Close(ctx)
 
-	authService := auth.New(log, nil, nil, tokenTTL, secret)
+	userRepository := user_repository.NewUserRepository(conn, log)
+
+	authService := auth.New(log, userRepository, tokenTTL, secret)
 
 	grpcApp := grpcapp.New(log, authService, grpcPort)
 

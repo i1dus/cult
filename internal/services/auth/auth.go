@@ -2,12 +2,13 @@ package auth
 
 import (
 	"context"
+	"cult/internal/domain"
 	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"log/slog"
 	"time"
 
-	"cult/internal/domain/models"
 	"cult/internal/lib/jwt"
 	"cult/internal/lib/logger/sl"
 	"cult/internal/repository"
@@ -16,83 +17,57 @@ import (
 )
 
 type Auth struct {
-	log         *slog.Logger
-	usrSaver    UserSaver
-	usrProvider UserProvider
-	tokenTTL    time.Duration
-	Secret      string
+	log            *slog.Logger
+	userRepository UserRepository
+	tokenTTL       time.Duration
+	Secret         string
 }
 
 var (
 	ErrInvalidCredentials = errors.New("invalid credentials")
 )
 
-//go:generate go run github.com/vektra/mockery/v2@v2.28.2 --name=URLSaver
-type UserSaver interface {
-	SaveUser(
-		ctx context.Context,
-		email string,
-		passHash []byte,
-	) (uid int64, err error)
+type UserRepository interface {
+	SaveUser(ctx context.Context, phone string, passHash []byte) (uuid.UUID, error)
+	User(ctx context.Context, phone string) (domain.User, error)
 }
 
-type UserProvider interface {
-	User(ctx context.Context, email string) (models.User, error)
-	IsAdmin(ctx context.Context, userID int64) (bool, error)
-}
-
-func New(
-	log *slog.Logger,
-	userSaver UserSaver,
-	userProvider UserProvider,
-	tokenTTL time.Duration,
-	secret string,
-) *Auth {
+func New(log *slog.Logger, userRepo UserRepository, tokenTTL time.Duration, secret string) *Auth {
 	return &Auth{
-		usrSaver:    userSaver,
-		usrProvider: userProvider,
-		log:         log,
-		tokenTTL:    tokenTTL,
-		Secret:      secret,
+		userRepository: userRepo,
+		log:            log,
+		tokenTTL:       tokenTTL,
+		Secret:         secret,
 	}
 }
 
-// Login checks if user with given credentials exists in the system and returns access token.
-//
-// If user exists, but password is incorrect, returns error.
-// If user doesn't exist, returns error.
-func (a *Auth) Login(
-	ctx context.Context,
-	email string,
-	password string,
-	appID int,
-) (string, error) {
+func (a *Auth) Login(ctx context.Context, phoneNumber string, password string) (uuid.UUID, string, error) {
 	const op = "Auth.Login"
 
 	log := a.log.With(
 		slog.String("op", op),
-		slog.String("username", email),
+		slog.String("phone_number", phoneNumber),
 	)
 
 	log.Info("attempting to login user")
 
-	user, err := a.usrProvider.User(ctx, email)
+	user, err := a.userRepository.User(ctx, phoneNumber)
 	if err != nil {
 		if errors.Is(err, repository.ErrUserNotFound) {
 			a.log.Warn("user not found", sl.Err(err))
 
-			return "", fmt.Errorf("%s: %w", op, ErrInvalidCredentials)
+			return uuid.Nil, "", fmt.Errorf("%s: %w", op, ErrInvalidCredentials)
 		}
 
 		a.log.Error("failed to get user", sl.Err(err))
 
-		return "", fmt.Errorf("%s: %w", op, err)
+		return uuid.Nil, "", fmt.Errorf("%s: %w", op, err)
 	}
 
 	if err := bcrypt.CompareHashAndPassword(user.PassHash, []byte(password)); err != nil {
 		a.log.Info("invalid credentials", sl.Err(err))
 
-		return "", fmt.Errorf("%s: %w", op, ErrInvalidCredentials)
+		return uuid.Nil, "", fmt.Errorf("%s: %w", op, ErrInvalidCredentials)
 	}
 
 	log.Info("user logged in successfully")
@@ -101,20 +76,20 @@ func (a *Auth) Login(
 	if err != nil {
 		a.log.Error("failed to generate token", sl.Err(err))
 
-		return "", fmt.Errorf("%s: %w", op, err)
+		return uuid.Nil, "", fmt.Errorf("%s: %w", op, err)
 	}
 
-	return token, nil
+	return user.ID, token, nil
 }
 
 // RegisterNewUser registers new user in the system and returns user ID.
 // If user with given username already exists, returns error.
-func (a *Auth) RegisterNewUser(ctx context.Context, email string, pass string) (int64, error) {
+func (a *Auth) RegisterNewUser(ctx context.Context, phoneNumber string, pass string) (uuid.UUID, error) {
 	const op = "Auth.RegisterNewUser"
 
 	log := a.log.With(
 		slog.String("op", op),
-		slog.String("email", email),
+		slog.String("phoneNumber", phoneNumber),
 	)
 
 	log.Info("registering user")
@@ -123,38 +98,15 @@ func (a *Auth) RegisterNewUser(ctx context.Context, email string, pass string) (
 	if err != nil {
 		log.Error("failed to generate password hash", sl.Err(err))
 
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return uuid.Nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	id, err := a.usrSaver.SaveUser(ctx, email, passHash)
+	id, err := a.userRepository.SaveUser(ctx, phoneNumber, passHash)
 	if err != nil {
 		log.Error("failed to save user", sl.Err(err))
 
-		return 0, fmt.Errorf("%s: %w", op, err)
+		return uuid.Nil, fmt.Errorf("%s: %w", op, err)
 	}
 
 	return id, nil
-}
-
-var i = 0
-
-// IsAdmin checks if user is admin.
-func (a *Auth) IsAdmin(ctx context.Context, userID int64) (bool, error) {
-	const op = "Auth.IsAdmin"
-
-	log := a.log.With(
-		slog.String("op", op),
-		slog.Int64("user_id", userID),
-	)
-
-	log.Info("checking if user is admin")
-
-	isAdmin, err := a.usrProvider.IsAdmin(ctx, userID)
-	if err != nil {
-		return false, fmt.Errorf("%s: %w", op, err)
-	}
-
-	log.Info("checked if user is admin", slog.Bool("is_admin", isAdmin))
-
-	return isAdmin, nil
 }
