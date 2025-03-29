@@ -7,6 +7,7 @@ toolchain go1.23.7
 require (
 	github.com/fatih/color v1.18.0
 	github.com/golang-jwt/jwt/v5 v5.2.2
+	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.26.3
 	github.com/ilyakaznacheev/cleanenv v1.5.0

@@ -2,7 +2,6 @@ ifeq ($(POSTGRES_SETUP),)
 	POSTGRES_SETUP := user=postgres password=password dbname=cult host=localhost port=5432 sslmode=disable
 endif
 
-DATABASE_URL=postgresql://postgres:password@localhost:5434/hotel_management?sslmode=disable
 MIGRATION_FOLDER=$(CURDIR)/migrations
 
 OUT_PATH:=$(CURDIR)/pkg
@@ -10,7 +9,7 @@ PROTOS_PATH=./api/*.proto
 LOCAL_BIN:=$(CURDIR)/bin
 BUILD_DIR := ./build
 
-all: bin-deps generate db-up migration-create run
+all: bin-deps generate db-up m-create run
 
 db-up:
 	docker-compose up
@@ -54,6 +53,7 @@ bin-deps: .vendor-proto
 	GOBIN=$(LOCAL_BIN) go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2@latest
 	GOBIN=$(LOCAL_BIN) go install github.com/envoyproxy/protoc-gen-validate@latest
 	GOBIN=$(LOCAL_BIN) go install github.com/rakyll/statik@latest
+
 
 
 .vendor-proto: .vendor-proto/google/protobuf .vendor-proto/google/api .vendor-proto/validate

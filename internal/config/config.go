@@ -9,12 +9,11 @@ import (
 )
 
 type Config struct {
-	Env            string     `yaml:"env" env-default:"local"`
-	DatabaseURL    string     `yaml:"database_url" env-required:"true"`
-	GRPC           GRPCConfig `yaml:"grpc"`
-	MigrationsPath string
-	TokenTTL       time.Duration `yaml:"token_ttl" env-default:"1h"`
-	Secret         string        `yaml:"secret" env-required:"true"`
+	Env         string        `yaml:"env" env-default:"local"`
+	DatabaseURL string        `yaml:"database_url" env-required:"true"`
+	GRPC        GRPCConfig    `yaml:"grpc"`
+	TokenTTL    time.Duration `yaml:"token_ttl" env-default:"1h"`
+	Secret      string        `yaml:"secret" env-required:"true"`
 }
 
 type GRPCConfig struct {

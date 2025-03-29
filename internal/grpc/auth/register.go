@@ -9,19 +9,16 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (s *serverAPI) Register(
-	ctx context.Context,
-	in *sso.RegisterRequest,
-) (*sso.RegisterResponse, error) {
+func (s *serverAPI) Register(ctx context.Context, in *sso.RegisterRequest) (*sso.RegisterResponse, error) {
 	if in.PhoneNumber == "" {
-		return nil, status.Error(codes.InvalidArgument, "email is required")
+		return nil, status.Error(codes.InvalidArgument, "phone number is required")
 	}
 
 	if in.Password == "" {
 		return nil, status.Error(codes.InvalidArgument, "password is required")
 	}
 
-	uid, err := s.auth.RegisterNewUser(ctx, in.PhoneNumber(), in.GetPassword())
+	userID, err := s.auth.RegisterNewUser(ctx, in.GetPhoneNumber(), in.GetPassword())
 	if err != nil {
 		if errors.Is(err, repository.ErrUserExists) {
 			return nil, status.Error(codes.AlreadyExists, "user already exists")
@@ -30,5 +27,5 @@ func (s *serverAPI) Register(
 		return nil, status.Error(codes.Internal, "failed to register user")
 	}
 
-	return &sso.RegisterResponse{UserId: uid}, nil
+	return &sso.RegisterResponse{UserId: userID.String()}, nil
 }
