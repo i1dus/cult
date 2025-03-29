@@ -14,19 +14,15 @@ type App struct {
 }
 
 func New(
-	ctx context.Context,
-	log *slog.Logger,
-	grpcPort int,
-	databaseURL string,
-	tokenTTL time.Duration,
-) *App {
+	ctx context.Context, log *slog.Logger, grpcPort int,
+	databaseURL string, tokenTTL time.Duration, secret string) *App {
 	conn, err := pgx.Connect(ctx, databaseURL)
 	if err != nil {
 		panic(err)
 	}
 	defer conn.Close(ctx)
 
-	authService := auth.New(log, nil, nil, nil, tokenTTL)
+	authService := auth.New(log, nil, nil, tokenTTL, secret)
 
 	grpcApp := grpcapp.New(log, authService, grpcPort)
 

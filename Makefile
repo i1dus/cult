@@ -18,7 +18,7 @@ db-up:
 db-down:
 	docker-compose down
 
-migration-create:
+m-create:
 	goose -dir "$(MIGRATION_FOLDER)" create rename_me sql
 
 .migration-up:
@@ -27,8 +27,8 @@ migration-create:
 .migration-down:
 	goose -dir "$(MIGRATION_FOLDER)" postgres "$(POSTGRES_SETUP)" down-to 0
 
-migration-up: .migration-up
-migration-down: .migration-down
+up: .migration-up
+down: .migration-down
 db-reset: .migration-down .migration-up
 
 run:

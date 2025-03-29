@@ -1,5 +1,6 @@
 env: "local"
 database_url: "postgresql://postgres:password@localhost:5432/cult?sslmode=disable"
+secret: "secret"
 grpc:
   port: 44044
   timeout: 10h
