@@ -463,6 +463,9 @@
         "status": {
           "$ref": "#/definitions/apiParkingLotStatus",
           "title": "Статус парковочного места (забронировано, доступно)"
+        },
+        "ownerId": {
+          "type": "string"
         }
       }
     },

@@ -3,7 +3,10 @@ package parking_lot
 import (
 	"context"
 	"cult/internal/domain"
+	"cult/internal/repository/parking_lot"
+	"errors"
 	"fmt"
+	"github.com/google/uuid"
 	"log/slog"
 	"time"
 
@@ -18,6 +21,8 @@ type ParkingLotService struct {
 
 type ParkingLotRepository interface {
 	GetAllParkingLots(ctx context.Context) ([]domain.ParkingLot, error)
+	GetParkingLotByNumber(ctx context.Context, number string) (domain.ParkingLot, error)
+	GetParkingLotsByOwnerID(ctx context.Context, ownerID uuid.UUID) ([]domain.ParkingLot, error)
 }
 
 func NewParkingLotService(log *slog.Logger, repo ParkingLotRepository) *ParkingLotService {
@@ -44,27 +49,48 @@ func (s *ParkingLotService) GetAllParkingLots(ctx context.Context) ([]domain.Par
 	return lots, nil
 }
 
-//// GetParkingLotByID returns a single parking lot by its ID
-//func (s *ParkingLotService) GetParkingLotByID(ctx context.Context, id string) (domain.ParkingLot, error) {
-//	const op = "ParkingLotService.GetParkingLotByID"
-//
-//	log := s.log.With(
-//		slog.String("op", op),
-//		slog.String("parking_lot_id", id),
-//	)
-//
-//	log.Info("fetching parking lot")
-//
-//	lot, err := s.parkingLotRepo.GetByID(ctx, id)
-//	if err != nil {
-//		if errors.Is(err, domain.ErrNotFound) {
-//			log.Warn("parking lot not found", sl.Err(err))
-//			return domain.ParkingLot{}, fmt.Errorf("%s: %w", op, ErrParkingLotNotFound)
-//		}
-//		log.Error("failed to get parking lot", sl.Err(err))
-//		return domain.ParkingLot{}, fmt.Errorf("%s: %w", op, err)
-//	}
-//
-//	log.Info("successfully retrieved parking lot")
-//	return lot, nil
-//}
+func (s *ParkingLotService) GetParkingLotByNumber(ctx context.Context, number string) (domain.ParkingLot, error) {
+	const op = "ParkingLotService.GetParkingLotByNumber"
+
+	log := s.log.With(
+		slog.String("op", op),
+		slog.String("parking_number", number),
+	)
+
+	log.Info("fetching parking lot by number")
+
+	lot, err := s.parkingLotRepo.GetParkingLotByNumber(ctx, number)
+	if err != nil {
+		if errors.Is(err, parking_lot.ErrNotFound) {
+			log.Warn("parking lot not found", sl.Err(err))
+			return domain.ParkingLot{}, fmt.Errorf("%s: %s", op, err.Error())
+		}
+		log.Error("failed to get parking lot", sl.Err(err))
+		return domain.ParkingLot{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	log.Info("successfully retrieved parking lot")
+	return lot, nil
+}
+
+func (s *ParkingLotService) GetParkingLotsByOwner(ctx context.Context, ownerID uuid.UUID) ([]domain.ParkingLot, error) {
+	const op = "ParkingLotService.GetParkingLotsByOwner"
+
+	log := s.log.With(
+		slog.String("op", op),
+		slog.String("owner_id", ownerID.String()),
+	)
+
+	log.Info("fetching parking lots by owner")
+
+	lots, err := s.parkingLotRepo.GetParkingLotsByOwnerID(ctx, ownerID)
+	if err != nil {
+		log.Error("failed to get parking lots by owner", sl.Err(err))
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	log.Info("successfully retrieved parking lots by owner",
+		slog.Int("count", len(lots)),
+	)
+	return lots, nil
+}

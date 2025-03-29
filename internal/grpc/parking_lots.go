@@ -5,6 +5,7 @@ import (
 	"cult/internal/domain"
 	sso "cult/pkg"
 	"fmt"
+	"github.com/google/uuid"
 	"github.com/samber/lo"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -20,9 +21,10 @@ func (s *serverAPI) ListParkingLots(ctx context.Context, in *sso.ListParkingLots
 	return &sso.ListParkingLotsResponse{
 		ParkingLot: lo.Map(lots, func(item domain.ParkingLot, index int) *sso.ParkingLot {
 			return &sso.ParkingLot{
-				Number: int64(lo.Must(strconv.Atoi(item.ID))),
-				Type:   item.ParkingType.GetPBType(),
-				Status: getRandomParkingStatus(index),
+				Number:  int64(lo.Must(strconv.Atoi(item.ID))),
+				Type:    item.ParkingType.GetPBType(),
+				Status:  getRandomParkingStatus(index),
+				OwnerId: lo.ToPtr(item.OwnerID.String()),
 			}
 		}),
 		Total: int64(len(lots)),
@@ -41,20 +43,45 @@ func getRandomParkingStatus(index int) sso.ParkingLotStatus {
 	panic("undefined parking lot status")
 }
 
-//func (s *serverAPI) GetParkingLot(ctx context.Context, in *sso.GetParkingLotRequest) (*sso.GetParkingLotResponse, error) {
-//	lots, err := s.parkingLot.GetAllParkingLots(ctx)
-//	if err != nil {
-//		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get list parking lots: %s", err.Error()))
-//	}
-//
-//	return &sso.ListParkingLotsResponse{
-//		ParkingLot: lo.Map(lots, func(item domain.ParkingLot, index int) *sso.ParkingLot {
-//			return &sso.ParkingLot{
-//				Number: int64(lo.Must(strconv.Atoi(item.ID))),
-//				Type:   item.ParkingType.GetPBType(),
-//				Status: getRandomParkingStatus(index),
-//			}
-//		}),
-//		Total: int64(len(lots)),
-//	}, nil
-//}
+func (s *serverAPI) GetParkingLot(ctx context.Context, req *sso.GetParkingLotRequest) (*sso.GetParkingLotResponse, error) {
+	parkingNumber := strconv.FormatInt(req.Number, 10)
+
+	lot, err := s.parkingLot.GetParkingLotByNumber(ctx, parkingNumber)
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get parking lot: %v", err))
+	}
+
+	return &sso.GetParkingLotResponse{
+		ParkingLot: &sso.ParkingLot{
+			Number:  req.Number,
+			Type:    lot.ParkingType.GetPBType(),
+			Status:  getRandomParkingStatus(int(req.Number) % 3),
+			OwnerId: lo.ToPtr(lot.OwnerID.String()),
+		},
+	}, nil
+}
+
+func (s *serverAPI) GetParkingLotsByUserID(ctx context.Context, req *sso.GetParkingLotsByUserIDRequest) (*sso.GetParkingLotsByUserIDResponse, error) {
+	userID, err := uuid.Parse(req.UserId)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "invalid user ID format")
+	}
+
+	lots, err := s.parkingLot.GetParkingLotsByOwner(ctx, userID)
+	if err != nil {
+		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get user parking lots: %v", err))
+	}
+
+	return &sso.GetParkingLotsByUserIDResponse{
+		ParkingLot: lo.Map(lots, func(item domain.ParkingLot, index int) *sso.ParkingLot {
+			number := lo.Must(strconv.ParseInt(item.ID, 10, 64))
+
+			return &sso.ParkingLot{
+				Number:  number,
+				Type:    item.ParkingType.GetPBType(),
+				Status:  getRandomParkingStatus(index),
+				OwnerId: lo.ToPtr(item.OwnerID.String()),
+			}
+		}),
+	}, nil
+}

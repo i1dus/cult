@@ -845,6 +845,7 @@ type ParkingLot struct {
 	Type ParkingType `protobuf:"varint,2,opt,name=type,proto3,enum=api.ParkingType" json:"type,omitempty"`
 	// Статус парковочного места (забронировано, доступно)
 	Status        ParkingLotStatus `protobuf:"varint,3,opt,name=status,proto3,enum=api.ParkingLotStatus" json:"status,omitempty"`
+	OwnerId       *string          `protobuf:"bytes,4,opt,name=owner_id,json=ownerId,proto3,oneof" json:"owner_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -898,6 +899,13 @@ func (x *ParkingLot) GetStatus() ParkingLotStatus {
 		return x.Status
 	}
 	return ParkingLotStatus_UNDEFINED_PARKING_LOT_STATUS
+}
+
+func (x *ParkingLot) GetOwnerId() string {
+	if x != nil && x.OwnerId != nil {
+		return *x.OwnerId
+	}
+	return ""
 }
 
 type User struct {
@@ -1470,12 +1478,14 @@ const file_parking_proto_rawDesc = "" +
 	"\x17ListParkingLotsResponse\x120\n" +
 	"\vparking_lot\x18\x01 \x03(\v2\x0f.api.ParkingLotR\n" +
 	"parkingLot\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"y\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xa6\x01\n" +
 	"\n" +
 	"ParkingLot\x12\x16\n" +
 	"\x06number\x18\x01 \x01(\x03R\x06number\x12$\n" +
 	"\x04type\x18\x02 \x01(\x0e2\x10.api.ParkingTypeR\x04type\x12-\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x15.api.ParkingLotStatusR\x06status\"\x91\x02\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x15.api.ParkingLotStatusR\x06status\x12\x1e\n" +
+	"\bowner_id\x18\x04 \x01(\tH\x00R\aownerId\x88\x01\x01B\v\n" +
+	"\t_owner_id\"\x91\x02\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1d\n" +
@@ -1637,6 +1647,7 @@ func file_parking_proto_init() {
 	if File_parking_proto != nil {
 		return
 	}
+	file_parking_proto_msgTypes[14].OneofWrappers = []any{}
 	file_parking_proto_msgTypes[15].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{

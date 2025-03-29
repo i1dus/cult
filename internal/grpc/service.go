@@ -16,6 +16,8 @@ type AuthService interface {
 
 type ParkingLotService interface {
 	GetAllParkingLots(ctx context.Context) ([]domain.ParkingLot, error)
+	GetParkingLotByNumber(ctx context.Context, number string) (domain.ParkingLot, error)
+	GetParkingLotsByOwner(ctx context.Context, ownerID uuid.UUID) ([]domain.ParkingLot, error)
 }
 
 type serverAPI struct {

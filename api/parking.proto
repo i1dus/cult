@@ -142,6 +142,7 @@ message ParkingLot {
   ParkingType type = 2;
   // Статус парковочного места (забронировано, доступно)
   ParkingLotStatus status = 3;
+  optional string owner_id = 4;
 }
 
 enum ParkingLotStatus {

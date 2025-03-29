@@ -1632,6 +1632,10 @@ func (m *ParkingLot) validate(all bool) error {
 
 	// no validation rules for Status
 
+	if m.OwnerId != nil {
+		// no validation rules for OwnerId
+	}
+
 	if len(errors) > 0 {
 		return ParkingLotMultiError(errors)
 	}
