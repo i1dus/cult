@@ -28,7 +28,7 @@ var (
 )
 
 type UserRepository interface {
-	SaveUser(ctx context.Context, phone string, passHash []byte) (uuid.UUID, error)
+	SaveUser(ctx context.Context, id uuid.UUID, phone string, passHash []byte) (uuid.UUID, error)
 	User(ctx context.Context, phone string) (domain.User, error)
 }
 
@@ -101,7 +101,7 @@ func (a *Auth) RegisterNewUser(ctx context.Context, phoneNumber string, pass str
 		return uuid.Nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	id, err := a.userRepository.SaveUser(ctx, phoneNumber, passHash)
+	id, err := a.userRepository.SaveUser(ctx, uuid.New(), phoneNumber, passHash)
 	if err != nil {
 		log.Error("failed to save user", sl.Err(err))
 

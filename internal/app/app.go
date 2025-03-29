@@ -1,7 +1,6 @@
 package app
 
 import (
-	"context"
 	grpcapp "cult/internal/app/grpc"
 	"cult/internal/repository/user_repository"
 	"cult/internal/services/auth"
@@ -15,13 +14,8 @@ type App struct {
 }
 
 func New(
-	ctx context.Context, log *slog.Logger, grpcPort int,
-	databaseURL string, tokenTTL time.Duration, secret string) *App {
-	conn, err := pgx.Connect(ctx, databaseURL)
-	if err != nil {
-		panic(err)
-	}
-	defer conn.Close(ctx)
+	log *slog.Logger, grpcPort int,
+	conn *pgx.Conn, tokenTTL time.Duration, secret string) *App {
 
 	userRepository := user_repository.NewUserRepository(conn, log)
 

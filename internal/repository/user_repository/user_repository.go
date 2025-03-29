@@ -26,7 +26,7 @@ func NewUserRepository(db *pgx.Conn, log *slog.Logger) *UserRepository {
 }
 
 // SaveUser implements UserSaver interface
-func (r *UserRepository) SaveUser(ctx context.Context, phone string, passHash []byte) (uuid.UUID, error) {
+func (r *UserRepository) SaveUser(ctx context.Context, _ uuid.UUID, phone string, passHash []byte) (uuid.UUID, error) {
 	const op = "UserRepository.SaveUser"
 
 	query := `
@@ -35,8 +35,8 @@ func (r *UserRepository) SaveUser(ctx context.Context, phone string, passHash []
 		RETURNING id
 	`
 
-	var id uuid.UUID
-	err := r.db.QueryRow(ctx, query, phone, string(passHash), domain.RegularUserType.String()).Scan(&id)
+	var userID uuid.UUID
+	err := r.db.QueryRow(ctx, query, phone, string(passHash), domain.RegularUserType.String()).Scan(&userID)
 	if err != nil {
 		if isUniqueViolation(err) {
 			return uuid.Nil, fmt.Errorf("%s: %w", op, repository.ErrUserExists)
@@ -44,7 +44,7 @@ func (r *UserRepository) SaveUser(ctx context.Context, phone string, passHash []
 		return uuid.Nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	return id, nil
+	return userID, nil
 }
 
 // User implements UserProvider interface
