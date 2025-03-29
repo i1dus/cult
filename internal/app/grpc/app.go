@@ -5,14 +5,12 @@ import (
 	"crypto/tls"
 	authgrpc "cult/internal/grpc/auth"
 	api "cult/pkg"
-	"errors"
 	"fmt"
-	"log"
 	"log/slog"
 	"net"
 	"net/http"
 	"os"
-	"sync"
+	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -91,7 +89,16 @@ func (a *App) MustRun() {
 func (a *App) Run() error {
 	op := "app.Run"
 
-	// Create a TCP listener for gRPC
+	ctx := context.Background()
+
+	// Create context for graceful shutdown
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	// Error channel to collect server errors
+	errChan := make(chan error, 3)
+
+	// Create TCP listener for gRPC
 	grpcListener, err := net.Listen("tcp", fmt.Sprintf(":%d", a.port))
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
@@ -99,11 +106,9 @@ func (a *App) Run() error {
 
 	// Create HTTP router for gRPC gateway
 	grpcGatewayMux := runtime.NewServeMux()
-
-	// Register gRPC gateway endpoints
 	opts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	err = api.RegisterParkingAPIHandlerFromEndpoint(
-		context.Background(),
+		ctx,
 		grpcGatewayMux,
 		fmt.Sprintf("localhost:%d", a.port),
 		opts,
@@ -112,66 +117,80 @@ func (a *App) Run() error {
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
+	// Main HTTP server
 	httpMux := http.NewServeMux()
 	httpMux.Handle("/", grpcGatewayMux)
-
-	// HTTP server
 	httpServer := &http.Server{
-		Addr:    fmt.Sprintf(":%d", 8080),
-		Handler: httpMux,
-		// Enforce HTTP/1.1
+		Addr:         fmt.Sprintf(":%d", 8080),
+		Handler:      httpMux,
 		TLSNextProto: make(map[string]func(*http.Server, *tls.Conn, http.Handler)),
 	}
 
-	// Use WaitGroup to manage goroutines
-	var wg sync.WaitGroup
-	wg.Add(2)
-
-	// Start gRPC server in goroutine
-	go func() {
-		defer wg.Done()
-		a.log.Info("gRPC server started", slog.String("addr", grpcListener.Addr().String()))
-		if err := a.gRPCServer.Serve(grpcListener); err != nil {
-			a.log.Error("gRPC server failed", slog.String("error", err.Error()))
-		}
-	}()
-
-	// Start HTTP server in goroutine
-	go func() {
-		defer wg.Done()
-		a.log.Info("HTTP server started", slog.String("addr", httpServer.Addr))
-		if err := httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			a.log.Error("HTTP server failed", slog.String("error", err.Error()))
-		}
-	}()
-
-	// Wait for servers to exit
-	wg.Wait()
-
-	a.log.Info("Запуск Swagger по адресу localhost:8081")
-
-	mux := chi.NewMux()
-	mux.HandleFunc("/swagger/doc.json", func(w http.ResponseWriter, r *http.Request) {
-		b, err := os.ReadFile("/cult/pkg/parking.swagger.json")
+	// Swagger server
+	swaggerMux := chi.NewMux()
+	swaggerMux.HandleFunc("/swagger/doc.json", func(w http.ResponseWriter, r *http.Request) {
+		b, err := os.ReadFile("pkg/parking.swagger.json")
 		if err != nil {
-			log.Fatal(err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
 		}
-
 		w.Header().Set("Content-Type", "application/json")
 		w.Write(b)
 	})
-	mux.HandleFunc("/swagger/*", httpSwagger.WrapHandler)
-
-	srv := &http.Server{
-		Addr:    "localhost:7002",
-		Handler: mux,
+	swaggerMux.HandleFunc("/swagger/*", httpSwagger.WrapHandler)
+	swaggerServer := &http.Server{
+		Addr:    ":8081", // Changed to standard port
+		Handler: swaggerMux,
 	}
 
-	if err := srv.ListenAndServe(); err != http.ErrServerClosed {
-		log.Fatal(err)
+	// Start servers in goroutines
+	go func() {
+		a.log.Info("gRPC server starting", slog.String("addr", grpcListener.Addr().String()))
+		if err := a.gRPCServer.Serve(grpcListener); err != nil && err != grpc.ErrServerStopped {
+			errChan <- fmt.Errorf("gRPC server error: %w", err)
+		}
+	}()
+
+	go func() {
+		a.log.Info("HTTP server starting", slog.String("addr", httpServer.Addr))
+		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			errChan <- fmt.Errorf("HTTP server error: %w", err)
+		}
+	}()
+
+	go func() {
+		a.log.Info("Swagger UI available", slog.String("addr", swaggerServer.Addr))
+		if err := swaggerServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			errChan <- fmt.Errorf("Swagger server error: %w", err)
+		}
+	}()
+
+	select {
+	case <-ctx.Done():
+		a.log.Info("shutdown signal received")
+	case err := <-errChan:
+		cancel()
+		return fmt.Errorf("%s: %w", op, err)
 	}
 
-	return nil
+	a.log.Info("shutting down servers")
+
+	shutdownCtx, shutdownCancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer shutdownCancel()
+
+	var shutdownErr error
+
+	if err := httpServer.Shutdown(shutdownCtx); err != nil {
+		shutdownErr = fmt.Errorf("HTTP server shutdown error: %w", err)
+	}
+
+	if err := swaggerServer.Shutdown(shutdownCtx); err != nil {
+		shutdownErr = fmt.Errorf("Swagger server shutdown error: %w", err)
+	}
+
+	a.gRPCServer.GracefulStop() // Graceful stop for gRPC
+
+	return shutdownErr
 }
 
 // Stop stops gRPC server.
