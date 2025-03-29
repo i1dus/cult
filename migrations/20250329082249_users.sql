@@ -1,6 +1,6 @@
 -- +goose Up
 -- +goose StatementBegin
-CREATE TABLE IF NOT EXISTS users
+CREATE TABLE users
 (
     id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     phone      TEXT NOT NULL UNIQUE,
