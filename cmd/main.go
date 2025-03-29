@@ -5,6 +5,7 @@ import (
 	"cult/internal/app"
 	"cult/internal/config"
 	"cult/internal/lib/logger/handlers/slogpretty"
+	"github.com/jackc/pgx/v5"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -23,7 +24,13 @@ func main() {
 
 	log := setupLogger(cfg.Env)
 
-	application := app.New(ctx, log, cfg.GRPC.Port, cfg.DatabaseURL, cfg.TokenTTL, cfg.Secret)
+	conn, err := pgx.Connect(ctx, cfg.DatabaseURL)
+	if err != nil {
+		panic(err)
+	}
+	defer conn.Close(ctx)
+
+	application := app.New(log, cfg.GRPC.Port, conn, cfg.TokenTTL, cfg.Secret)
 
 	go func() {
 		application.GRPCServer.MustRun()

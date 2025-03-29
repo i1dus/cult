@@ -5,6 +5,7 @@ import (
 	"cult/internal/repository"
 	sso "cult/pkg"
 	"errors"
+	"fmt"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -24,7 +25,7 @@ func (s *serverAPI) Register(ctx context.Context, in *sso.RegisterRequest) (*sso
 			return nil, status.Error(codes.AlreadyExists, "user already exists")
 		}
 
-		return nil, status.Error(codes.Internal, "failed to register user")
+		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to register user: %s", err.Error()))
 	}
 
 	return &sso.RegisterResponse{UserId: userID.String()}, nil

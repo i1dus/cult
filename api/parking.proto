@@ -86,16 +86,6 @@ message LoginResponse {
   string userID = 2;
 }
 
-message IsAdminRequest {
-  // ID пользователя в формате UUID
-  string user_id = 1;
-}
-
-message IsAdminResponse {
-  bool is_admin = 1;
-}
-
-
 message GetParkingLotRequest {
   int64 number = 1;
 }
