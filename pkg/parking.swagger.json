@@ -623,6 +623,37 @@
         ]
       }
     },
+    "/rental/get": {
+      "get": {
+        "operationId": "ParkingAPI_GetRental",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetRentalResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "parkingLot",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
     "/rentals/get": {
       "get": {
         "operationId": "ParkingAPI_GetRentals",
@@ -1077,6 +1108,14 @@
         },
         "currency": {
           "type": "string"
+        }
+      }
+    },
+    "apiGetRentalResponse": {
+      "type": "object",
+      "properties": {
+        "rental": {
+          "$ref": "#/definitions/apiRental"
         }
       }
     },

@@ -209,3 +209,35 @@ func (r *RentalRepository) GetBookingPriceByID(ctx context.Context, id uuid.UUID
 
 	return priceCents, nil
 }
+
+// GetRentalByLot implements
+func (r *RentalRepository) GetRentalByLot(ctx context.Context, parkingLot int64) (domain.Rental, error) {
+	const op = "RentalRepository.GetRentalByLot"
+
+	query := `
+        SELECT 
+            r.id,
+            r.parking_lot_id,
+            r.start_at,
+            r.end_at,
+            r.cost_per_hour,
+            r.cost_per_day
+        FROM rentals r
+        WHERE r.parking_lot_id = $1`
+
+	var rental domain.Rental
+
+	err := r.db.QueryRow(ctx, query, parkingLot).Scan(
+		&rental.ID,
+		&rental.ParkingLot,
+		&rental.From,
+		&rental.To,
+		&rental.CostPerHour,
+		&rental.CostPerDay,
+	)
+	if err != nil {
+		return domain.Rental{}, err
+	}
+
+	return rental, nil
+}

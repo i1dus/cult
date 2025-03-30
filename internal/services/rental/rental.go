@@ -19,6 +19,7 @@ type Repository interface {
 	AddRental(ctx context.Context, rental domain.Rental) error
 	GetBookingPriceByID(ctx context.Context, bookingID uuid.UUID) (int64, error)
 	GetRentalsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Rental, error)
+	GetRentalByLot(ctx context.Context, parkingLot int64) (domain.Rental, error)
 }
 
 func NewRentalService(log *slog.Logger, repo Repository) *RentalService {
@@ -59,4 +60,21 @@ func (s *RentalService) AddRental(ctx context.Context, rental domain.Rental) err
 	}
 
 	return nil
+}
+
+func (s *RentalService) GetRental(ctx context.Context, parkingLot int64) (domain.Rental, error) {
+	const op = "RentalService.GetRental"
+
+	log := s.log.With(slog.String("op", op))
+
+	log.Info("fetching rental")
+
+	rental, err := s.rentalRepo.GetRentalByLot(ctx, parkingLot)
+	if err != nil {
+		log.Error("failed to get rental", sl.Err(err))
+		return domain.Rental{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	log.Info("successfully retrieved rental")
+	return rental, nil
 }

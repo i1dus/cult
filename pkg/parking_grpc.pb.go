@@ -36,6 +36,7 @@ const (
 	ParkingAPI_AddRental_FullMethodName              = "/api.ParkingAPI/AddRental"
 	ParkingAPI_GetMyParkingLots_FullMethodName       = "/api.ParkingAPI/GetMyParkingLots"
 	ParkingAPI_GetRentals_FullMethodName             = "/api.ParkingAPI/GetRentals"
+	ParkingAPI_GetRental_FullMethodName              = "/api.ParkingAPI/GetRental"
 )
 
 // ParkingAPIClient is the client API for ParkingAPI service.
@@ -62,6 +63,7 @@ type ParkingAPIClient interface {
 	AddRental(ctx context.Context, in *AddRentalRequest, opts ...grpc.CallOption) (*AddRentalResponse, error)
 	GetMyParkingLots(ctx context.Context, in *GetMyParkingLotsRequest, opts ...grpc.CallOption) (*GetMyParkingLotsResponse, error)
 	GetRentals(ctx context.Context, in *GetRentalsRequest, opts ...grpc.CallOption) (*GetRentalsResponse, error)
+	GetRental(ctx context.Context, in *GetRentalRequest, opts ...grpc.CallOption) (*GetRentalResponse, error)
 }
 
 type parkingAPIClient struct {
@@ -242,6 +244,16 @@ func (c *parkingAPIClient) GetRentals(ctx context.Context, in *GetRentalsRequest
 	return out, nil
 }
 
+func (c *parkingAPIClient) GetRental(ctx context.Context, in *GetRentalRequest, opts ...grpc.CallOption) (*GetRentalResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetRentalResponse)
+	err := c.cc.Invoke(ctx, ParkingAPI_GetRental_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ParkingAPIServer is the server API for ParkingAPI service.
 // All implementations must embed UnimplementedParkingAPIServer
 // for forward compatibility.
@@ -266,6 +278,7 @@ type ParkingAPIServer interface {
 	AddRental(context.Context, *AddRentalRequest) (*AddRentalResponse, error)
 	GetMyParkingLots(context.Context, *GetMyParkingLotsRequest) (*GetMyParkingLotsResponse, error)
 	GetRentals(context.Context, *GetRentalsRequest) (*GetRentalsResponse, error)
+	GetRental(context.Context, *GetRentalRequest) (*GetRentalResponse, error)
 	mustEmbedUnimplementedParkingAPIServer()
 }
 
@@ -326,6 +339,9 @@ func (UnimplementedParkingAPIServer) GetMyParkingLots(context.Context, *GetMyPar
 }
 func (UnimplementedParkingAPIServer) GetRentals(context.Context, *GetRentalsRequest) (*GetRentalsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetRentals not implemented")
+}
+func (UnimplementedParkingAPIServer) GetRental(context.Context, *GetRentalRequest) (*GetRentalResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRental not implemented")
 }
 func (UnimplementedParkingAPIServer) mustEmbedUnimplementedParkingAPIServer() {}
 func (UnimplementedParkingAPIServer) testEmbeddedByValue()                    {}
@@ -654,6 +670,24 @@ func _ParkingAPI_GetRentals_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ParkingAPI_GetRental_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRentalRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ParkingAPIServer).GetRental(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ParkingAPI_GetRental_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ParkingAPIServer).GetRental(ctx, req.(*GetRentalRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ParkingAPI_ServiceDesc is the grpc.ServiceDesc for ParkingAPI service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -728,6 +762,10 @@ var ParkingAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetRentals",
 			Handler:    _ParkingAPI_GetRentals_Handler,
+		},
+		{
+			MethodName: "GetRental",
+			Handler:    _ParkingAPI_GetRental_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

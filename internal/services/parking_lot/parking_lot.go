@@ -74,6 +74,7 @@ func (s *ParkingLotService) GetAllParkingLots(ctx context.Context, userID uuid.U
 		}
 		lots[i].ParkingType = pType
 		lots[i].ParkingStatus = pStatus
+		fmt.Println(i, lots[i])
 	}
 
 	log.Info("successfully retrieved parking lots", slog.Int("count", len(lots)))

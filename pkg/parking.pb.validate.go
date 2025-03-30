@@ -570,6 +570,239 @@ var _ interface {
 	ErrorName() string
 } = GetRentalsResponseValidationError{}
 
+// Validate checks the field values on GetRentalRequest with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetRentalRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetRentalRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetRentalRequestMultiError, or nil if none found.
+func (m *GetRentalRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetRentalRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for ParkingLot
+
+	if len(errors) > 0 {
+		return GetRentalRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetRentalRequestMultiError is an error wrapping multiple validation errors
+// returned by GetRentalRequest.ValidateAll() if the designated constraints
+// aren't met.
+type GetRentalRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetRentalRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetRentalRequestMultiError) AllErrors() []error { return m }
+
+// GetRentalRequestValidationError is the validation error returned by
+// GetRentalRequest.Validate if the designated constraints aren't met.
+type GetRentalRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetRentalRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetRentalRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetRentalRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetRentalRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetRentalRequestValidationError) ErrorName() string { return "GetRentalRequestValidationError" }
+
+// Error satisfies the builtin error interface
+func (e GetRentalRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetRentalRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetRentalRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetRentalRequestValidationError{}
+
+// Validate checks the field values on GetRentalResponse with the rules defined
+// in the proto definition for this message. If any rules are violated, the
+// first error encountered is returned, or nil if there are no violations.
+func (m *GetRentalResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on GetRentalResponse with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// GetRentalResponseMultiError, or nil if none found.
+func (m *GetRentalResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *GetRentalResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetRental()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, GetRentalResponseValidationError{
+					field:  "Rental",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, GetRentalResponseValidationError{
+					field:  "Rental",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetRental()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return GetRentalResponseValidationError{
+				field:  "Rental",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return GetRentalResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// GetRentalResponseMultiError is an error wrapping multiple validation errors
+// returned by GetRentalResponse.ValidateAll() if the designated constraints
+// aren't met.
+type GetRentalResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m GetRentalResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m GetRentalResponseMultiError) AllErrors() []error { return m }
+
+// GetRentalResponseValidationError is the validation error returned by
+// GetRentalResponse.Validate if the designated constraints aren't met.
+type GetRentalResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e GetRentalResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e GetRentalResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e GetRentalResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e GetRentalResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e GetRentalResponseValidationError) ErrorName() string {
+	return "GetRentalResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e GetRentalResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sGetRentalResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = GetRentalResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = GetRentalResponseValidationError{}
+
 // Validate checks the field values on CreatePaymentRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

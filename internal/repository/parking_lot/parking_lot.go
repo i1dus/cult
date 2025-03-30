@@ -57,7 +57,6 @@ func (r *ParkingLotRepo) GetAllParkingLots(ctx context.Context) ([]domain.Parkin
 		}
 
 		lot.ParkingKind = domain.ParkingKind(parkingLotKind)
-
 		lots = append(lots, lot)
 	}
 
