@@ -189,7 +189,7 @@ func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, filter doma
 
 // GetParkingLotsByFilter implements
 func (r *BookingRepository) GetParkingLotsByFilter(ctx context.Context, filter domain.Filter) ([]domain.ParkingLot, error) {
-	const op = "BookingRepository.GetBookingsByFilter"
+	const op = "BookingRepository.GetParkingLotsByFilter"
 
 	query := `
         SELECT p.id, p.owner_vehicle
@@ -210,7 +210,7 @@ func (r *BookingRepository) GetParkingLotsByFilter(ctx context.Context, filter d
 
 	// Add optional filters
 	if filter.UserID != uuid.Nil {
-		query += " AND p.user_id = $3"
+		query += " AND p.owner_id = $3"
 		args = append(args, filter.UserID)
 	}
 

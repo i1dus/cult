@@ -3,7 +3,7 @@
 CREATE TABLE bookings
 (
     id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    rental_id     int     NOT NULL,
+    rental_id     UUID     NOT NULL,
     user_id       UUID    NOT NULL,
     vehicle       TEXT    NOT NULL,
     is_short_term BOOLEAN NOT NULL,
