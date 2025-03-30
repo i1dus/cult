@@ -45,9 +45,13 @@ func (r *BookingRepository) AddBooking(ctx context.Context, booking domain.Booki
 		booking.To,
 	).Scan(&rentalID)
 
+	if err != nil || rentalID == uuid.Nil {
+		return fmt.Errorf("%s: %w", op, errors.New("no rental found"))
+	}
+
 	query := `
-        INSERT INTO bookings (rental_id, user_id, vehicle, start_at, end_at)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO bookings (rental_id, user_id, vehicle, start_at, end_at, is_short_term)
+        VALUES ($1, $2, $3, $4, $5, true)
         ON CONFLICT (rental_id, start_at, end_at) 
         DO NOTHING
     `
