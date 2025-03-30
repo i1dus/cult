@@ -141,7 +141,6 @@ func (s *ParkingLotService) calculateTypeAndStatus(ctx context.Context, lot doma
 
 	idInt := lot.ID
 	booking, err := s.bookingRepo.GetBooking(ctx, idInt)
-	fmt.Println(lot.ID, booking, err, isOwner, hasOwner)
 	if err != nil {
 		s.log.Error(err.Error())
 		return domain.UndefinedParkingType, domain.UndefinedParkingLotStatus
