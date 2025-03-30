@@ -9,8 +9,6 @@ import (
 	"log/slog"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgconn"
-
 	"github.com/jackc/pgx/v5"
 	"github.com/lib/pq"
 )
@@ -35,28 +33,27 @@ func (r *BookingRepository) AddBooking(ctx context.Context, booking domain.Booki
 		return fmt.Errorf("%s: %w", op, repository.ErrInvalidTimeRange)
 	}
 
-	var exists bool
+	var rentalID uuid.UUID
 	err := r.db.QueryRow(ctx,
-		"SELECT EXISTS(SELECT 1 FROM parking_lots WHERE id = $1)",
+		`SELECT id FROM rentals 
+         WHERE parking_lot_id = $1 
+         AND start_at <= $2 
+         AND end_at >= $3`,
 		booking.ParkingLot,
-	).Scan(&exists)
-	if err != nil {
-		return fmt.Errorf("%s: %w", op, err)
-	}
-	if !exists {
-		return fmt.Errorf("%s: %w", op, "parking_lots does not exist")
-	}
+		booking.From,
+		booking.To,
+	).Scan(&rentalID)
 
 	query := `
-        INSERT INTO bookings (parking_lot_id, user_id, vehicle_id, start_at, end_at)
+        INSERT INTO bookings (rental_id, user_id, vehicle, start_at, end_at)
         VALUES ($1, $2, $3, $4, $5)
-        ON CONFLICT (parking_lot_id, start_at, end_at) 
+        ON CONFLICT (rental_id, start_at, end_at) 
         DO NOTHING
     `
 	res, err := r.db.Exec(
 		ctx,
 		query,
-		booking.ParkingLot,
+		rentalID,
 		booking.UserID,
 		booking.Vehicle,
 		booking.From,
@@ -77,15 +74,29 @@ func (r *BookingRepository) AddBooking(ctx context.Context, booking domain.Booki
 func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (domain.Booking, error) {
 	const op = "BookingRepository.GetBooking"
 
-	query := `
-		SELECT user_id, vehicle_id, start_at, end_at
-		FROM bookings
-		WHERE parking_lot_id = $1
-		  AND NOW() BETWEEN start_at AND end_at
-	`
+	var rentalID int
+	err := r.db.QueryRow(ctx,
+		`SELECT parking_lot_id FROM rentals 
+         WHERE parking_lot_id = $1 
+         AND NOW() BETWEEN start_at AND end_at`,
+		parkingLot,
+	).Scan(&rentalID)
 
+	if err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			return domain.Booking{}, fmt.Errorf("%s: %w", op, repository.ErrNoActiveRental)
+		}
+		return domain.Booking{}, fmt.Errorf("%s: %w", op, err)
+	}
+
+	query := `
+        SELECT user_id, vehicle, start_at, end_at
+        FROM bookings
+        WHERE rental_id = $1
+          AND NOW() BETWEEN start_at AND end_at
+    `
 	var booking domain.Booking
-	err := r.db.QueryRow(ctx, query, parkingLot).Scan(
+	err = r.db.QueryRow(ctx, query, parkingLot).Scan(
 		&booking.UserID,
 		&booking.Vehicle,
 		&booking.From,
@@ -98,24 +109,29 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (d
 		return domain.Booking{}, fmt.Errorf("%s: %w", op, err)
 	}
 
+	booking.ParkingLot = parkingLot
+
 	return booking, nil
 }
 
 // GetBookingsByFilter implements
 func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Booking, error) {
+	const op = "BookingRepository.GetBookingsByFilter"
+
 	query := `
-        SELECT b.parking_lot_id, b.user_id, b.vehicle_id, b.start_at, b.end_at
+        SELECT r.parking_lot_id, b.user_id, b.vehicle, b.start_at, b.end_at
         FROM bookings b
-        JOIN parking_lots pl ON b.parking_lot_id = pl.id
-        WHERE pl.owner_id = $1 OR $1 IS NULL
+        JOIN rentals r ON b.rental_id = r.id
+        WHERE ($1::uuid IS NULL OR b.user_id = $1)
           AND (
               ($2::timestamp IS NULL AND $3::timestamp IS NULL) OR
               (b.start_at <= $3 AND b.end_at >= $2)
           )
-          AND ($4::int[] IS NULL OR b.parking_lot_id::int = ANY($4::int[]))
+          AND ($4::int[] IS NULL OR r.parking_lot_id = ANY($4::int[]))
         ORDER BY b.start_at
     `
 
+	// Convert filter parameters to SQL-compatible values
 	var from, to interface{}
 	if filter.From.IsZero() {
 		from = nil
@@ -144,7 +160,7 @@ func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, filter doma
 	)
 
 	if err != nil {
-		return nil, fmt.Errorf("querying bookings: %w", err)
+		return nil, fmt.Errorf("%s: querying bookings: %w", op, err)
 	}
 	defer rows.Close()
 
@@ -159,39 +175,14 @@ func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, filter doma
 			&b.To,
 		)
 		if err != nil {
-			return nil, fmt.Errorf("scanning booking: %w", err)
+			return nil, fmt.Errorf("%s: scanning booking: %w", op, err)
 		}
 		bookings = append(bookings, b)
 	}
 
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("%s: rows error: %w", op, err)
+	}
+
 	return bookings, nil
-}
-
-// IsAdmin implements UserProvider interface
-func (r *BookingRepository) IsAdmin(ctx context.Context, userID uuid.UUID) (bool, error) {
-	const op = "UserRepository.IsAdmin"
-
-	query := `
-		SELECT EXISTS (
-			SELECT 1 FROM users
-			WHERE id = $1 AND user_type = 'admin'
-		)
-	`
-
-	var isAdmin bool
-	err := r.db.QueryRow(ctx, query, userID).Scan(&isAdmin)
-	if err != nil {
-		return false, fmt.Errorf("%s: %w", op, err)
-	}
-
-	return isAdmin, nil
-}
-
-// helper function to check for unique violation
-func isUniqueViolation(err error) bool {
-	var pgErr *pgconn.PgError
-	if errors.As(err, &pgErr) {
-		return pgErr.Code == "23505" // unique_violation
-	}
-	return false
 }

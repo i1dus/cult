@@ -3036,3 +3036,167 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = GetParkingBookingsListResponseValidationError{}
+
+// Validate checks the field values on Rental with the rules defined in the
+// proto definition for this message. If any rules are violated, the first
+// error encountered is returned, or nil if there are no violations.
+func (m *Rental) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on Rental with the rules defined in the
+// proto definition for this message. If any rules are violated, the result is
+// a list of violation errors wrapped in RentalMultiError, or nil if none found.
+func (m *Rental) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *Rental) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for RentalId
+
+	// no validation rules for ParkingLot
+
+	if all {
+		switch v := interface{}(m.GetTimeFrom()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RentalValidationError{
+					field:  "TimeFrom",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RentalValidationError{
+					field:  "TimeFrom",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimeFrom()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RentalValidationError{
+				field:  "TimeFrom",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if all {
+		switch v := interface{}(m.GetTimeTo()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, RentalValidationError{
+					field:  "TimeTo",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, RentalValidationError{
+					field:  "TimeTo",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimeTo()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return RentalValidationError{
+				field:  "TimeTo",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	// no validation rules for CostPerHour
+
+	// no validation rules for CostPerDay
+
+	if len(errors) > 0 {
+		return RentalMultiError(errors)
+	}
+
+	return nil
+}
+
+// RentalMultiError is an error wrapping multiple validation errors returned by
+// Rental.ValidateAll() if the designated constraints aren't met.
+type RentalMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m RentalMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m RentalMultiError) AllErrors() []error { return m }
+
+// RentalValidationError is the validation error returned by Rental.Validate if
+// the designated constraints aren't met.
+type RentalValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e RentalValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e RentalValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e RentalValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e RentalValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e RentalValidationError) ErrorName() string { return "RentalValidationError" }
+
+// Error satisfies the builtin error interface
+func (e RentalValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sRental.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = RentalValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = RentalValidationError{}

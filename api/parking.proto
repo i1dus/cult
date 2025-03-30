@@ -245,6 +245,15 @@ message GetParkingBookingsListResponse {
   int64 total = 2;
 }
 
+message Rental {
+  string rental_id = 1;
+  int64 parking_lot = 2;
+  google.protobuf.Timestamp time_from = 4  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_to = 5  [(google.api.field_behavior) = REQUIRED];
+  int64 cost_per_hour = 6;
+  int64 cost_per_day = 7;
+}
+
 
 
 

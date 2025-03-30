@@ -1511,6 +1511,90 @@ func (x *GetParkingBookingsListResponse) GetTotal() int64 {
 	return 0
 }
 
+type Rental struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	RentalId      string                 `protobuf:"bytes,1,opt,name=rental_id,json=rentalId,proto3" json:"rental_id,omitempty"`
+	ParkingLot    int64                  `protobuf:"varint,2,opt,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
+	TimeFrom      *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=time_from,json=timeFrom,proto3" json:"time_from,omitempty"`
+	TimeTo        *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=time_to,json=timeTo,proto3" json:"time_to,omitempty"`
+	CostPerHour   int64                  `protobuf:"varint,6,opt,name=cost_per_hour,json=costPerHour,proto3" json:"cost_per_hour,omitempty"`
+	CostPerDay    int64                  `protobuf:"varint,7,opt,name=cost_per_day,json=costPerDay,proto3" json:"cost_per_day,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Rental) Reset() {
+	*x = Rental{}
+	mi := &file_parking_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Rental) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Rental) ProtoMessage() {}
+
+func (x *Rental) ProtoReflect() protoreflect.Message {
+	mi := &file_parking_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Rental.ProtoReflect.Descriptor instead.
+func (*Rental) Descriptor() ([]byte, []int) {
+	return file_parking_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *Rental) GetRentalId() string {
+	if x != nil {
+		return x.RentalId
+	}
+	return ""
+}
+
+func (x *Rental) GetParkingLot() int64 {
+	if x != nil {
+		return x.ParkingLot
+	}
+	return 0
+}
+
+func (x *Rental) GetTimeFrom() *timestamppb.Timestamp {
+	if x != nil {
+		return x.TimeFrom
+	}
+	return nil
+}
+
+func (x *Rental) GetTimeTo() *timestamppb.Timestamp {
+	if x != nil {
+		return x.TimeTo
+	}
+	return nil
+}
+
+func (x *Rental) GetCostPerHour() int64 {
+	if x != nil {
+		return x.CostPerHour
+	}
+	return 0
+}
+
+func (x *Rental) GetCostPerDay() int64 {
+	if x != nil {
+		return x.CostPerDay
+	}
+	return 0
+}
+
 var File_parking_proto protoreflect.FileDescriptor
 
 const file_parking_proto_rawDesc = "" +
@@ -1608,7 +1692,16 @@ const file_parking_proto_rawDesc = "" +
 	"\bvehicles\x18\x04 \x03(\tR\bvehicles\"g\n" +
 	"\x1eGetParkingBookingsListResponse\x12/\n" +
 	"\bbookings\x18\x01 \x03(\v2\x13.api.ParkingBookingR\bbookings\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total*\x9a\x01\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\x84\x02\n" +
+	"\x06Rental\x12\x1b\n" +
+	"\trental_id\x18\x01 \x01(\tR\brentalId\x12\x1f\n" +
+	"\vparking_lot\x18\x02 \x01(\x03R\n" +
+	"parkingLot\x12<\n" +
+	"\ttime_from\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x02R\btimeFrom\x128\n" +
+	"\atime_to\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x02R\x06timeTo\x12\"\n" +
+	"\rcost_per_hour\x18\x06 \x01(\x03R\vcostPerHour\x12 \n" +
+	"\fcost_per_day\x18\a \x01(\x03R\n" +
+	"costPerDay*\x9a\x01\n" +
 	"\x10ParkingLotStatus\x12 \n" +
 	"\x1cUNDEFINED_PARKING_LOT_STATUS\x10\x00\x12 \n" +
 	"\x1cAVAILABLE_PARKING_LOT_STATUS\x10\x01\x12\x1d\n" +
@@ -1651,7 +1744,7 @@ func file_parking_proto_rawDescGZIP() []byte {
 }
 
 var file_parking_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_parking_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
+var file_parking_proto_msgTypes = make([]protoimpl.MessageInfo, 26)
 var file_parking_proto_goTypes = []any{
 	(ParkingLotStatus)(0),                  // 0: api.ParkingLotStatus
 	(ParkingType)(0),                       // 1: api.ParkingType
@@ -1681,7 +1774,8 @@ var file_parking_proto_goTypes = []any{
 	(*GetParkingBookingsListRequest)(nil),  // 25: api.GetParkingBookingsListRequest
 	(*Filter)(nil),                         // 26: api.Filter
 	(*GetParkingBookingsListResponse)(nil), // 27: api.GetParkingBookingsListResponse
-	(*timestamppb.Timestamp)(nil),          // 28: google.protobuf.Timestamp
+	(*Rental)(nil),                         // 28: api.Rental
+	(*timestamppb.Timestamp)(nil),          // 29: google.protobuf.Timestamp
 }
 var file_parking_proto_depIdxs = []int32{
 	18, // 0: api.GetUserByIDResponse.user:type_name -> api.User
@@ -1692,37 +1786,39 @@ var file_parking_proto_depIdxs = []int32{
 	0,  // 5: api.ParkingLot.status:type_name -> api.ParkingLotStatus
 	19, // 6: api.ParkingLot.vehicle:type_name -> api.Vehicle
 	2,  // 7: api.User.user_type:type_name -> api.UserType
-	28, // 8: api.ParkingBooking.time_from:type_name -> google.protobuf.Timestamp
-	28, // 9: api.ParkingBooking.time_to:type_name -> google.protobuf.Timestamp
+	29, // 8: api.ParkingBooking.time_from:type_name -> google.protobuf.Timestamp
+	29, // 9: api.ParkingBooking.time_to:type_name -> google.protobuf.Timestamp
 	20, // 10: api.AddParkingBookingRequest.booking:type_name -> api.ParkingBooking
 	20, // 11: api.GetParkingBookingResponse.booking:type_name -> api.ParkingBooking
 	26, // 12: api.GetParkingBookingsListRequest.filter:type_name -> api.Filter
-	28, // 13: api.Filter.time_from:type_name -> google.protobuf.Timestamp
-	28, // 14: api.Filter.time_to:type_name -> google.protobuf.Timestamp
+	29, // 13: api.Filter.time_from:type_name -> google.protobuf.Timestamp
+	29, // 14: api.Filter.time_to:type_name -> google.protobuf.Timestamp
 	20, // 15: api.GetParkingBookingsListResponse.bookings:type_name -> api.ParkingBooking
-	11, // 16: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
-	13, // 17: api.ParkingAPI.GetParkingLotsByUserID:input_type -> api.GetParkingLotsByUserIDRequest
-	15, // 18: api.ParkingAPI.ListParkingLots:input_type -> api.ListParkingLotsRequest
-	21, // 19: api.ParkingAPI.AddParkingBooking:input_type -> api.AddParkingBookingRequest
-	23, // 20: api.ParkingAPI.GetParkingBooking:input_type -> api.GetParkingBookingRequest
-	25, // 21: api.ParkingAPI.GetParkingBookingsList:input_type -> api.GetParkingBookingsListRequest
-	5,  // 22: api.ParkingAPI.Register:input_type -> api.RegisterRequest
-	7,  // 23: api.ParkingAPI.Login:input_type -> api.LoginRequest
-	3,  // 24: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
-	12, // 25: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
-	14, // 26: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
-	16, // 27: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
-	22, // 28: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
-	24, // 29: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
-	27, // 30: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
-	6,  // 31: api.ParkingAPI.Register:output_type -> api.RegisterResponse
-	8,  // 32: api.ParkingAPI.Login:output_type -> api.LoginResponse
-	4,  // 33: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
-	25, // [25:34] is the sub-list for method output_type
-	16, // [16:25] is the sub-list for method input_type
-	16, // [16:16] is the sub-list for extension type_name
-	16, // [16:16] is the sub-list for extension extendee
-	0,  // [0:16] is the sub-list for field type_name
+	29, // 16: api.Rental.time_from:type_name -> google.protobuf.Timestamp
+	29, // 17: api.Rental.time_to:type_name -> google.protobuf.Timestamp
+	11, // 18: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
+	13, // 19: api.ParkingAPI.GetParkingLotsByUserID:input_type -> api.GetParkingLotsByUserIDRequest
+	15, // 20: api.ParkingAPI.ListParkingLots:input_type -> api.ListParkingLotsRequest
+	21, // 21: api.ParkingAPI.AddParkingBooking:input_type -> api.AddParkingBookingRequest
+	23, // 22: api.ParkingAPI.GetParkingBooking:input_type -> api.GetParkingBookingRequest
+	25, // 23: api.ParkingAPI.GetParkingBookingsList:input_type -> api.GetParkingBookingsListRequest
+	5,  // 24: api.ParkingAPI.Register:input_type -> api.RegisterRequest
+	7,  // 25: api.ParkingAPI.Login:input_type -> api.LoginRequest
+	3,  // 26: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
+	12, // 27: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
+	14, // 28: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
+	16, // 29: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
+	22, // 30: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
+	24, // 31: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
+	27, // 32: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
+	6,  // 33: api.ParkingAPI.Register:output_type -> api.RegisterResponse
+	8,  // 34: api.ParkingAPI.Login:output_type -> api.LoginResponse
+	4,  // 35: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
+	27, // [27:36] is the sub-list for method output_type
+	18, // [18:27] is the sub-list for method input_type
+	18, // [18:18] is the sub-list for extension type_name
+	18, // [18:18] is the sub-list for extension extendee
+	0,  // [0:18] is the sub-list for field type_name
 }
 
 func init() { file_parking_proto_init() }
@@ -1738,7 +1834,7 @@ func file_parking_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_parking_proto_rawDesc), len(file_parking_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   25,
+			NumMessages:   26,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

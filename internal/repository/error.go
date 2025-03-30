@@ -11,4 +11,5 @@ var (
 	ErrBookingNotFound  = errors.New("booking not found")
 	ErrInvalidTimeRange = errors.New("invalid time range")
 	ErrBookingConflict  = errors.New("booking conflict")
+	ErrNoActiveRental   = errors.New("no active rental")
 )

@@ -3,6 +3,7 @@ package grpc
 import (
 	"context"
 	"cult/internal/domain"
+	"fmt"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
@@ -11,6 +12,8 @@ import (
 import desc "cult/pkg"
 
 func (s *serverAPI) AddParkingBooking(ctx context.Context, in *desc.AddParkingBookingRequest) (*desc.AddParkingBookingResponse, error) {
+
+	fmt.Println(in.Booking.GetParkingLot())
 
 	err := s.booking.AddBooking(ctx, apiToBooking(in.GetBooking()))
 	if err != nil {
@@ -23,6 +26,7 @@ func (s *serverAPI) AddParkingBooking(ctx context.Context, in *desc.AddParkingBo
 }
 
 func apiToBooking(in *desc.ParkingBooking) domain.Booking {
+	fmt.Println("whhtth " + in.GetUserId())
 	return domain.Booking{
 		UserID:     uuid.MustParse(in.GetUserId()),
 		ParkingLot: in.ParkingLot,
