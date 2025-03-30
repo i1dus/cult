@@ -120,6 +120,12 @@ service ParkingAPI {
       get: "/rentals/get"
     };
   }
+
+  rpc GetBookingPrice (GetBookingPriceRequest) returns (GetBookingPriceResponse) {
+    option (google.api.http) = {
+      get: "/booking/price/get"
+    };
+  }
 }
 
 
@@ -161,6 +167,14 @@ service PaymentAPI {
       body: "*"
     };
   };
+}
+
+message GetBookingPriceRequest {
+  string booking_id = 1;
+}
+
+message GetBookingPriceResponse {
+  int64 amountCents = 1;
 }
 
 message EditParkingBookingRequest {
