@@ -4,11 +4,12 @@ import (
 	"context"
 	"cult/internal/domain"
 	desc "cult/pkg"
-
+	"github.com/google/uuid"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func (s *serverAPI) GetMyParkingLots(ctx context.Context, in *desc.GetMyParkingLotsRequest) (*desc.GetMyParkingLotsResponse, error) {
+	parsedOwner := uuid.MustParse(in.GetFilter().OwnerId)
 
 	rentals, err := s.rental.GetRentalsByFilter(ctx, apiToFilter(in.GetFilter()))
 	if err != nil {
@@ -20,7 +21,7 @@ func (s *serverAPI) GetMyParkingLots(ctx context.Context, in *desc.GetMyParkingL
 		return nil, err
 	}
 
-	parkingLots, err := s.booking.GetParkingLotsByFilter(ctx, apiToFilter(in.GetFilter()))
+	parkingLots, err := s.parkingLot.GetParkingLotsByOwner(ctx, parsedOwner)
 	if err != nil {
 		return nil, err
 	}
