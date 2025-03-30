@@ -25,8 +25,8 @@ VALUES
     ('e19c9873-df4f-4421-9d2f-20efcc4b2c18','+79006543218', 'Павел', 'Семенов', 'Олегович', NULL, 'ADMINISTRATOR_USER_TYPE', '$2a$10$6Y5U4I3O2P1A9S8D7F6G'),
     ('70d89566-dddf-4f76-b28a-f5e03fdc87d8','+79007778899', 'Татьяна', 'Федорова', 'Николаевна', 'ул. Центральная, д.1', 'REGULAR_USER_TYPE', '$2a$10$8H7J6G5F4D3S2A1Q2W3E'),
     ('bbf1f5f1-d0fe-4946-bd71-90b15cd40a17','+79007778810', NULL, NULL, NULL, NULL, 'REGULAR_USER_TYPE', '$2a$10$8H7J6G5F4D3S2A1Q2W3E'),
-    ('9100aeb3-ac9a-4941-9c86-4cbee5da8b71','+79000000000', 'Админ', 'Админов', 'Админович', 'ул. Пушкина, д.1', 'ADMINISTRATOR_USER_TYPE', '$2a$10$nmONwfFLIAyQMPXbk618tuFwrvbQGw1U590dqWcVvCHhGKgvAyjxm'),
-    ('3374d806-a42e-42ff-9fbe-b7ea6e29efc0','+79000000001', 'Компания', 'Управляющая', NULL, 'ул. Гоголя, д.1', 'MANAGING_COMPANY_USER_TYPE', '$2a$10$nmONwfFLIAyQMPXbk618tuFwrvbQGw1U590dqWcVvCHhGKgvAyjxm');
+    ('9100aeb3-ac9a-4941-9c86-4cbee5da8b71','+7 900 000 00 00', 'Админ', 'Админов', 'Админович', 'ул. Пушкина, д.1', 'ADMINISTRATOR_USER_TYPE', '$2a$10$yW5BiXmKI7KGIVjE8B7oiOyXNgmDGK26snFK5SGGgugNGeIXyXXpq'),
+    ('3374d806-a42e-42ff-9fbe-b7ea6e29efc0','+7 900 000 00 01', 'Компания', 'Управляющая', NULL, 'ул. Гоголя, д.1', 'MANAGING_COMPANY_USER_TYPE', '$2a$10$FdPbjRva3zE/kkVlXjmy5OdTBHeWC5iCHyLXO.qKDjUAzb01C4vyW');
 -- +goose StatementEnd
 
 -- +goose Down
