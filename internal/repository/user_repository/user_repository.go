@@ -6,9 +6,10 @@ import (
 	"cult/internal/repository"
 	"errors"
 	"fmt"
+	"log/slog"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
-	"log/slog"
 
 	"github.com/jackc/pgx/v5"
 )

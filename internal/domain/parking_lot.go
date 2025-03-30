@@ -2,6 +2,8 @@ package domain
 
 import (
 	sso "cult/pkg"
+	"time"
+
 	"github.com/google/uuid"
 )
 
@@ -45,4 +47,19 @@ func (p ParkingType) GetPBType() sso.ParkingType {
 		return sso.ParkingType_INCLUSIVE_PARKING_TYPE
 	}
 	panic("unknown parking type")
+}
+
+type Booking struct {
+	UserID     uuid.UUID
+	ParkingLot int64
+	From       time.Time
+	To         time.Time
+	Vehicle    string
+}
+
+type Filter struct {
+	UserID      uuid.UUID
+	From        time.Time
+	To          time.Time
+	ParkingLots []int
 }

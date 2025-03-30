@@ -435,7 +435,8 @@ func (x *LoginRequest) GetPassword() string {
 type LoginResponse struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Авторизационный токен
-	Token         string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	Token string `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
+	// ID пользователя в виде UUID
 	UserID        string `protobuf:"bytes,2,opt,name=userID,proto3" json:"userID,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
@@ -844,8 +845,11 @@ type ParkingLot struct {
 	// Тип парковочного места: для инвалидов, спец. назначения и др.
 	Type ParkingType `protobuf:"varint,2,opt,name=type,proto3,enum=api.ParkingType" json:"type,omitempty"`
 	// Статус парковочного места (забронировано, доступно)
-	Status        ParkingLotStatus `protobuf:"varint,3,opt,name=status,proto3,enum=api.ParkingLotStatus" json:"status,omitempty"`
-	OwnerId       *string          `protobuf:"bytes,4,opt,name=owner_id,json=ownerId,proto3,oneof" json:"owner_id,omitempty"`
+	Status ParkingLotStatus `protobuf:"varint,3,opt,name=status,proto3,enum=api.ParkingLotStatus" json:"status,omitempty"`
+	// Машина на парковочном месте
+	Vehicle *Vehicle `protobuf:"bytes,4,opt,name=vehicle,proto3,oneof" json:"vehicle,omitempty"`
+	// Владелец парковочного места
+	Owner         *User `protobuf:"bytes,5,opt,name=owner,proto3,oneof" json:"owner,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -901,11 +905,18 @@ func (x *ParkingLot) GetStatus() ParkingLotStatus {
 	return ParkingLotStatus_UNDEFINED_PARKING_LOT_STATUS
 }
 
-func (x *ParkingLot) GetOwnerId() string {
-	if x != nil && x.OwnerId != nil {
-		return *x.OwnerId
+func (x *ParkingLot) GetVehicle() *Vehicle {
+	if x != nil {
+		return x.Vehicle
 	}
-	return ""
+	return nil
+}
+
+func (x *ParkingLot) GetOwner() *User {
+	if x != nil {
+		return x.Owner
+	}
+	return nil
 }
 
 type User struct {
@@ -1070,12 +1081,11 @@ func (x *Vehicle) GetUserId() string {
 
 type ParkingBooking struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ParkingLot    string                 `protobuf:"bytes,1,opt,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
-	PhoneNumber   string                 `protobuf:"bytes,2,opt,name=phone_number,json=phoneNumber,proto3" json:"phone_number,omitempty"`
-	Name          string                 `protobuf:"bytes,3,opt,name=name,proto3" json:"name,omitempty"`
-	CarPlate      string                 `protobuf:"bytes,4,opt,name=car_plate,json=carPlate,proto3" json:"car_plate,omitempty"`
-	TimeFrom      *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=time_from,json=timeFrom,proto3" json:"time_from,omitempty"`
-	TimeTo        *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=time_to,json=timeTo,proto3" json:"time_to,omitempty"`
+	UserId        string                 `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	ParkingLot    int64                  `protobuf:"varint,2,opt,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
+	Vehicle       string                 `protobuf:"bytes,3,opt,name=vehicle,proto3" json:"vehicle,omitempty"`
+	TimeFrom      *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=time_from,json=timeFrom,proto3" json:"time_from,omitempty"`
+	TimeTo        *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=time_to,json=timeTo,proto3" json:"time_to,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1110,30 +1120,23 @@ func (*ParkingBooking) Descriptor() ([]byte, []int) {
 	return file_parking_proto_rawDescGZIP(), []int{17}
 }
 
-func (x *ParkingBooking) GetParkingLot() string {
+func (x *ParkingBooking) GetUserId() string {
+	if x != nil {
+		return x.UserId
+	}
+	return ""
+}
+
+func (x *ParkingBooking) GetParkingLot() int64 {
 	if x != nil {
 		return x.ParkingLot
 	}
-	return ""
+	return 0
 }
 
-func (x *ParkingBooking) GetPhoneNumber() string {
+func (x *ParkingBooking) GetVehicle() string {
 	if x != nil {
-		return x.PhoneNumber
-	}
-	return ""
-}
-
-func (x *ParkingBooking) GetName() string {
-	if x != nil {
-		return x.Name
-	}
-	return ""
-}
-
-func (x *ParkingBooking) GetCarPlate() string {
-	if x != nil {
-		return x.CarPlate
+		return x.Vehicle
 	}
 	return ""
 }
@@ -1154,7 +1157,7 @@ func (x *ParkingBooking) GetTimeTo() *timestamppb.Timestamp {
 
 type AddParkingBookingRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Booking       *ParkingBooking        `protobuf:"bytes,2,opt,name=booking,proto3" json:"booking,omitempty"`
+	Booking       *ParkingBooking        `protobuf:"bytes,1,opt,name=booking,proto3" json:"booking,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1198,7 +1201,7 @@ func (x *AddParkingBookingRequest) GetBooking() *ParkingBooking {
 
 type AddParkingBookingResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ParkingLot    string                 `protobuf:"bytes,1,opt,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
+	ParkingLot    int64                  `protobuf:"varint,1,opt,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1233,16 +1236,16 @@ func (*AddParkingBookingResponse) Descriptor() ([]byte, []int) {
 	return file_parking_proto_rawDescGZIP(), []int{19}
 }
 
-func (x *AddParkingBookingResponse) GetParkingLot() string {
+func (x *AddParkingBookingResponse) GetParkingLot() int64 {
 	if x != nil {
 		return x.ParkingLot
 	}
-	return ""
+	return 0
 }
 
 type GetParkingBookingRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	ParkingLot    string                 `protobuf:"bytes,1,opt,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
+	ParkingLot    int64                  `protobuf:"varint,1,opt,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1277,11 +1280,11 @@ func (*GetParkingBookingRequest) Descriptor() ([]byte, []int) {
 	return file_parking_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *GetParkingBookingRequest) GetParkingLot() string {
+func (x *GetParkingBookingRequest) GetParkingLot() int64 {
 	if x != nil {
 		return x.ParkingLot
 	}
-	return ""
+	return 0
 }
 
 type GetParkingBookingResponse struct {
@@ -1330,7 +1333,7 @@ func (x *GetParkingBookingResponse) GetBooking() *ParkingBooking {
 
 type GetParkingBookingsListRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Filter        string                 `protobuf:"bytes,1,opt,name=filter,proto3" json:"filter,omitempty"`
+	Filter        *Filter                `protobuf:"bytes,1,opt,name=filter,proto3" json:"filter,omitempty"`
 	Limit         int64                  `protobuf:"varint,2,opt,name=limit,proto3" json:"limit,omitempty"`   // opt
 	Offset        int64                  `protobuf:"varint,3,opt,name=offset,proto3" json:"offset,omitempty"` // opt
 	unknownFields protoimpl.UnknownFields
@@ -1367,11 +1370,11 @@ func (*GetParkingBookingsListRequest) Descriptor() ([]byte, []int) {
 	return file_parking_proto_rawDescGZIP(), []int{22}
 }
 
-func (x *GetParkingBookingsListRequest) GetFilter() string {
+func (x *GetParkingBookingsListRequest) GetFilter() *Filter {
 	if x != nil {
 		return x.Filter
 	}
-	return ""
+	return nil
 }
 
 func (x *GetParkingBookingsListRequest) GetLimit() int64 {
@@ -1388,6 +1391,74 @@ func (x *GetParkingBookingsListRequest) GetOffset() int64 {
 	return 0
 }
 
+type Filter struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	OwnerId       string                 `protobuf:"bytes,1,opt,name=owner_id,json=ownerId,proto3" json:"owner_id,omitempty"`
+	TimeFrom      *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=time_from,json=timeFrom,proto3" json:"time_from,omitempty"`
+	TimeTo        *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=time_to,json=timeTo,proto3" json:"time_to,omitempty"`
+	Vehicles      []string               `protobuf:"bytes,4,rep,name=vehicles,proto3" json:"vehicles,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *Filter) Reset() {
+	*x = Filter{}
+	mi := &file_parking_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Filter) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Filter) ProtoMessage() {}
+
+func (x *Filter) ProtoReflect() protoreflect.Message {
+	mi := &file_parking_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Filter.ProtoReflect.Descriptor instead.
+func (*Filter) Descriptor() ([]byte, []int) {
+	return file_parking_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *Filter) GetOwnerId() string {
+	if x != nil {
+		return x.OwnerId
+	}
+	return ""
+}
+
+func (x *Filter) GetTimeFrom() *timestamppb.Timestamp {
+	if x != nil {
+		return x.TimeFrom
+	}
+	return nil
+}
+
+func (x *Filter) GetTimeTo() *timestamppb.Timestamp {
+	if x != nil {
+		return x.TimeTo
+	}
+	return nil
+}
+
+func (x *Filter) GetVehicles() []string {
+	if x != nil {
+		return x.Vehicles
+	}
+	return nil
+}
+
 type GetParkingBookingsListResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Bookings      []*ParkingBooking      `protobuf:"bytes,1,rep,name=bookings,proto3" json:"bookings,omitempty"`
@@ -1398,7 +1469,7 @@ type GetParkingBookingsListResponse struct {
 
 func (x *GetParkingBookingsListResponse) Reset() {
 	*x = GetParkingBookingsListResponse{}
-	mi := &file_parking_proto_msgTypes[23]
+	mi := &file_parking_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1410,7 +1481,7 @@ func (x *GetParkingBookingsListResponse) String() string {
 func (*GetParkingBookingsListResponse) ProtoMessage() {}
 
 func (x *GetParkingBookingsListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[23]
+	mi := &file_parking_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1423,7 +1494,7 @@ func (x *GetParkingBookingsListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParkingBookingsListResponse.ProtoReflect.Descriptor instead.
 func (*GetParkingBookingsListResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{23}
+	return file_parking_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *GetParkingBookingsListResponse) GetBookings() []*ParkingBooking {
@@ -1478,14 +1549,17 @@ const file_parking_proto_rawDesc = "" +
 	"\x17ListParkingLotsResponse\x120\n" +
 	"\vparking_lot\x18\x01 \x03(\v2\x0f.api.ParkingLotR\n" +
 	"parkingLot\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\xa6\x01\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xe2\x01\n" +
 	"\n" +
 	"ParkingLot\x12\x16\n" +
 	"\x06number\x18\x01 \x01(\x03R\x06number\x12$\n" +
 	"\x04type\x18\x02 \x01(\x0e2\x10.api.ParkingTypeR\x04type\x12-\n" +
-	"\x06status\x18\x03 \x01(\x0e2\x15.api.ParkingLotStatusR\x06status\x12\x1e\n" +
-	"\bowner_id\x18\x04 \x01(\tH\x00R\aownerId\x88\x01\x01B\v\n" +
-	"\t_owner_id\"\x91\x02\n" +
+	"\x06status\x18\x03 \x01(\x0e2\x15.api.ParkingLotStatusR\x06status\x12+\n" +
+	"\avehicle\x18\x04 \x01(\v2\f.api.VehicleH\x00R\avehicle\x88\x01\x01\x12$\n" +
+	"\x05owner\x18\x05 \x01(\v2\t.api.UserH\x01R\x05owner\x88\x01\x01B\n" +
+	"\n" +
+	"\b_vehicleB\b\n" +
+	"\x06_owner\"\x91\x02\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1d\n" +
@@ -1505,29 +1579,33 @@ const file_parking_proto_rawDesc = "" +
 	"\aVehicle\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x16\n" +
 	"\x06number\x18\x02 \x01(\tR\x06number\x12\x17\n" +
-	"\auser_id\x18\x03 \x01(\tR\x06userId\"\x87\x02\n" +
-	"\x0eParkingBooking\x12\x1f\n" +
-	"\vparking_lot\x18\x01 \x01(\tR\n" +
-	"parkingLot\x12&\n" +
-	"\fphone_number\x18\x02 \x01(\tB\x03\xe0A\x02R\vphoneNumber\x12\x12\n" +
-	"\x04name\x18\x03 \x01(\tR\x04name\x12 \n" +
-	"\tcar_plate\x18\x04 \x01(\tB\x03\xe0A\x02R\bcarPlate\x12<\n" +
-	"\ttime_from\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x02R\btimeFrom\x128\n" +
-	"\atime_to\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x02R\x06timeTo\"N\n" +
+	"\auser_id\x18\x03 \x01(\tR\x06userId\"\xe1\x01\n" +
+	"\x0eParkingBooking\x12\x17\n" +
+	"\auser_id\x18\x01 \x01(\tR\x06userId\x12\x1f\n" +
+	"\vparking_lot\x18\x02 \x01(\x03R\n" +
+	"parkingLot\x12\x1d\n" +
+	"\avehicle\x18\x03 \x01(\tB\x03\xe0A\x02R\avehicle\x12<\n" +
+	"\ttime_from\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x02R\btimeFrom\x128\n" +
+	"\atime_to\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampB\x03\xe0A\x02R\x06timeTo\"N\n" +
 	"\x18AddParkingBookingRequest\x122\n" +
-	"\abooking\x18\x02 \x01(\v2\x13.api.ParkingBookingB\x03\xe0A\x02R\abooking\"<\n" +
+	"\abooking\x18\x01 \x01(\v2\x13.api.ParkingBookingB\x03\xe0A\x02R\abooking\"<\n" +
 	"\x19AddParkingBookingResponse\x12\x1f\n" +
-	"\vparking_lot\x18\x01 \x01(\tR\n" +
+	"\vparking_lot\x18\x01 \x01(\x03R\n" +
 	"parkingLot\";\n" +
 	"\x18GetParkingBookingRequest\x12\x1f\n" +
-	"\vparking_lot\x18\x01 \x01(\tR\n" +
+	"\vparking_lot\x18\x01 \x01(\x03R\n" +
 	"parkingLot\"J\n" +
 	"\x19GetParkingBookingResponse\x12-\n" +
-	"\abooking\x18\x01 \x01(\v2\x13.api.ParkingBookingR\abooking\"e\n" +
-	"\x1dGetParkingBookingsListRequest\x12\x16\n" +
-	"\x06filter\x18\x01 \x01(\tR\x06filter\x12\x14\n" +
+	"\abooking\x18\x01 \x01(\v2\x13.api.ParkingBookingR\abooking\"r\n" +
+	"\x1dGetParkingBookingsListRequest\x12#\n" +
+	"\x06filter\x18\x01 \x01(\v2\v.api.FilterR\x06filter\x12\x14\n" +
 	"\x05limit\x18\x02 \x01(\x03R\x05limit\x12\x16\n" +
-	"\x06offset\x18\x03 \x01(\x03R\x06offset\"g\n" +
+	"\x06offset\x18\x03 \x01(\x03R\x06offset\"\xb2\x01\n" +
+	"\x06Filter\x12\x1e\n" +
+	"\bowner_id\x18\x01 \x01(\tB\x03\xe0A\x02R\aownerId\x127\n" +
+	"\ttime_from\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\btimeFrom\x123\n" +
+	"\atime_to\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampR\x06timeTo\x12\x1a\n" +
+	"\bvehicles\x18\x04 \x03(\tR\bvehicles\"g\n" +
 	"\x1eGetParkingBookingsListResponse\x12/\n" +
 	"\bbookings\x18\x01 \x03(\v2\x13.api.ParkingBookingR\bbookings\x12\x14\n" +
 	"\x05total\x18\x02 \x01(\x03R\x05total*\x9a\x01\n" +
@@ -1573,7 +1651,7 @@ func file_parking_proto_rawDescGZIP() []byte {
 }
 
 var file_parking_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_parking_proto_msgTypes = make([]protoimpl.MessageInfo, 24)
+var file_parking_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_parking_proto_goTypes = []any{
 	(ParkingLotStatus)(0),                  // 0: api.ParkingLotStatus
 	(ParkingType)(0),                       // 1: api.ParkingType
@@ -1601,8 +1679,9 @@ var file_parking_proto_goTypes = []any{
 	(*GetParkingBookingRequest)(nil),       // 23: api.GetParkingBookingRequest
 	(*GetParkingBookingResponse)(nil),      // 24: api.GetParkingBookingResponse
 	(*GetParkingBookingsListRequest)(nil),  // 25: api.GetParkingBookingsListRequest
-	(*GetParkingBookingsListResponse)(nil), // 26: api.GetParkingBookingsListResponse
-	(*timestamppb.Timestamp)(nil),          // 27: google.protobuf.Timestamp
+	(*Filter)(nil),                         // 26: api.Filter
+	(*GetParkingBookingsListResponse)(nil), // 27: api.GetParkingBookingsListResponse
+	(*timestamppb.Timestamp)(nil),          // 28: google.protobuf.Timestamp
 }
 var file_parking_proto_depIdxs = []int32{
 	18, // 0: api.GetUserByIDResponse.user:type_name -> api.User
@@ -1611,35 +1690,40 @@ var file_parking_proto_depIdxs = []int32{
 	17, // 3: api.ListParkingLotsResponse.parking_lot:type_name -> api.ParkingLot
 	1,  // 4: api.ParkingLot.type:type_name -> api.ParkingType
 	0,  // 5: api.ParkingLot.status:type_name -> api.ParkingLotStatus
-	2,  // 6: api.User.user_type:type_name -> api.UserType
-	27, // 7: api.ParkingBooking.time_from:type_name -> google.protobuf.Timestamp
-	27, // 8: api.ParkingBooking.time_to:type_name -> google.protobuf.Timestamp
-	20, // 9: api.AddParkingBookingRequest.booking:type_name -> api.ParkingBooking
-	20, // 10: api.GetParkingBookingResponse.booking:type_name -> api.ParkingBooking
-	20, // 11: api.GetParkingBookingsListResponse.bookings:type_name -> api.ParkingBooking
-	11, // 12: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
-	13, // 13: api.ParkingAPI.GetParkingLotsByUserID:input_type -> api.GetParkingLotsByUserIDRequest
-	15, // 14: api.ParkingAPI.ListParkingLots:input_type -> api.ListParkingLotsRequest
-	21, // 15: api.ParkingAPI.AddParkingBooking:input_type -> api.AddParkingBookingRequest
-	23, // 16: api.ParkingAPI.GetParkingBooking:input_type -> api.GetParkingBookingRequest
-	25, // 17: api.ParkingAPI.GetParkingBookingsList:input_type -> api.GetParkingBookingsListRequest
-	5,  // 18: api.ParkingAPI.Register:input_type -> api.RegisterRequest
-	7,  // 19: api.ParkingAPI.Login:input_type -> api.LoginRequest
-	3,  // 20: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
-	12, // 21: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
-	14, // 22: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
-	16, // 23: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
-	22, // 24: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
-	24, // 25: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
-	26, // 26: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
-	6,  // 27: api.ParkingAPI.Register:output_type -> api.RegisterResponse
-	8,  // 28: api.ParkingAPI.Login:output_type -> api.LoginResponse
-	4,  // 29: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
-	21, // [21:30] is the sub-list for method output_type
-	12, // [12:21] is the sub-list for method input_type
-	12, // [12:12] is the sub-list for extension type_name
-	12, // [12:12] is the sub-list for extension extendee
-	0,  // [0:12] is the sub-list for field type_name
+	19, // 6: api.ParkingLot.vehicle:type_name -> api.Vehicle
+	18, // 7: api.ParkingLot.owner:type_name -> api.User
+	2,  // 8: api.User.user_type:type_name -> api.UserType
+	28, // 9: api.ParkingBooking.time_from:type_name -> google.protobuf.Timestamp
+	28, // 10: api.ParkingBooking.time_to:type_name -> google.protobuf.Timestamp
+	20, // 11: api.AddParkingBookingRequest.booking:type_name -> api.ParkingBooking
+	20, // 12: api.GetParkingBookingResponse.booking:type_name -> api.ParkingBooking
+	26, // 13: api.GetParkingBookingsListRequest.filter:type_name -> api.Filter
+	28, // 14: api.Filter.time_from:type_name -> google.protobuf.Timestamp
+	28, // 15: api.Filter.time_to:type_name -> google.protobuf.Timestamp
+	20, // 16: api.GetParkingBookingsListResponse.bookings:type_name -> api.ParkingBooking
+	11, // 17: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
+	13, // 18: api.ParkingAPI.GetParkingLotsByUserID:input_type -> api.GetParkingLotsByUserIDRequest
+	15, // 19: api.ParkingAPI.ListParkingLots:input_type -> api.ListParkingLotsRequest
+	21, // 20: api.ParkingAPI.AddParkingBooking:input_type -> api.AddParkingBookingRequest
+	23, // 21: api.ParkingAPI.GetParkingBooking:input_type -> api.GetParkingBookingRequest
+	25, // 22: api.ParkingAPI.GetParkingBookingsList:input_type -> api.GetParkingBookingsListRequest
+	5,  // 23: api.ParkingAPI.Register:input_type -> api.RegisterRequest
+	7,  // 24: api.ParkingAPI.Login:input_type -> api.LoginRequest
+	3,  // 25: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
+	12, // 26: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
+	14, // 27: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
+	16, // 28: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
+	22, // 29: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
+	24, // 30: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
+	27, // 31: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
+	6,  // 32: api.ParkingAPI.Register:output_type -> api.RegisterResponse
+	8,  // 33: api.ParkingAPI.Login:output_type -> api.LoginResponse
+	4,  // 34: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
+	26, // [26:35] is the sub-list for method output_type
+	17, // [17:26] is the sub-list for method input_type
+	17, // [17:17] is the sub-list for extension type_name
+	17, // [17:17] is the sub-list for extension extendee
+	0,  // [0:17] is the sub-list for field type_name
 }
 
 func init() { file_parking_proto_init() }
@@ -1655,7 +1739,7 @@ func file_parking_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_parking_proto_rawDesc), len(file_parking_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   24,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

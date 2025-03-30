@@ -40,9 +40,7 @@ type ParkingAPIClient interface {
 	AddParkingBooking(ctx context.Context, in *AddParkingBookingRequest, opts ...grpc.CallOption) (*AddParkingBookingResponse, error)
 	GetParkingBooking(ctx context.Context, in *GetParkingBookingRequest, opts ...grpc.CallOption) (*GetParkingBookingResponse, error)
 	GetParkingBookingsList(ctx context.Context, in *GetParkingBookingsListRequest, opts ...grpc.CallOption) (*GetParkingBookingsListResponse, error)
-	// Register registers a new user.
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
-	// Login logs in a user and returns an auth token.
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	// IsAdmin checks whether a user is an admin.
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
@@ -156,9 +154,7 @@ type ParkingAPIServer interface {
 	AddParkingBooking(context.Context, *AddParkingBookingRequest) (*AddParkingBookingResponse, error)
 	GetParkingBooking(context.Context, *GetParkingBookingRequest) (*GetParkingBookingResponse, error)
 	GetParkingBookingsList(context.Context, *GetParkingBookingsListRequest) (*GetParkingBookingsListResponse, error)
-	// Register registers a new user.
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
-	// Login logs in a user and returns an auth token.
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	// IsAdmin checks whether a user is an admin.
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)

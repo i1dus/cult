@@ -5,6 +5,18 @@ import (
 	desc "cult/pkg"
 )
 
-func (s *parkingAPI) GetBooking(ctx context.Context, in *desc.AddParkingBookingRequest) (*desc.AddParkingBookingResponse, error) {
-	return &desc.AddParkingBookingResponse{}, nil
+func (s *serverAPI) GetParkingBooking(ctx context.Context, in *desc.GetParkingBookingRequest) (*desc.GetParkingBookingResponse, error) {
+
+	booking, err := s.booking.GetBooking(ctx, in.GetParkingLot())
+	if err != nil {
+		return nil, err
+	}
+
+	if booking == nil {
+		return &desc.GetParkingBookingResponse{}, nil
+	}
+
+	return &desc.GetParkingBookingResponse{
+		Booking: bookingToApi(booking),
+	}, nil
 }

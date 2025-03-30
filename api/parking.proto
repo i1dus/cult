@@ -45,7 +45,6 @@ service ParkingAPI {
     };
   }
 
-  // Register registers a new user.
   rpc Register (RegisterRequest) returns (RegisterResponse) {
     option (google.api.http) = {
       post: "/sso/register"
@@ -53,7 +52,6 @@ service ParkingAPI {
     };
   };
 
-  // Login logs in a user and returns an auth token.
   rpc Login (LoginRequest) returns (LoginResponse) {
     option (google.api.http) = {
       post: "/sso/login"
@@ -100,6 +98,7 @@ message LoginRequest {
 message LoginResponse {
   // Авторизационный токен
   string token = 1;
+  // ID пользователя в виде UUID
   string userID = 2;
 }
 
@@ -142,7 +141,10 @@ message ParkingLot {
   ParkingType type = 2;
   // Статус парковочного места (забронировано, доступно)
   ParkingLotStatus status = 3;
-  optional string owner_id = 4;
+  // Машина на парковочном месте
+  optional Vehicle vehicle = 4;
+  // Владелец парковочного места
+  optional User owner = 5;
 }
 
 enum ParkingLotStatus {
@@ -202,24 +204,23 @@ message Vehicle {
 }
 
 message ParkingBooking {
-  string parking_lot = 1;
-  string phone_number = 2 [(google.api.field_behavior) = REQUIRED];
-  string name = 3;
-  string car_plate = 4  [(google.api.field_behavior) = REQUIRED];
-  google.protobuf.Timestamp time_from = 5  [(google.api.field_behavior) = REQUIRED];
-  google.protobuf.Timestamp time_to = 6  [(google.api.field_behavior) = REQUIRED];
+  string user_id = 1;
+  int64 parking_lot = 2;
+  string vehicle = 3  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_from = 4  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_to = 5  [(google.api.field_behavior) = REQUIRED];
 }
 
 message AddParkingBookingRequest {
-  ParkingBooking booking = 2 [(google.api.field_behavior) = REQUIRED];;
+  ParkingBooking booking = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 message AddParkingBookingResponse {
-  string parking_lot = 1;
+  int64 parking_lot = 1;
 }
 
 message GetParkingBookingRequest {
-  string parking_lot = 1;
+  int64 parking_lot = 1;
 }
 
 message GetParkingBookingResponse {
@@ -227,9 +228,16 @@ message GetParkingBookingResponse {
 }
 
 message GetParkingBookingsListRequest {
-  string filter = 1;
+  Filter filter = 1;
   int64 limit = 2; // opt
   int64 offset = 3; // opt
+}
+
+message Filter {
+  string owner_id = 1 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_from = 2 ;
+  google.protobuf.Timestamp time_to = 3;
+  repeated string vehicles = 4;
 }
 
 message GetParkingBookingsListResponse {

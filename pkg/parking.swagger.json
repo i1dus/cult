@@ -70,7 +70,8 @@
             "name": "parkingLot",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "int64"
           }
         ],
         "tags": [
@@ -97,10 +98,34 @@
         },
         "parameters": [
           {
-            "name": "filter",
+            "name": "filter.ownerId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "filter.timeFrom",
             "in": "query",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.timeTo",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.vehicles",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           },
           {
             "name": "limit",
@@ -240,7 +265,6 @@
     },
     "/sso/login": {
       "post": {
-        "summary": "Login logs in a user and returns an auth token.",
         "operationId": "ParkingAPI_Login",
         "responses": {
           "200": {
@@ -273,7 +297,6 @@
     },
     "/sso/register": {
       "post": {
-        "summary": "Register registers a new user.",
         "operationId": "ParkingAPI_Register",
         "responses": {
           "200": {
@@ -321,9 +344,35 @@
       "type": "object",
       "properties": {
         "parkingLot": {
-          "type": "string"
+          "type": "string",
+          "format": "int64"
         }
       }
+    },
+    "apiFilter": {
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string"
+        },
+        "timeFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timeTo": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "vehicles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "ownerId"
+      ]
     },
     "apiGetParkingBookingResponse": {
       "type": "object",
@@ -414,23 +463,22 @@
           "title": "Авторизационный токен"
         },
         "userID": {
-          "type": "string"
+          "type": "string",
+          "title": "ID пользователя в виде UUID"
         }
       }
     },
     "apiParkingBooking": {
       "type": "object",
       "properties": {
+        "userId": {
+          "type": "string"
+        },
         "parkingLot": {
-          "type": "string"
+          "type": "string",
+          "format": "int64"
         },
-        "phoneNumber": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "carPlate": {
+        "vehicle": {
           "type": "string"
         },
         "timeFrom": {
@@ -443,8 +491,7 @@
         }
       },
       "required": [
-        "phoneNumber",
-        "carPlate",
+        "vehicle",
         "timeFrom",
         "timeTo"
       ]
@@ -464,8 +511,13 @@
           "$ref": "#/definitions/apiParkingLotStatus",
           "title": "Статус парковочного места (забронировано, доступно)"
         },
-        "ownerId": {
-          "type": "string"
+        "vehicle": {
+          "$ref": "#/definitions/apiVehicle",
+          "title": "Машина на парковочном месте"
+        },
+        "owner": {
+          "$ref": "#/definitions/apiUser",
+          "title": "Владелец парковочного места"
         }
       }
     },
@@ -555,6 +607,23 @@
       ],
       "default": "UNDEFINED_USER_TYPE",
       "title": "- UNDEFINED_USER_TYPE: Неизвестный\n - REGULAR_USER_TYPE: Обычный пользователь (Владелец+Арендатор)\n - MANAGING_COMPANY_USER_TYPE: Управляющая компания\n - ADMINISTRATOR_USER_TYPE: Администратор"
+    },
+    "apiVehicle": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "UUID"
+        },
+        "number": {
+          "type": "string",
+          "title": "Гос. номер машины"
+        },
+        "userId": {
+          "type": "string",
+          "title": "ID владельца машины"
+        }
+      }
     },
     "protobufAny": {
       "type": "object",

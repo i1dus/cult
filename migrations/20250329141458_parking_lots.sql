@@ -2,9 +2,10 @@
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS parking_lots
 (
-    id           TEXT PRIMARY KEY,
-    parking_type TEXT NOT NULL,
-    owner_id     UUID
+    id             INTEGER PRIMARY KEY,
+    parking_type   TEXT NOT NULL,
+    vehicle_id     TEXT,
+    owner_id       UUID
 );
 
 INSERT INTO parking_lots (id, parking_type, owner_id)
