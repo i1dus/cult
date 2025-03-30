@@ -52,10 +52,10 @@ func (s *ParkingLotService) GetAllParkingLots(ctx context.Context, userID uuid.U
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	for _, lot := range lots {
+	for i, lot := range lots {
 		pType, pStatus := s.calculateTypeAndStatus(ctx, lot, userID)
-		lot.ParkingType = pType
-		lot.ParkingStatus = pStatus
+		lots[i].ParkingType = pType
+		lots[i].ParkingStatus = pStatus
 	}
 
 	log.Info("successfully retrieved parking lots", slog.Int("count", len(lots)))
@@ -106,10 +106,10 @@ func (s *ParkingLotService) GetParkingLotsByOwner(ctx context.Context, ownerID u
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	for _, lot := range lots {
+	for i, lot := range lots {
 		pType, pStatus := s.calculateTypeAndStatus(ctx, lot, ownerID)
-		lot.ParkingType = pType
-		lot.ParkingStatus = pStatus
+		lots[i].ParkingType = pType
+		lots[i].ParkingStatus = pStatus
 	}
 
 	log.Info("successfully retrieved parking lots by owner",
@@ -141,6 +141,7 @@ func (s *ParkingLotService) calculateTypeAndStatus(ctx context.Context, lot doma
 
 	idInt := lot.ID
 	booking, err := s.bookingRepo.GetBooking(ctx, idInt)
+	fmt.Println(lot.ID, booking, err, isOwner, hasOwner)
 	if err != nil {
 		s.log.Error(err.Error())
 		return domain.UndefinedParkingType, domain.UndefinedParkingLotStatus
