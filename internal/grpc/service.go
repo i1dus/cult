@@ -38,6 +38,7 @@ type RentalService interface {
 	GetRentalsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Rental, error)
 	AddRental(ctx context.Context, rental domain.Rental) error
 	GetRental(ctx context.Context, parkingLot int64) (domain.Rental, error)
+	GetBookingPriceByID(ctx context.Context, id uuid.UUID) (int64, error)
 }
 
 type PaymentService interface {

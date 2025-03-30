@@ -184,6 +184,36 @@
         ]
       }
     },
+    "/booking/price/get": {
+      "get": {
+        "operationId": "ParkingAPI_GetBookingPrice",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetBookingPriceResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "bookingId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
     "/booking/vehicle/change": {
       "post": {
         "operationId": "ParkingAPI_UpdateBookingVehicle",
@@ -1001,6 +1031,15 @@
       "required": [
         "ownerId"
       ]
+    },
+    "apiGetBookingPriceResponse": {
+      "type": "object",
+      "properties": {
+        "amountCents": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
     },
     "apiGetMyParkingLotsResponse": {
       "type": "object",
