@@ -35,6 +35,272 @@ var (
 	_ = sort.Sort
 )
 
+// Validate checks the field values on EditParkingBookingRequest with the rules
+// defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *EditParkingBookingRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on EditParkingBookingRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// EditParkingBookingRequestMultiError, or nil if none found.
+func (m *EditParkingBookingRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *EditParkingBookingRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for UserId
+
+	// no validation rules for BookingId
+
+	if all {
+		switch v := interface{}(m.GetTimeTo()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, EditParkingBookingRequestValidationError{
+					field:  "TimeTo",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, EditParkingBookingRequestValidationError{
+					field:  "TimeTo",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimeTo()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return EditParkingBookingRequestValidationError{
+				field:  "TimeTo",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return EditParkingBookingRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// EditParkingBookingRequestMultiError is an error wrapping multiple validation
+// errors returned by EditParkingBookingRequest.ValidateAll() if the
+// designated constraints aren't met.
+type EditParkingBookingRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m EditParkingBookingRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m EditParkingBookingRequestMultiError) AllErrors() []error { return m }
+
+// EditParkingBookingRequestValidationError is the validation error returned by
+// EditParkingBookingRequest.Validate if the designated constraints aren't met.
+type EditParkingBookingRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e EditParkingBookingRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e EditParkingBookingRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e EditParkingBookingRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e EditParkingBookingRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e EditParkingBookingRequestValidationError) ErrorName() string {
+	return "EditParkingBookingRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e EditParkingBookingRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sEditParkingBookingRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = EditParkingBookingRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = EditParkingBookingRequestValidationError{}
+
+// Validate checks the field values on EditParkingBookingResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *EditParkingBookingResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on EditParkingBookingResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// EditParkingBookingResponseMultiError, or nil if none found.
+func (m *EditParkingBookingResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *EditParkingBookingResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if all {
+		switch v := interface{}(m.GetTimeTo()).(type) {
+		case interface{ ValidateAll() error }:
+			if err := v.ValidateAll(); err != nil {
+				errors = append(errors, EditParkingBookingResponseValidationError{
+					field:  "TimeTo",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		case interface{ Validate() error }:
+			if err := v.Validate(); err != nil {
+				errors = append(errors, EditParkingBookingResponseValidationError{
+					field:  "TimeTo",
+					reason: "embedded message failed validation",
+					cause:  err,
+				})
+			}
+		}
+	} else if v, ok := interface{}(m.GetTimeTo()).(interface{ Validate() error }); ok {
+		if err := v.Validate(); err != nil {
+			return EditParkingBookingResponseValidationError{
+				field:  "TimeTo",
+				reason: "embedded message failed validation",
+				cause:  err,
+			}
+		}
+	}
+
+	if len(errors) > 0 {
+		return EditParkingBookingResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// EditParkingBookingResponseMultiError is an error wrapping multiple
+// validation errors returned by EditParkingBookingResponse.ValidateAll() if
+// the designated constraints aren't met.
+type EditParkingBookingResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m EditParkingBookingResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m EditParkingBookingResponseMultiError) AllErrors() []error { return m }
+
+// EditParkingBookingResponseValidationError is the validation error returned
+// by EditParkingBookingResponse.Validate if the designated constraints aren't met.
+type EditParkingBookingResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e EditParkingBookingResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e EditParkingBookingResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e EditParkingBookingResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e EditParkingBookingResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e EditParkingBookingResponseValidationError) ErrorName() string {
+	return "EditParkingBookingResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e EditParkingBookingResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sEditParkingBookingResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = EditParkingBookingResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = EditParkingBookingResponseValidationError{}
+
 // Validate checks the field values on CreatePaymentRequest with the rules
 // defined in the proto definition for this message. If any rules are
 // violated, the first error encountered is returned, or nil if there are no violations.

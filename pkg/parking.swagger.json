@@ -51,6 +51,38 @@
         ]
       }
     },
+    "/booking/edit": {
+      "post": {
+        "operationId": "ParkingAPI_EditParkingBooking",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiEditParkingBookingResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiEditParkingBookingRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
     "/booking/get": {
       "get": {
         "operationId": "ParkingAPI_GetParkingBooking",
@@ -792,6 +824,37 @@
           "$ref": "#/definitions/apiPaymentStatus"
         }
       }
+    },
+    "apiEditParkingBookingRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "bookingId": {
+          "type": "string"
+        },
+        "timeTo": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "bookingId",
+        "timeTo"
+      ]
+    },
+    "apiEditParkingBookingResponse": {
+      "type": "object",
+      "properties": {
+        "timeTo": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "timeTo"
+      ]
     },
     "apiFilter": {
       "type": "object",

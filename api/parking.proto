@@ -36,6 +36,13 @@ service ParkingAPI {
     };
   }
 
+  rpc EditParkingBooking (EditParkingBookingRequest) returns (EditParkingBookingResponse) {
+    option (google.api.http) = {
+      post: "/booking/edit"
+      body: "*"
+    };
+  }
+
   rpc GetParkingBooking (GetParkingBookingRequest) returns (GetParkingBookingResponse) {
     option (google.api.http) = {
       get: "/booking/get"
@@ -141,6 +148,16 @@ service PaymentAPI {
       body: "*"
     };
   };
+}
+
+message EditParkingBookingRequest {
+  string user_id = 1;
+  string booking_id = 2  [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp time_to = 3 [(google.api.field_behavior) = REQUIRED];
+}
+
+message EditParkingBookingResponse {
+  google.protobuf.Timestamp time_to = 1 [(google.api.field_behavior) = REQUIRED];
 }
 
 // Payment messages

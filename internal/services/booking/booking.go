@@ -8,6 +8,8 @@ import (
 	"time"
 
 	"cult/internal/lib/logger/sl"
+
+	"github.com/google/uuid"
 )
 
 type BookingService struct {
@@ -21,6 +23,7 @@ type Repository interface {
 	GetBooking(ctx context.Context, parkingLot int64) (*domain.Booking, error)
 	GetBookingsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Booking, error)
 	GetParkingLotsByFilter(ctx context.Context, filter domain.Filter) ([]domain.ParkingLot, error)
+	EditBooking(ctx context.Context, bookingID uuid.UUID, to time.Time) error
 }
 
 func NewBookingService(log *slog.Logger, repo Repository) *BookingService {
@@ -92,5 +95,19 @@ func (s *BookingService) AddBooking(ctx context.Context, booking domain.Booking)
 		return fmt.Errorf("%s: %w", op, err)
 	}
 
+	return nil
+}
+
+func (s *BookingService) EditBooking(ctx context.Context, bookingID uuid.UUID, to time.Time) error {
+	const op = "BookingService.EditBooking"
+
+	log := s.log.With(slog.String("op", op))
+
+	log.Info("editing a booking")
+	err := s.bookingRepo.EditBooking(ctx, bookingID, to)
+	if err != nil {
+		log.Error("failed to edit booking", sl.Err(err))
+		return fmt.Errorf("%s: %w", op, err)
+	}
 	return nil
 }

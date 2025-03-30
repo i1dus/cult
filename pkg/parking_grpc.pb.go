@@ -23,6 +23,7 @@ const (
 	ParkingAPI_GetParkingLotsByUserID_FullMethodName = "/api.ParkingAPI/GetParkingLotsByUserID"
 	ParkingAPI_ListParkingLots_FullMethodName        = "/api.ParkingAPI/ListParkingLots"
 	ParkingAPI_AddParkingBooking_FullMethodName      = "/api.ParkingAPI/AddParkingBooking"
+	ParkingAPI_EditParkingBooking_FullMethodName     = "/api.ParkingAPI/EditParkingBooking"
 	ParkingAPI_GetParkingBooking_FullMethodName      = "/api.ParkingAPI/GetParkingBooking"
 	ParkingAPI_GetParkingBookingsList_FullMethodName = "/api.ParkingAPI/GetParkingBookingsList"
 	ParkingAPI_Register_FullMethodName               = "/api.ParkingAPI/Register"
@@ -46,6 +47,7 @@ type ParkingAPIClient interface {
 	// Получение всех парковочных мест для отрисовки карты
 	ListParkingLots(ctx context.Context, in *ListParkingLotsRequest, opts ...grpc.CallOption) (*ListParkingLotsResponse, error)
 	AddParkingBooking(ctx context.Context, in *AddParkingBookingRequest, opts ...grpc.CallOption) (*AddParkingBookingResponse, error)
+	EditParkingBooking(ctx context.Context, in *EditParkingBookingRequest, opts ...grpc.CallOption) (*EditParkingBookingResponse, error)
 	GetParkingBooking(ctx context.Context, in *GetParkingBookingRequest, opts ...grpc.CallOption) (*GetParkingBookingResponse, error)
 	GetParkingBookingsList(ctx context.Context, in *GetParkingBookingsListRequest, opts ...grpc.CallOption) (*GetParkingBookingsListResponse, error)
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
@@ -100,6 +102,16 @@ func (c *parkingAPIClient) AddParkingBooking(ctx context.Context, in *AddParking
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(AddParkingBookingResponse)
 	err := c.cc.Invoke(ctx, ParkingAPI_AddParkingBooking_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *parkingAPIClient) EditParkingBooking(ctx context.Context, in *EditParkingBookingRequest, opts ...grpc.CallOption) (*EditParkingBookingResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(EditParkingBookingResponse)
+	err := c.cc.Invoke(ctx, ParkingAPI_EditParkingBooking_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -217,6 +229,7 @@ type ParkingAPIServer interface {
 	// Получение всех парковочных мест для отрисовки карты
 	ListParkingLots(context.Context, *ListParkingLotsRequest) (*ListParkingLotsResponse, error)
 	AddParkingBooking(context.Context, *AddParkingBookingRequest) (*AddParkingBookingResponse, error)
+	EditParkingBooking(context.Context, *EditParkingBookingRequest) (*EditParkingBookingResponse, error)
 	GetParkingBooking(context.Context, *GetParkingBookingRequest) (*GetParkingBookingResponse, error)
 	GetParkingBookingsList(context.Context, *GetParkingBookingsListRequest) (*GetParkingBookingsListResponse, error)
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
@@ -248,6 +261,9 @@ func (UnimplementedParkingAPIServer) ListParkingLots(context.Context, *ListParki
 }
 func (UnimplementedParkingAPIServer) AddParkingBooking(context.Context, *AddParkingBookingRequest) (*AddParkingBookingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method AddParkingBooking not implemented")
+}
+func (UnimplementedParkingAPIServer) EditParkingBooking(context.Context, *EditParkingBookingRequest) (*EditParkingBookingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method EditParkingBooking not implemented")
 }
 func (UnimplementedParkingAPIServer) GetParkingBooking(context.Context, *GetParkingBookingRequest) (*GetParkingBookingResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetParkingBooking not implemented")
@@ -368,6 +384,24 @@ func _ParkingAPI_AddParkingBooking_Handler(srv interface{}, ctx context.Context,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ParkingAPIServer).AddParkingBooking(ctx, req.(*AddParkingBookingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ParkingAPI_EditParkingBooking_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(EditParkingBookingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ParkingAPIServer).EditParkingBooking(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ParkingAPI_EditParkingBooking_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ParkingAPIServer).EditParkingBooking(ctx, req.(*EditParkingBookingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -574,6 +608,10 @@ var ParkingAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddParkingBooking",
 			Handler:    _ParkingAPI_AddParkingBooking_Handler,
+		},
+		{
+			MethodName: "EditParkingBooking",
+			Handler:    _ParkingAPI_EditParkingBooking_Handler,
 		},
 		{
 			MethodName: "GetParkingBooking",

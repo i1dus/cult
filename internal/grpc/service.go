@@ -4,6 +4,7 @@ import (
 	"context"
 	"cult/internal/domain"
 	sso "cult/pkg"
+	"time"
 
 	"github.com/google/uuid"
 	"google.golang.org/grpc"
@@ -29,6 +30,7 @@ type BookingService interface {
 	GetBooking(ctx context.Context, parkingLot int64) (*domain.Booking, error)
 	AddBooking(ctx context.Context, booking domain.Booking) error
 	GetParkingLotsByFilter(ctx context.Context, filter domain.Filter) ([]domain.ParkingLot, error)
+	EditBooking(ctx context.Context, bookingID uuid.UUID, to time.Time) error
 }
 
 type RentalService interface {
