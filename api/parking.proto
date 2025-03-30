@@ -107,6 +107,12 @@ service ParkingAPI {
       get: "/my/parking/list"
     };
   }
+
+  rpc GetRentals (GetRentalsRequest) returns (GetRentalsResponse) {
+    option (google.api.http) = {
+      get: "/rentals/get"
+    };
+  }
 }
 
 
@@ -158,6 +164,15 @@ message EditParkingBookingRequest {
 
 message EditParkingBookingResponse {
   google.protobuf.Timestamp time_to = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetRentalsRequest {
+  Filter filter = 1;
+}
+
+message  GetRentalsResponse {
+  repeated Rental rentals = 1;
+  int64 total = 2;
 }
 
 // Payment messages
