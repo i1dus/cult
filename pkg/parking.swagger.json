@@ -149,6 +149,60 @@
         ]
       }
     },
+    "/my/parking/list": {
+      "get": {
+        "operationId": "ParkingAPI_GetMyParkingLots",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetMyParkingLotsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "filter.ownerId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "filter.timeFrom",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.timeTo",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "filter.vehicles",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
     "/parking/get": {
       "get": {
         "summary": "Получение парковочного места по его числу",
@@ -242,36 +296,6 @@
             "in": "query",
             "required": false,
             "type": "string"
-          }
-        ],
-        "tags": [
-          "ParkingAPI"
-        ]
-      },
-      "post": {
-        "operationId": "ParkingAPI_GetMyParkingLots",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetMyParkingLotsResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiGetMyParkingLotsRequest"
-            }
           }
         ],
         "tags": [
@@ -532,14 +556,6 @@
       "required": [
         "ownerId"
       ]
-    },
-    "apiGetMyParkingLotsRequest": {
-      "type": "object",
-      "properties": {
-        "filter": {
-          "$ref": "#/definitions/apiFilter"
-        }
-      }
     },
     "apiGetMyParkingLotsResponse": {
       "type": "object",

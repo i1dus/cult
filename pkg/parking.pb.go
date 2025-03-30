@@ -2292,7 +2292,7 @@ const file_parking_proto_rawDesc = "" +
 	"UpdateUser\x12\x16.api.UpdateUserRequest\x1a\x17.api.UpdateUserResponse\"\x17\x82\xd3\xe4\x93\x02\x11:\x01*\"\f/user/update\x12k\n" +
 	"\x10UpdateParkingLot\x12\x1c.api.UpdateParkingLotRequest\x1a\x1d.api.UpdateParkingLotResponse\"\x1a\x82\xd3\xe4\x93\x02\x14:\x01*\"\x0f/parking/update\x12R\n" +
 	"\tAddRental\x12\x15.api.AddRentalRequest\x1a\x16.api.AddRentalResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/rental/add\x12i\n" +
-	"\x10GetMyParkingLots\x12\x1c.api.GetMyParkingLotsRequest\x1a\x1d.api.GetMyParkingLotsResponse\"\x18\x82\xd3\xe4\x93\x02\x12:\x01*\"\r/parking/listB%Z#internal/pb/parking_lot;parking_lotb\x06proto3"
+	"\x10GetMyParkingLots\x12\x1c.api.GetMyParkingLotsRequest\x1a\x1d.api.GetMyParkingLotsResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/my/parking/listB%Z#internal/pb/parking_lot;parking_lotb\x06proto3"
 
 var (
 	file_parking_proto_rawDescOnce sync.Once

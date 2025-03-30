@@ -74,7 +74,7 @@ func (r *BookingRepository) AddBooking(ctx context.Context, booking domain.Booki
 func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (domain.Booking, error) {
 	const op = "BookingRepository.GetBooking"
 
-	var rentalID int
+	var rentalID uuid.UUID
 	err := r.db.QueryRow(ctx,
 		`SELECT id FROM rentals 
          WHERE parking_lot_id = $1 
@@ -82,7 +82,7 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (d
 		parkingLot,
 	).Scan(&rentalID)
 
-	if err != nil {
+	if err != nil || rentalID == uuid.Nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return domain.Booking{}, fmt.Errorf("%s: %w", op, repository.ErrNoActiveRental)
 		}
