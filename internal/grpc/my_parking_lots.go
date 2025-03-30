@@ -5,6 +5,7 @@ import (
 	"cult/internal/domain"
 	desc "cult/pkg"
 	"github.com/google/uuid"
+	"github.com/samber/lo"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -26,10 +27,25 @@ func (s *serverAPI) GetMyParkingLots(ctx context.Context, in *desc.GetMyParkingL
 		return nil, err
 	}
 
+	var parkingLotIDs []int64
+	for _, rental := range rentals {
+		parkingLotIDs = append(parkingLotIDs, rental.ParkingLot)
+	}
+	for _, booking := range bookings {
+		parkingLotIDs = append(parkingLotIDs, booking.ParkingLot)
+	}
+
+	resultLots := make([]domain.ParkingLot, 0)
+	for _, lot := range parkingLots {
+		if !lo.Contains(parkingLotIDs, lot.ID) {
+			resultLots = append(resultLots, lot)
+		}
+	}
+
 	return &desc.GetMyParkingLotsResponse{
 		Rentals:     rentalsToApi(rentals),
 		Bookings:    bookingsToApi(bookings),
-		ParkingLots: parkingLotsToApi(parkingLots),
+		ParkingLots: parkingLotsToApi(resultLots),
 		Total:       int64(len(rentals) + len(bookings) + len(parkingLots)),
 	}, nil
 }
