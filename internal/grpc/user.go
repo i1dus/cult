@@ -7,6 +7,7 @@ import (
 	sso "cult/pkg"
 	"errors"
 	"fmt"
+
 	"github.com/google/uuid"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -83,4 +84,31 @@ func (s *serverAPI) UpdateUser(ctx context.Context, req *sso.UpdateUserRequest) 
 	}
 
 	return &sso.UpdateUserResponse{}, nil
+}
+
+func (s *serverAPI) GetUserByPhoneNumber(ctx context.Context, in *sso.GetUserByPhoneNumberRequest) (*sso.GetUserByPhoneNumberResponse, error) {
+	if in.PhoneNumber == "" {
+		return nil, status.Error(codes.InvalidArgument, "user ID is required")
+	}
+
+	user, err := s.auth.UserByPhoneNumber(ctx, in.PhoneNumber)
+	if err != nil {
+		//if errors.Is(err, ErrInvalidCredentials) {
+		//	return nil, status.Error(codes.InvalidArgument, "invalid email or password")
+		//}
+
+		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get user: %s", err.Error()))
+	}
+
+	return &sso.GetUserByPhoneNumberResponse{
+		User: &sso.User{
+			Id:          user.ID.String(),
+			Name:        user.Name,
+			Surname:     user.Surname,
+			Patronymic:  user.Patronymic,
+			PhoneNumber: user.Phone,
+			Address:     user.Address,
+			UserType:    userType(user.UserType),
+		},
+	}, nil
 }

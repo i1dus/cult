@@ -136,3 +136,29 @@ func (a *Auth) RegisterNewUser(ctx context.Context, phoneNumber string, pass str
 func (a *Auth) UpdateUser(ctx context.Context, userID uuid.UUID, update domain.UserUpdate) error {
 	return a.userRepository.UpdateUser(ctx, userID, update)
 }
+
+func (a *Auth) UserByPhoneNumber(ctx context.Context, phoneNumber string) (*domain.User, error) {
+	const op = "Auth.UserByPhoneNumber"
+
+	log := a.log.With(
+		slog.String("op", op),
+		slog.String("phone_number", phoneNumber),
+	)
+
+	log.Info("attempting to login user")
+
+	user, err := a.userRepository.UserByPhone(ctx, phoneNumber)
+	if err != nil {
+		if errors.Is(err, repository.ErrUserNotFound) {
+			a.log.Warn("user not found", sl.Err(err))
+
+			return nil, repository.ErrUserNotFound
+		}
+
+		a.log.Error("failed to get user", sl.Err(err))
+
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	return &user, nil
+}

@@ -68,6 +68,12 @@ service ParkingAPI {
     };
   };
 
+  rpc GetUserByPhoneNumber (GetUserByPhoneNumberRequest) returns (GetUserByPhoneNumberResponse) {
+    option (google.api.http) = {
+      get: "/user/get_by_phone"
+    };
+  };
+
   rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
     option (google.api.http) = {
       post: "/user/update"
@@ -96,6 +102,142 @@ service ParkingAPI {
   }
 }
 
+
+service PaymentAPI {
+  // Create a payment for a booking
+  rpc CreatePayment (CreatePaymentRequest) returns (CreatePaymentResponse) {
+    option (google.api.http) = {
+      post: "/payment/create"
+      body: "*"
+    };
+  };
+
+  // Get payment status
+  rpc GetPaymentStatus (GetPaymentStatusRequest) returns (GetPaymentStatusResponse) {
+    option (google.api.http) = {
+      get: "/payment/status"
+    };
+  };
+
+  // Process payment callback from payment provider
+  rpc PaymentCallback (PaymentCallbackRequest) returns (PaymentCallbackResponse) {
+    option (google.api.http) = {
+      post: "/payment/callback"
+      body: "*"
+    };
+  };
+
+  // Get payment history for user
+  rpc GetPaymentHistory (GetPaymentHistoryRequest) returns (GetPaymentHistoryResponse) {
+    option (google.api.http) = {
+      get: "/payment/history"
+    };
+  };
+
+  // Refund payment
+  rpc RefundPayment (RefundPaymentRequest) returns (RefundPaymentResponse) {
+    option (google.api.http) = {
+      post: "/payment/refund"
+      body: "*"
+    };
+  };
+}
+
+// Payment messages
+message CreatePaymentRequest {
+  string user_id = 1 [(google.api.field_behavior) = REQUIRED];
+  oneof payment_type {
+    string booking_id = 2;  // For parking bookings
+    string rental_id = 3;   // For rentals
+  }
+  PaymentMethod payment_method = 4 [(google.api.field_behavior) = REQUIRED];
+}
+
+message CreatePaymentResponse {
+  string payment_id = 1;
+  string payment_url = 2;  // For redirect to payment provider
+  PaymentStatus status = 3;
+}
+
+message GetPaymentStatusRequest {
+  string payment_id = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetPaymentStatusResponse {
+  PaymentStatus status = 1;
+  google.protobuf.Timestamp payment_date = 2;
+  int64 amount = 3;
+  string currency = 4;
+}
+
+message PaymentCallbackRequest {
+  string payment_id = 1;
+  string external_id = 2;
+  PaymentStatus status = 3;
+  string signature = 4;  // For verification
+}
+
+message PaymentCallbackResponse {
+  bool success = 1;
+}
+
+message GetPaymentHistoryRequest {
+  string user_id = 1 [(google.api.field_behavior) = REQUIRED];
+  google.protobuf.Timestamp from = 2;
+  google.protobuf.Timestamp to = 3;
+  int32 limit = 4;
+  int32 offset = 5;
+}
+
+message GetPaymentHistoryResponse {
+  repeated PaymentHistoryItem payments = 1;
+  int32 total = 2;
+}
+
+message RefundPaymentRequest {
+  string payment_id = 1 [(google.api.field_behavior) = REQUIRED];
+  string reason = 2;
+}
+
+message RefundPaymentResponse {
+  string refund_id = 1;
+  PaymentStatus status = 2;
+}
+
+// Payment data structures
+message PaymentHistoryItem {
+  string payment_id = 1;
+  int64 amount = 2;
+  string currency = 3;
+  PaymentStatus status = 4;
+  google.protobuf.Timestamp created_at = 5;
+  oneof payment_type {
+    string booking_id = 6;
+    string rental_id = 7;
+  }
+  PaymentMethod payment_method = 8;
+}
+
+enum PaymentMethod {
+  UNDEFINED_PAYMENT_METHOD = 0;
+  CREDIT_CARD = 1;
+  BANK_TRANSFER = 2;
+  MOBILE_PAYMENT = 3;
+  ELECTRONIC_WALLET = 4;
+}
+
+enum PaymentStatus {
+  UNDEFINED_PAYMENT_STATUS = 0;
+  PENDING = 1;
+  PROCESSING = 2;
+  COMPLETED = 3;
+  FAILED = 4;
+  REFUNDED = 5;
+  PARTIALLY_REFUNDED = 6;
+  CANCELLED = 7;
+}
+
+
 message AddRentalRequest {
   Rental rental = 1;
 }
@@ -120,6 +262,14 @@ message GetUserByIDRequest {
 }
 
 message GetUserByIDResponse {
+  User user = 1;
+}
+
+message GetUserByPhoneNumberRequest {
+  string phone_number = 1 [(google.api.field_behavior) = REQUIRED];
+}
+
+message GetUserByPhoneNumberResponse {
   User user = 1;
 }
 

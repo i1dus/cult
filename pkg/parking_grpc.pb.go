@@ -28,6 +28,7 @@ const (
 	ParkingAPI_Register_FullMethodName               = "/api.ParkingAPI/Register"
 	ParkingAPI_Login_FullMethodName                  = "/api.ParkingAPI/Login"
 	ParkingAPI_GetUserByID_FullMethodName            = "/api.ParkingAPI/GetUserByID"
+	ParkingAPI_GetUserByPhoneNumber_FullMethodName   = "/api.ParkingAPI/GetUserByPhoneNumber"
 	ParkingAPI_UpdateUser_FullMethodName             = "/api.ParkingAPI/UpdateUser"
 	ParkingAPI_UpdateParkingLot_FullMethodName       = "/api.ParkingAPI/UpdateParkingLot"
 	ParkingAPI_AddRental_FullMethodName              = "/api.ParkingAPI/AddRental"
@@ -50,6 +51,7 @@ type ParkingAPIClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error)
 	GetUserByID(ctx context.Context, in *GetUserByIDRequest, opts ...grpc.CallOption) (*GetUserByIDResponse, error)
+	GetUserByPhoneNumber(ctx context.Context, in *GetUserByPhoneNumberRequest, opts ...grpc.CallOption) (*GetUserByPhoneNumberResponse, error)
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error)
 	UpdateParkingLot(ctx context.Context, in *UpdateParkingLotRequest, opts ...grpc.CallOption) (*UpdateParkingLotResponse, error)
 	AddRental(ctx context.Context, in *AddRentalRequest, opts ...grpc.CallOption) (*AddRentalResponse, error)
@@ -154,6 +156,16 @@ func (c *parkingAPIClient) GetUserByID(ctx context.Context, in *GetUserByIDReque
 	return out, nil
 }
 
+func (c *parkingAPIClient) GetUserByPhoneNumber(ctx context.Context, in *GetUserByPhoneNumberRequest, opts ...grpc.CallOption) (*GetUserByPhoneNumberResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetUserByPhoneNumberResponse)
+	err := c.cc.Invoke(ctx, ParkingAPI_GetUserByPhoneNumber_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *parkingAPIClient) UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UpdateUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(UpdateUserResponse)
@@ -210,6 +222,7 @@ type ParkingAPIServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	Login(context.Context, *LoginRequest) (*LoginResponse, error)
 	GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error)
+	GetUserByPhoneNumber(context.Context, *GetUserByPhoneNumberRequest) (*GetUserByPhoneNumberResponse, error)
 	UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error)
 	UpdateParkingLot(context.Context, *UpdateParkingLotRequest) (*UpdateParkingLotResponse, error)
 	AddRental(context.Context, *AddRentalRequest) (*AddRentalResponse, error)
@@ -250,6 +263,9 @@ func (UnimplementedParkingAPIServer) Login(context.Context, *LoginRequest) (*Log
 }
 func (UnimplementedParkingAPIServer) GetUserByID(context.Context, *GetUserByIDRequest) (*GetUserByIDResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserByID not implemented")
+}
+func (UnimplementedParkingAPIServer) GetUserByPhoneNumber(context.Context, *GetUserByPhoneNumberRequest) (*GetUserByPhoneNumberResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserByPhoneNumber not implemented")
 }
 func (UnimplementedParkingAPIServer) UpdateUser(context.Context, *UpdateUserRequest) (*UpdateUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUser not implemented")
@@ -446,6 +462,24 @@ func _ParkingAPI_GetUserByID_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ParkingAPI_GetUserByPhoneNumber_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserByPhoneNumberRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ParkingAPIServer).GetUserByPhoneNumber(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ParkingAPI_GetUserByPhoneNumber_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ParkingAPIServer).GetUserByPhoneNumber(ctx, req.(*GetUserByPhoneNumberRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ParkingAPI_UpdateUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(UpdateUserRequest)
 	if err := dec(in); err != nil {
@@ -562,6 +596,10 @@ var ParkingAPI_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _ParkingAPI_GetUserByID_Handler,
 		},
 		{
+			MethodName: "GetUserByPhoneNumber",
+			Handler:    _ParkingAPI_GetUserByPhoneNumber_Handler,
+		},
+		{
 			MethodName: "UpdateUser",
 			Handler:    _ParkingAPI_UpdateUser_Handler,
 		},
@@ -576,6 +614,270 @@ var ParkingAPI_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMyParkingLots",
 			Handler:    _ParkingAPI_GetMyParkingLots_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "parking.proto",
+}
+
+const (
+	PaymentAPI_CreatePayment_FullMethodName     = "/api.PaymentAPI/CreatePayment"
+	PaymentAPI_GetPaymentStatus_FullMethodName  = "/api.PaymentAPI/GetPaymentStatus"
+	PaymentAPI_PaymentCallback_FullMethodName   = "/api.PaymentAPI/PaymentCallback"
+	PaymentAPI_GetPaymentHistory_FullMethodName = "/api.PaymentAPI/GetPaymentHistory"
+	PaymentAPI_RefundPayment_FullMethodName     = "/api.PaymentAPI/RefundPayment"
+)
+
+// PaymentAPIClient is the client API for PaymentAPI service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type PaymentAPIClient interface {
+	// Create a payment for a booking
+	CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*CreatePaymentResponse, error)
+	// Get payment status
+	GetPaymentStatus(ctx context.Context, in *GetPaymentStatusRequest, opts ...grpc.CallOption) (*GetPaymentStatusResponse, error)
+	// Process payment callback from payment provider
+	PaymentCallback(ctx context.Context, in *PaymentCallbackRequest, opts ...grpc.CallOption) (*PaymentCallbackResponse, error)
+	// Get payment history for user
+	GetPaymentHistory(ctx context.Context, in *GetPaymentHistoryRequest, opts ...grpc.CallOption) (*GetPaymentHistoryResponse, error)
+	// Refund payment
+	RefundPayment(ctx context.Context, in *RefundPaymentRequest, opts ...grpc.CallOption) (*RefundPaymentResponse, error)
+}
+
+type paymentAPIClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewPaymentAPIClient(cc grpc.ClientConnInterface) PaymentAPIClient {
+	return &paymentAPIClient{cc}
+}
+
+func (c *paymentAPIClient) CreatePayment(ctx context.Context, in *CreatePaymentRequest, opts ...grpc.CallOption) (*CreatePaymentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CreatePaymentResponse)
+	err := c.cc.Invoke(ctx, PaymentAPI_CreatePayment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *paymentAPIClient) GetPaymentStatus(ctx context.Context, in *GetPaymentStatusRequest, opts ...grpc.CallOption) (*GetPaymentStatusResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPaymentStatusResponse)
+	err := c.cc.Invoke(ctx, PaymentAPI_GetPaymentStatus_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *paymentAPIClient) PaymentCallback(ctx context.Context, in *PaymentCallbackRequest, opts ...grpc.CallOption) (*PaymentCallbackResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PaymentCallbackResponse)
+	err := c.cc.Invoke(ctx, PaymentAPI_PaymentCallback_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *paymentAPIClient) GetPaymentHistory(ctx context.Context, in *GetPaymentHistoryRequest, opts ...grpc.CallOption) (*GetPaymentHistoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetPaymentHistoryResponse)
+	err := c.cc.Invoke(ctx, PaymentAPI_GetPaymentHistory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *paymentAPIClient) RefundPayment(ctx context.Context, in *RefundPaymentRequest, opts ...grpc.CallOption) (*RefundPaymentResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(RefundPaymentResponse)
+	err := c.cc.Invoke(ctx, PaymentAPI_RefundPayment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PaymentAPIServer is the server API for PaymentAPI service.
+// All implementations must embed UnimplementedPaymentAPIServer
+// for forward compatibility.
+type PaymentAPIServer interface {
+	// Create a payment for a booking
+	CreatePayment(context.Context, *CreatePaymentRequest) (*CreatePaymentResponse, error)
+	// Get payment status
+	GetPaymentStatus(context.Context, *GetPaymentStatusRequest) (*GetPaymentStatusResponse, error)
+	// Process payment callback from payment provider
+	PaymentCallback(context.Context, *PaymentCallbackRequest) (*PaymentCallbackResponse, error)
+	// Get payment history for user
+	GetPaymentHistory(context.Context, *GetPaymentHistoryRequest) (*GetPaymentHistoryResponse, error)
+	// Refund payment
+	RefundPayment(context.Context, *RefundPaymentRequest) (*RefundPaymentResponse, error)
+	mustEmbedUnimplementedPaymentAPIServer()
+}
+
+// UnimplementedPaymentAPIServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedPaymentAPIServer struct{}
+
+func (UnimplementedPaymentAPIServer) CreatePayment(context.Context, *CreatePaymentRequest) (*CreatePaymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreatePayment not implemented")
+}
+func (UnimplementedPaymentAPIServer) GetPaymentStatus(context.Context, *GetPaymentStatusRequest) (*GetPaymentStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPaymentStatus not implemented")
+}
+func (UnimplementedPaymentAPIServer) PaymentCallback(context.Context, *PaymentCallbackRequest) (*PaymentCallbackResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PaymentCallback not implemented")
+}
+func (UnimplementedPaymentAPIServer) GetPaymentHistory(context.Context, *GetPaymentHistoryRequest) (*GetPaymentHistoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPaymentHistory not implemented")
+}
+func (UnimplementedPaymentAPIServer) RefundPayment(context.Context, *RefundPaymentRequest) (*RefundPaymentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RefundPayment not implemented")
+}
+func (UnimplementedPaymentAPIServer) mustEmbedUnimplementedPaymentAPIServer() {}
+func (UnimplementedPaymentAPIServer) testEmbeddedByValue()                    {}
+
+// UnsafePaymentAPIServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PaymentAPIServer will
+// result in compilation errors.
+type UnsafePaymentAPIServer interface {
+	mustEmbedUnimplementedPaymentAPIServer()
+}
+
+func RegisterPaymentAPIServer(s grpc.ServiceRegistrar, srv PaymentAPIServer) {
+	// If the following call pancis, it indicates UnimplementedPaymentAPIServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&PaymentAPI_ServiceDesc, srv)
+}
+
+func _PaymentAPI_CreatePayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentAPIServer).CreatePayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentAPI_CreatePayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentAPIServer).CreatePayment(ctx, req.(*CreatePaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PaymentAPI_GetPaymentStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPaymentStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentAPIServer).GetPaymentStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentAPI_GetPaymentStatus_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentAPIServer).GetPaymentStatus(ctx, req.(*GetPaymentStatusRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PaymentAPI_PaymentCallback_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PaymentCallbackRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentAPIServer).PaymentCallback(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentAPI_PaymentCallback_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentAPIServer).PaymentCallback(ctx, req.(*PaymentCallbackRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PaymentAPI_GetPaymentHistory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPaymentHistoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentAPIServer).GetPaymentHistory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentAPI_GetPaymentHistory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentAPIServer).GetPaymentHistory(ctx, req.(*GetPaymentHistoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PaymentAPI_RefundPayment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RefundPaymentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PaymentAPIServer).RefundPayment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PaymentAPI_RefundPayment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PaymentAPIServer).RefundPayment(ctx, req.(*RefundPaymentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PaymentAPI_ServiceDesc is the grpc.ServiceDesc for PaymentAPI service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var PaymentAPI_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "api.PaymentAPI",
+	HandlerType: (*PaymentAPIServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreatePayment",
+			Handler:    _PaymentAPI_CreatePayment_Handler,
+		},
+		{
+			MethodName: "GetPaymentStatus",
+			Handler:    _PaymentAPI_GetPaymentStatus_Handler,
+		},
+		{
+			MethodName: "PaymentCallback",
+			Handler:    _PaymentAPI_PaymentCallback_Handler,
+		},
+		{
+			MethodName: "GetPaymentHistory",
+			Handler:    _PaymentAPI_GetPaymentHistory_Handler,
+		},
+		{
+			MethodName: "RefundPayment",
+			Handler:    _PaymentAPI_RefundPayment_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

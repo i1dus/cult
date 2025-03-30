@@ -14,6 +14,7 @@ type AuthService interface {
 	RegisterNewUser(ctx context.Context, phoneNumber string, password string) (userID uuid.UUID, err error)
 	GetUserByID(ctx context.Context, userID uuid.UUID) (*domain.User, error)
 	UpdateUser(ctx context.Context, userID uuid.UUID, update domain.UserUpdate) error
+	UserByPhoneNumber(ctx context.Context, phoneNumber string) (*domain.User, error)
 }
 
 type ParkingLotService interface {

@@ -7,6 +7,9 @@
   "tags": [
     {
       "name": "ParkingAPI"
+    },
+    {
+      "name": "PaymentAPI"
     }
   ],
   "consumes": [
@@ -335,6 +338,195 @@
         ]
       }
     },
+    "/payment/callback": {
+      "post": {
+        "summary": "Process payment callback from payment provider",
+        "operationId": "PaymentAPI_PaymentCallback",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiPaymentCallbackResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiPaymentCallbackRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PaymentAPI"
+        ]
+      }
+    },
+    "/payment/create": {
+      "post": {
+        "summary": "Create a payment for a booking",
+        "operationId": "PaymentAPI_CreatePayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiCreatePaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiCreatePaymentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PaymentAPI"
+        ]
+      }
+    },
+    "/payment/history": {
+      "get": {
+        "summary": "Get payment history for user",
+        "operationId": "PaymentAPI_GetPaymentHistory",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetPaymentHistoryResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "to",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "tags": [
+          "PaymentAPI"
+        ]
+      }
+    },
+    "/payment/refund": {
+      "post": {
+        "summary": "Refund payment",
+        "operationId": "PaymentAPI_RefundPayment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiRefundPaymentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiRefundPaymentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PaymentAPI"
+        ]
+      }
+    },
+    "/payment/status": {
+      "get": {
+        "summary": "Get payment status",
+        "operationId": "PaymentAPI_GetPaymentStatus",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetPaymentStatusResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PaymentAPI"
+        ]
+      }
+    },
     "/rental/add": {
       "post": {
         "operationId": "ParkingAPI_AddRental",
@@ -461,6 +653,36 @@
         ]
       }
     },
+    "/user/get_by_phone": {
+      "get": {
+        "operationId": "ParkingAPI_GetUserByPhoneNumber",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetUserByPhoneNumberResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "phoneNumber",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
     "/user/update": {
       "post": {
         "operationId": "ParkingAPI_UpdateUser",
@@ -529,6 +751,45 @@
         "parkingLotId": {
           "type": "string",
           "format": "int64"
+        }
+      }
+    },
+    "apiCreatePaymentRequest": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        },
+        "bookingId": {
+          "type": "string",
+          "title": "For parking bookings"
+        },
+        "rentalId": {
+          "type": "string",
+          "title": "For rentals"
+        },
+        "paymentMethod": {
+          "$ref": "#/definitions/apiPaymentMethod"
+        }
+      },
+      "title": "Payment messages",
+      "required": [
+        "userId",
+        "paymentMethod"
+      ]
+    },
+    "apiCreatePaymentResponse": {
+      "type": "object",
+      "properties": {
+        "paymentId": {
+          "type": "string"
+        },
+        "paymentUrl": {
+          "type": "string",
+          "title": "For redirect to payment provider"
+        },
+        "status": {
+          "$ref": "#/definitions/apiPaymentStatus"
         }
       }
     },
@@ -631,7 +892,50 @@
         }
       }
     },
+    "apiGetPaymentHistoryResponse": {
+      "type": "object",
+      "properties": {
+        "payments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiPaymentHistoryItem"
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "apiGetPaymentStatusResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/apiPaymentStatus"
+        },
+        "paymentDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "currency": {
+          "type": "string"
+        }
+      }
+    },
     "apiGetUserByIDResponse": {
+      "type": "object",
+      "properties": {
+        "user": {
+          "$ref": "#/definitions/apiUser"
+        }
+      }
+    },
+    "apiGetUserByPhoneNumberResponse": {
       "type": "object",
       "properties": {
         "user": {
@@ -771,6 +1075,114 @@
         "SHORT_TERM_RENT_BY_OTHER_PARKING_TYPE"
       ],
       "default": "UNDEFINED_PARKING_TYPE"
+    },
+    "apiPaymentCallbackRequest": {
+      "type": "object",
+      "properties": {
+        "paymentId": {
+          "type": "string"
+        },
+        "externalId": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/apiPaymentStatus"
+        },
+        "signature": {
+          "type": "string",
+          "title": "For verification"
+        }
+      }
+    },
+    "apiPaymentCallbackResponse": {
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "apiPaymentHistoryItem": {
+      "type": "object",
+      "properties": {
+        "paymentId": {
+          "type": "string"
+        },
+        "amount": {
+          "type": "string",
+          "format": "int64"
+        },
+        "currency": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/apiPaymentStatus"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "bookingId": {
+          "type": "string"
+        },
+        "rentalId": {
+          "type": "string"
+        },
+        "paymentMethod": {
+          "$ref": "#/definitions/apiPaymentMethod"
+        }
+      },
+      "title": "Payment data structures"
+    },
+    "apiPaymentMethod": {
+      "type": "string",
+      "enum": [
+        "UNDEFINED_PAYMENT_METHOD",
+        "CREDIT_CARD",
+        "BANK_TRANSFER",
+        "MOBILE_PAYMENT",
+        "ELECTRONIC_WALLET"
+      ],
+      "default": "UNDEFINED_PAYMENT_METHOD"
+    },
+    "apiPaymentStatus": {
+      "type": "string",
+      "enum": [
+        "UNDEFINED_PAYMENT_STATUS",
+        "PENDING",
+        "PROCESSING",
+        "COMPLETED",
+        "FAILED",
+        "REFUNDED",
+        "PARTIALLY_REFUNDED",
+        "CANCELLED"
+      ],
+      "default": "UNDEFINED_PAYMENT_STATUS"
+    },
+    "apiRefundPaymentRequest": {
+      "type": "object",
+      "properties": {
+        "paymentId": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "paymentId"
+      ]
+    },
+    "apiRefundPaymentResponse": {
+      "type": "object",
+      "properties": {
+        "refundId": {
+          "type": "string"
+        },
+        "status": {
+          "$ref": "#/definitions/apiPaymentStatus"
+        }
+      }
     },
     "apiRegisterRequest": {
       "type": "object",
