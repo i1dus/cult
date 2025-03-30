@@ -51,7 +51,7 @@ func (s *Service) CreatePayment(ctx context.Context, req *desc.CreatePaymentRequ
 		UserID:    req.UserId,
 		Status:    domain.PaymentStatus_PENDING,
 		CreatedAt: time.Now(),
-		Amount:    calculateAmount(req),
+		Amount:    0, // !!
 		Currency:  "RUB",
 	}
 
@@ -203,17 +203,6 @@ func (s *Service) RefundPayment(ctx context.Context, req *desc.RefundPaymentRequ
 		RefundId: refundID,
 		Status:   toApiStatus(payment.Status),
 	}, nil
-}
-
-func calculateAmount(req *desc.CreatePaymentRequest) int64 {
-	id, err := uuid.Parse(req.GetRentalId())
-	if err != nil {
-		return 0
-	}
-
-	// В зависимости от типа (бронирование или аренда)
-	// и других параметров
-	return 1000 // Пример фиксированной суммы
 }
 
 func toApiStatus(status domain.PaymentStatus) desc.PaymentStatus {
