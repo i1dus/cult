@@ -7,9 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/samber/lo"
 	"log/slog"
-	"strconv"
 	"time"
 
 	"cult/internal/lib/logger/sl"
@@ -141,7 +139,7 @@ func (s *ParkingLotService) calculateTypeAndStatus(ctx context.Context, lot doma
 		}
 	}
 
-	idInt := int64(lo.Must(strconv.Atoi(lot.ID)))
+	idInt := lot.ID
 	booking, err := s.bookingRepo.GetBooking(ctx, idInt)
 	if err != nil {
 		s.log.Error(err.Error())

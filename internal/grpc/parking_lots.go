@@ -136,7 +136,7 @@ func ConvertParkingLotPbToDomain(item domain.ParkingLot, index int) *sso.Parking
 	}
 
 	return &sso.ParkingLot{
-		Number: item.ID,
+		Number:  item.ID,
 		Kind:    item.ParkingKind.GetPBType(),
 		Type:    item.ParkingType.GetPBType(),
 		Status:  item.ParkingStatus.ParkingLotStatusToPB(),

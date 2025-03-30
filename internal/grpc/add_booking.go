@@ -23,10 +23,9 @@ func (s *serverAPI) AddParkingBooking(ctx context.Context, in *desc.AddParkingBo
 
 func apiToBooking(in *desc.ParkingBooking) domain.Booking {
 	return domain.Booking{
-		UserID:     uuid.MustParse(in.GetUserId()),
-		ParkingLot: in.ParkingLot,
-		From:       in.TimeFrom.AsTime(),
-		To:         in.TimeTo.AsTime(),
-		Vehicle:    in.Vehicle,
+		UserID:  uuid.MustParse(in.GetUserId()),
+		From:    in.TimeFrom.AsTime(),
+		To:      in.TimeTo.AsTime(),
+		Vehicle: in.Vehicle,
 	}
 }
