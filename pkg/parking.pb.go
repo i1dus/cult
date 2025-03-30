@@ -651,6 +651,94 @@ func (x *GetRentalsResponse) GetTotal() int64 {
 	return 0
 }
 
+type GetRentalRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ParkingLot    int64                  `protobuf:"varint,1,opt,name=parking_lot,json=parkingLot,proto3" json:"parking_lot,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRentalRequest) Reset() {
+	*x = GetRentalRequest{}
+	mi := &file_parking_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRentalRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRentalRequest) ProtoMessage() {}
+
+func (x *GetRentalRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_parking_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRentalRequest.ProtoReflect.Descriptor instead.
+func (*GetRentalRequest) Descriptor() ([]byte, []int) {
+	return file_parking_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *GetRentalRequest) GetParkingLot() int64 {
+	if x != nil {
+		return x.ParkingLot
+	}
+	return 0
+}
+
+type GetRentalResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Rental        *Rental                `protobuf:"bytes,1,opt,name=rental,proto3" json:"rental,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetRentalResponse) Reset() {
+	*x = GetRentalResponse{}
+	mi := &file_parking_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetRentalResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetRentalResponse) ProtoMessage() {}
+
+func (x *GetRentalResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_parking_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetRentalResponse.ProtoReflect.Descriptor instead.
+func (*GetRentalResponse) Descriptor() ([]byte, []int) {
+	return file_parking_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *GetRentalResponse) GetRental() *Rental {
+	if x != nil {
+		return x.Rental
+	}
+	return nil
+}
+
 // Payment messages
 type CreatePaymentRequest struct {
 	state  protoimpl.MessageState `protogen:"open.v1"`
@@ -668,7 +756,7 @@ type CreatePaymentRequest struct {
 
 func (x *CreatePaymentRequest) Reset() {
 	*x = CreatePaymentRequest{}
-	mi := &file_parking_proto_msgTypes[6]
+	mi := &file_parking_proto_msgTypes[8]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -680,7 +768,7 @@ func (x *CreatePaymentRequest) String() string {
 func (*CreatePaymentRequest) ProtoMessage() {}
 
 func (x *CreatePaymentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[6]
+	mi := &file_parking_proto_msgTypes[8]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -693,7 +781,7 @@ func (x *CreatePaymentRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePaymentRequest.ProtoReflect.Descriptor instead.
 func (*CreatePaymentRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{6}
+	return file_parking_proto_rawDescGZIP(), []int{8}
 }
 
 func (x *CreatePaymentRequest) GetUserId() string {
@@ -769,7 +857,7 @@ type CreatePaymentResponse struct {
 
 func (x *CreatePaymentResponse) Reset() {
 	*x = CreatePaymentResponse{}
-	mi := &file_parking_proto_msgTypes[7]
+	mi := &file_parking_proto_msgTypes[9]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -781,7 +869,7 @@ func (x *CreatePaymentResponse) String() string {
 func (*CreatePaymentResponse) ProtoMessage() {}
 
 func (x *CreatePaymentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[7]
+	mi := &file_parking_proto_msgTypes[9]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -794,7 +882,7 @@ func (x *CreatePaymentResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePaymentResponse.ProtoReflect.Descriptor instead.
 func (*CreatePaymentResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{7}
+	return file_parking_proto_rawDescGZIP(), []int{9}
 }
 
 func (x *CreatePaymentResponse) GetPaymentId() string {
@@ -827,7 +915,7 @@ type GetPaymentStatusRequest struct {
 
 func (x *GetPaymentStatusRequest) Reset() {
 	*x = GetPaymentStatusRequest{}
-	mi := &file_parking_proto_msgTypes[8]
+	mi := &file_parking_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -839,7 +927,7 @@ func (x *GetPaymentStatusRequest) String() string {
 func (*GetPaymentStatusRequest) ProtoMessage() {}
 
 func (x *GetPaymentStatusRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[8]
+	mi := &file_parking_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -852,7 +940,7 @@ func (x *GetPaymentStatusRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPaymentStatusRequest.ProtoReflect.Descriptor instead.
 func (*GetPaymentStatusRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{8}
+	return file_parking_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *GetPaymentStatusRequest) GetPaymentId() string {
@@ -874,7 +962,7 @@ type GetPaymentStatusResponse struct {
 
 func (x *GetPaymentStatusResponse) Reset() {
 	*x = GetPaymentStatusResponse{}
-	mi := &file_parking_proto_msgTypes[9]
+	mi := &file_parking_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -886,7 +974,7 @@ func (x *GetPaymentStatusResponse) String() string {
 func (*GetPaymentStatusResponse) ProtoMessage() {}
 
 func (x *GetPaymentStatusResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[9]
+	mi := &file_parking_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -899,7 +987,7 @@ func (x *GetPaymentStatusResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPaymentStatusResponse.ProtoReflect.Descriptor instead.
 func (*GetPaymentStatusResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{9}
+	return file_parking_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetPaymentStatusResponse) GetStatus() PaymentStatus {
@@ -942,7 +1030,7 @@ type PaymentCallbackRequest struct {
 
 func (x *PaymentCallbackRequest) Reset() {
 	*x = PaymentCallbackRequest{}
-	mi := &file_parking_proto_msgTypes[10]
+	mi := &file_parking_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -954,7 +1042,7 @@ func (x *PaymentCallbackRequest) String() string {
 func (*PaymentCallbackRequest) ProtoMessage() {}
 
 func (x *PaymentCallbackRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[10]
+	mi := &file_parking_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -967,7 +1055,7 @@ func (x *PaymentCallbackRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentCallbackRequest.ProtoReflect.Descriptor instead.
 func (*PaymentCallbackRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{10}
+	return file_parking_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *PaymentCallbackRequest) GetPaymentId() string {
@@ -1007,7 +1095,7 @@ type PaymentCallbackResponse struct {
 
 func (x *PaymentCallbackResponse) Reset() {
 	*x = PaymentCallbackResponse{}
-	mi := &file_parking_proto_msgTypes[11]
+	mi := &file_parking_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1019,7 +1107,7 @@ func (x *PaymentCallbackResponse) String() string {
 func (*PaymentCallbackResponse) ProtoMessage() {}
 
 func (x *PaymentCallbackResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[11]
+	mi := &file_parking_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1032,7 +1120,7 @@ func (x *PaymentCallbackResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentCallbackResponse.ProtoReflect.Descriptor instead.
 func (*PaymentCallbackResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{11}
+	return file_parking_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *PaymentCallbackResponse) GetSuccess() bool {
@@ -1055,7 +1143,7 @@ type GetPaymentHistoryRequest struct {
 
 func (x *GetPaymentHistoryRequest) Reset() {
 	*x = GetPaymentHistoryRequest{}
-	mi := &file_parking_proto_msgTypes[12]
+	mi := &file_parking_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1067,7 +1155,7 @@ func (x *GetPaymentHistoryRequest) String() string {
 func (*GetPaymentHistoryRequest) ProtoMessage() {}
 
 func (x *GetPaymentHistoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[12]
+	mi := &file_parking_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1080,7 +1168,7 @@ func (x *GetPaymentHistoryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPaymentHistoryRequest.ProtoReflect.Descriptor instead.
 func (*GetPaymentHistoryRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{12}
+	return file_parking_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *GetPaymentHistoryRequest) GetUserId() string {
@@ -1128,7 +1216,7 @@ type GetPaymentHistoryResponse struct {
 
 func (x *GetPaymentHistoryResponse) Reset() {
 	*x = GetPaymentHistoryResponse{}
-	mi := &file_parking_proto_msgTypes[13]
+	mi := &file_parking_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1140,7 +1228,7 @@ func (x *GetPaymentHistoryResponse) String() string {
 func (*GetPaymentHistoryResponse) ProtoMessage() {}
 
 func (x *GetPaymentHistoryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[13]
+	mi := &file_parking_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1153,7 +1241,7 @@ func (x *GetPaymentHistoryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPaymentHistoryResponse.ProtoReflect.Descriptor instead.
 func (*GetPaymentHistoryResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{13}
+	return file_parking_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetPaymentHistoryResponse) GetPayments() []*PaymentHistoryItem {
@@ -1180,7 +1268,7 @@ type RefundPaymentRequest struct {
 
 func (x *RefundPaymentRequest) Reset() {
 	*x = RefundPaymentRequest{}
-	mi := &file_parking_proto_msgTypes[14]
+	mi := &file_parking_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1192,7 +1280,7 @@ func (x *RefundPaymentRequest) String() string {
 func (*RefundPaymentRequest) ProtoMessage() {}
 
 func (x *RefundPaymentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[14]
+	mi := &file_parking_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1205,7 +1293,7 @@ func (x *RefundPaymentRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefundPaymentRequest.ProtoReflect.Descriptor instead.
 func (*RefundPaymentRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{14}
+	return file_parking_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *RefundPaymentRequest) GetPaymentId() string {
@@ -1232,7 +1320,7 @@ type RefundPaymentResponse struct {
 
 func (x *RefundPaymentResponse) Reset() {
 	*x = RefundPaymentResponse{}
-	mi := &file_parking_proto_msgTypes[15]
+	mi := &file_parking_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1244,7 +1332,7 @@ func (x *RefundPaymentResponse) String() string {
 func (*RefundPaymentResponse) ProtoMessage() {}
 
 func (x *RefundPaymentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[15]
+	mi := &file_parking_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1257,7 +1345,7 @@ func (x *RefundPaymentResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RefundPaymentResponse.ProtoReflect.Descriptor instead.
 func (*RefundPaymentResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{15}
+	return file_parking_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *RefundPaymentResponse) GetRefundId() string {
@@ -1294,7 +1382,7 @@ type PaymentHistoryItem struct {
 
 func (x *PaymentHistoryItem) Reset() {
 	*x = PaymentHistoryItem{}
-	mi := &file_parking_proto_msgTypes[16]
+	mi := &file_parking_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1306,7 +1394,7 @@ func (x *PaymentHistoryItem) String() string {
 func (*PaymentHistoryItem) ProtoMessage() {}
 
 func (x *PaymentHistoryItem) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[16]
+	mi := &file_parking_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1319,7 +1407,7 @@ func (x *PaymentHistoryItem) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PaymentHistoryItem.ProtoReflect.Descriptor instead.
 func (*PaymentHistoryItem) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{16}
+	return file_parking_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *PaymentHistoryItem) GetPaymentId() string {
@@ -1414,7 +1502,7 @@ type AddRentalRequest struct {
 
 func (x *AddRentalRequest) Reset() {
 	*x = AddRentalRequest{}
-	mi := &file_parking_proto_msgTypes[17]
+	mi := &file_parking_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1426,7 +1514,7 @@ func (x *AddRentalRequest) String() string {
 func (*AddRentalRequest) ProtoMessage() {}
 
 func (x *AddRentalRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[17]
+	mi := &file_parking_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1439,7 +1527,7 @@ func (x *AddRentalRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddRentalRequest.ProtoReflect.Descriptor instead.
 func (*AddRentalRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{17}
+	return file_parking_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *AddRentalRequest) GetRental() *Rental {
@@ -1458,7 +1546,7 @@ type AddRentalResponse struct {
 
 func (x *AddRentalResponse) Reset() {
 	*x = AddRentalResponse{}
-	mi := &file_parking_proto_msgTypes[18]
+	mi := &file_parking_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1470,7 +1558,7 @@ func (x *AddRentalResponse) String() string {
 func (*AddRentalResponse) ProtoMessage() {}
 
 func (x *AddRentalResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[18]
+	mi := &file_parking_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1483,7 +1571,7 @@ func (x *AddRentalResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddRentalResponse.ProtoReflect.Descriptor instead.
 func (*AddRentalResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{18}
+	return file_parking_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *AddRentalResponse) GetParkingLotId() int64 {
@@ -1502,7 +1590,7 @@ type GetMyParkingLotsRequest struct {
 
 func (x *GetMyParkingLotsRequest) Reset() {
 	*x = GetMyParkingLotsRequest{}
-	mi := &file_parking_proto_msgTypes[19]
+	mi := &file_parking_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1514,7 +1602,7 @@ func (x *GetMyParkingLotsRequest) String() string {
 func (*GetMyParkingLotsRequest) ProtoMessage() {}
 
 func (x *GetMyParkingLotsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[19]
+	mi := &file_parking_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1527,7 +1615,7 @@ func (x *GetMyParkingLotsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMyParkingLotsRequest.ProtoReflect.Descriptor instead.
 func (*GetMyParkingLotsRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{19}
+	return file_parking_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *GetMyParkingLotsRequest) GetFilter() *Filter {
@@ -1549,7 +1637,7 @@ type GetMyParkingLotsResponse struct {
 
 func (x *GetMyParkingLotsResponse) Reset() {
 	*x = GetMyParkingLotsResponse{}
-	mi := &file_parking_proto_msgTypes[20]
+	mi := &file_parking_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1561,7 +1649,7 @@ func (x *GetMyParkingLotsResponse) String() string {
 func (*GetMyParkingLotsResponse) ProtoMessage() {}
 
 func (x *GetMyParkingLotsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[20]
+	mi := &file_parking_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1574,7 +1662,7 @@ func (x *GetMyParkingLotsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMyParkingLotsResponse.ProtoReflect.Descriptor instead.
 func (*GetMyParkingLotsResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{20}
+	return file_parking_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *GetMyParkingLotsResponse) GetBookings() []*ParkingBooking {
@@ -1614,7 +1702,7 @@ type GetUserByIDRequest struct {
 
 func (x *GetUserByIDRequest) Reset() {
 	*x = GetUserByIDRequest{}
-	mi := &file_parking_proto_msgTypes[21]
+	mi := &file_parking_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1626,7 +1714,7 @@ func (x *GetUserByIDRequest) String() string {
 func (*GetUserByIDRequest) ProtoMessage() {}
 
 func (x *GetUserByIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[21]
+	mi := &file_parking_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1639,7 +1727,7 @@ func (x *GetUserByIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByIDRequest.ProtoReflect.Descriptor instead.
 func (*GetUserByIDRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{21}
+	return file_parking_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *GetUserByIDRequest) GetUserId() string {
@@ -1658,7 +1746,7 @@ type GetUserByIDResponse struct {
 
 func (x *GetUserByIDResponse) Reset() {
 	*x = GetUserByIDResponse{}
-	mi := &file_parking_proto_msgTypes[22]
+	mi := &file_parking_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1670,7 +1758,7 @@ func (x *GetUserByIDResponse) String() string {
 func (*GetUserByIDResponse) ProtoMessage() {}
 
 func (x *GetUserByIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[22]
+	mi := &file_parking_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1683,7 +1771,7 @@ func (x *GetUserByIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByIDResponse.ProtoReflect.Descriptor instead.
 func (*GetUserByIDResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{22}
+	return file_parking_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *GetUserByIDResponse) GetUser() *User {
@@ -1702,7 +1790,7 @@ type GetUserByPhoneNumberRequest struct {
 
 func (x *GetUserByPhoneNumberRequest) Reset() {
 	*x = GetUserByPhoneNumberRequest{}
-	mi := &file_parking_proto_msgTypes[23]
+	mi := &file_parking_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1714,7 +1802,7 @@ func (x *GetUserByPhoneNumberRequest) String() string {
 func (*GetUserByPhoneNumberRequest) ProtoMessage() {}
 
 func (x *GetUserByPhoneNumberRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[23]
+	mi := &file_parking_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1727,7 +1815,7 @@ func (x *GetUserByPhoneNumberRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByPhoneNumberRequest.ProtoReflect.Descriptor instead.
 func (*GetUserByPhoneNumberRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{23}
+	return file_parking_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *GetUserByPhoneNumberRequest) GetPhoneNumber() string {
@@ -1746,7 +1834,7 @@ type GetUserByPhoneNumberResponse struct {
 
 func (x *GetUserByPhoneNumberResponse) Reset() {
 	*x = GetUserByPhoneNumberResponse{}
-	mi := &file_parking_proto_msgTypes[24]
+	mi := &file_parking_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1758,7 +1846,7 @@ func (x *GetUserByPhoneNumberResponse) String() string {
 func (*GetUserByPhoneNumberResponse) ProtoMessage() {}
 
 func (x *GetUserByPhoneNumberResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[24]
+	mi := &file_parking_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1771,7 +1859,7 @@ func (x *GetUserByPhoneNumberResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetUserByPhoneNumberResponse.ProtoReflect.Descriptor instead.
 func (*GetUserByPhoneNumberResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{24}
+	return file_parking_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *GetUserByPhoneNumberResponse) GetUser() *User {
@@ -1793,7 +1881,7 @@ type RegisterRequest struct {
 
 func (x *RegisterRequest) Reset() {
 	*x = RegisterRequest{}
-	mi := &file_parking_proto_msgTypes[25]
+	mi := &file_parking_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1805,7 +1893,7 @@ func (x *RegisterRequest) String() string {
 func (*RegisterRequest) ProtoMessage() {}
 
 func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[25]
+	mi := &file_parking_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1818,7 +1906,7 @@ func (x *RegisterRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterRequest.ProtoReflect.Descriptor instead.
 func (*RegisterRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{25}
+	return file_parking_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *RegisterRequest) GetPhoneNumber() string {
@@ -1845,7 +1933,7 @@ type RegisterResponse struct {
 
 func (x *RegisterResponse) Reset() {
 	*x = RegisterResponse{}
-	mi := &file_parking_proto_msgTypes[26]
+	mi := &file_parking_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1857,7 +1945,7 @@ func (x *RegisterResponse) String() string {
 func (*RegisterResponse) ProtoMessage() {}
 
 func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[26]
+	mi := &file_parking_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1870,7 +1958,7 @@ func (x *RegisterResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RegisterResponse.ProtoReflect.Descriptor instead.
 func (*RegisterResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{26}
+	return file_parking_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *RegisterResponse) GetUserId() string {
@@ -1892,7 +1980,7 @@ type LoginRequest struct {
 
 func (x *LoginRequest) Reset() {
 	*x = LoginRequest{}
-	mi := &file_parking_proto_msgTypes[27]
+	mi := &file_parking_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1904,7 +1992,7 @@ func (x *LoginRequest) String() string {
 func (*LoginRequest) ProtoMessage() {}
 
 func (x *LoginRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[27]
+	mi := &file_parking_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1917,7 +2005,7 @@ func (x *LoginRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginRequest.ProtoReflect.Descriptor instead.
 func (*LoginRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{27}
+	return file_parking_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *LoginRequest) GetPhoneNumber() string {
@@ -1946,7 +2034,7 @@ type LoginResponse struct {
 
 func (x *LoginResponse) Reset() {
 	*x = LoginResponse{}
-	mi := &file_parking_proto_msgTypes[28]
+	mi := &file_parking_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1958,7 +2046,7 @@ func (x *LoginResponse) String() string {
 func (*LoginResponse) ProtoMessage() {}
 
 func (x *LoginResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[28]
+	mi := &file_parking_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1971,7 +2059,7 @@ func (x *LoginResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use LoginResponse.ProtoReflect.Descriptor instead.
 func (*LoginResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{28}
+	return file_parking_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *LoginResponse) GetToken() string {
@@ -1998,7 +2086,7 @@ type IsAdminRequest struct {
 
 func (x *IsAdminRequest) Reset() {
 	*x = IsAdminRequest{}
-	mi := &file_parking_proto_msgTypes[29]
+	mi := &file_parking_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2010,7 +2098,7 @@ func (x *IsAdminRequest) String() string {
 func (*IsAdminRequest) ProtoMessage() {}
 
 func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[29]
+	mi := &file_parking_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2023,7 +2111,7 @@ func (x *IsAdminRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminRequest.ProtoReflect.Descriptor instead.
 func (*IsAdminRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{29}
+	return file_parking_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *IsAdminRequest) GetUserId() string {
@@ -2042,7 +2130,7 @@ type IsAdminResponse struct {
 
 func (x *IsAdminResponse) Reset() {
 	*x = IsAdminResponse{}
-	mi := &file_parking_proto_msgTypes[30]
+	mi := &file_parking_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2054,7 +2142,7 @@ func (x *IsAdminResponse) String() string {
 func (*IsAdminResponse) ProtoMessage() {}
 
 func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[30]
+	mi := &file_parking_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2067,7 +2155,7 @@ func (x *IsAdminResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use IsAdminResponse.ProtoReflect.Descriptor instead.
 func (*IsAdminResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{30}
+	return file_parking_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *IsAdminResponse) GetIsAdmin() bool {
@@ -2087,7 +2175,7 @@ type GetParkingLotRequest struct {
 
 func (x *GetParkingLotRequest) Reset() {
 	*x = GetParkingLotRequest{}
-	mi := &file_parking_proto_msgTypes[31]
+	mi := &file_parking_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2099,7 +2187,7 @@ func (x *GetParkingLotRequest) String() string {
 func (*GetParkingLotRequest) ProtoMessage() {}
 
 func (x *GetParkingLotRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[31]
+	mi := &file_parking_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2112,7 +2200,7 @@ func (x *GetParkingLotRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParkingLotRequest.ProtoReflect.Descriptor instead.
 func (*GetParkingLotRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{31}
+	return file_parking_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *GetParkingLotRequest) GetNumber() int64 {
@@ -2138,7 +2226,7 @@ type GetParkingLotResponse struct {
 
 func (x *GetParkingLotResponse) Reset() {
 	*x = GetParkingLotResponse{}
-	mi := &file_parking_proto_msgTypes[32]
+	mi := &file_parking_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2150,7 +2238,7 @@ func (x *GetParkingLotResponse) String() string {
 func (*GetParkingLotResponse) ProtoMessage() {}
 
 func (x *GetParkingLotResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[32]
+	mi := &file_parking_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2163,7 +2251,7 @@ func (x *GetParkingLotResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParkingLotResponse.ProtoReflect.Descriptor instead.
 func (*GetParkingLotResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{32}
+	return file_parking_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *GetParkingLotResponse) GetParkingLot() *ParkingLot {
@@ -2182,7 +2270,7 @@ type GetParkingLotsByUserIDRequest struct {
 
 func (x *GetParkingLotsByUserIDRequest) Reset() {
 	*x = GetParkingLotsByUserIDRequest{}
-	mi := &file_parking_proto_msgTypes[33]
+	mi := &file_parking_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2194,7 +2282,7 @@ func (x *GetParkingLotsByUserIDRequest) String() string {
 func (*GetParkingLotsByUserIDRequest) ProtoMessage() {}
 
 func (x *GetParkingLotsByUserIDRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[33]
+	mi := &file_parking_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2207,7 +2295,7 @@ func (x *GetParkingLotsByUserIDRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParkingLotsByUserIDRequest.ProtoReflect.Descriptor instead.
 func (*GetParkingLotsByUserIDRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{33}
+	return file_parking_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *GetParkingLotsByUserIDRequest) GetUserId() string {
@@ -2226,7 +2314,7 @@ type GetParkingLotsByUserIDResponse struct {
 
 func (x *GetParkingLotsByUserIDResponse) Reset() {
 	*x = GetParkingLotsByUserIDResponse{}
-	mi := &file_parking_proto_msgTypes[34]
+	mi := &file_parking_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2238,7 +2326,7 @@ func (x *GetParkingLotsByUserIDResponse) String() string {
 func (*GetParkingLotsByUserIDResponse) ProtoMessage() {}
 
 func (x *GetParkingLotsByUserIDResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[34]
+	mi := &file_parking_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2251,7 +2339,7 @@ func (x *GetParkingLotsByUserIDResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParkingLotsByUserIDResponse.ProtoReflect.Descriptor instead.
 func (*GetParkingLotsByUserIDResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{34}
+	return file_parking_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *GetParkingLotsByUserIDResponse) GetParkingLot() []*ParkingLot {
@@ -2270,7 +2358,7 @@ type ListParkingLotsRequest struct {
 
 func (x *ListParkingLotsRequest) Reset() {
 	*x = ListParkingLotsRequest{}
-	mi := &file_parking_proto_msgTypes[35]
+	mi := &file_parking_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2282,7 +2370,7 @@ func (x *ListParkingLotsRequest) String() string {
 func (*ListParkingLotsRequest) ProtoMessage() {}
 
 func (x *ListParkingLotsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[35]
+	mi := &file_parking_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2295,7 +2383,7 @@ func (x *ListParkingLotsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListParkingLotsRequest.ProtoReflect.Descriptor instead.
 func (*ListParkingLotsRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{35}
+	return file_parking_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *ListParkingLotsRequest) GetUserId() string {
@@ -2315,7 +2403,7 @@ type ListParkingLotsResponse struct {
 
 func (x *ListParkingLotsResponse) Reset() {
 	*x = ListParkingLotsResponse{}
-	mi := &file_parking_proto_msgTypes[36]
+	mi := &file_parking_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2327,7 +2415,7 @@ func (x *ListParkingLotsResponse) String() string {
 func (*ListParkingLotsResponse) ProtoMessage() {}
 
 func (x *ListParkingLotsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[36]
+	mi := &file_parking_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2340,7 +2428,7 @@ func (x *ListParkingLotsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListParkingLotsResponse.ProtoReflect.Descriptor instead.
 func (*ListParkingLotsResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{36}
+	return file_parking_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ListParkingLotsResponse) GetParkingLot() []*ParkingLot {
@@ -2377,7 +2465,7 @@ type ParkingLot struct {
 
 func (x *ParkingLot) Reset() {
 	*x = ParkingLot{}
-	mi := &file_parking_proto_msgTypes[37]
+	mi := &file_parking_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2389,7 +2477,7 @@ func (x *ParkingLot) String() string {
 func (*ParkingLot) ProtoMessage() {}
 
 func (x *ParkingLot) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[37]
+	mi := &file_parking_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2402,7 +2490,7 @@ func (x *ParkingLot) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ParkingLot.ProtoReflect.Descriptor instead.
 func (*ParkingLot) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{37}
+	return file_parking_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *ParkingLot) GetNumber() int64 {
@@ -2467,7 +2555,7 @@ type User struct {
 
 func (x *User) Reset() {
 	*x = User{}
-	mi := &file_parking_proto_msgTypes[38]
+	mi := &file_parking_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2479,7 +2567,7 @@ func (x *User) String() string {
 func (*User) ProtoMessage() {}
 
 func (x *User) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[38]
+	mi := &file_parking_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2492,7 +2580,7 @@ func (x *User) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use User.ProtoReflect.Descriptor instead.
 func (*User) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{38}
+	return file_parking_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *User) GetId() string {
@@ -2558,7 +2646,7 @@ type Vehicle struct {
 
 func (x *Vehicle) Reset() {
 	*x = Vehicle{}
-	mi := &file_parking_proto_msgTypes[39]
+	mi := &file_parking_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2570,7 +2658,7 @@ func (x *Vehicle) String() string {
 func (*Vehicle) ProtoMessage() {}
 
 func (x *Vehicle) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[39]
+	mi := &file_parking_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2583,7 +2671,7 @@ func (x *Vehicle) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Vehicle.ProtoReflect.Descriptor instead.
 func (*Vehicle) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{39}
+	return file_parking_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *Vehicle) GetId() string {
@@ -2621,7 +2709,7 @@ type ParkingBooking struct {
 
 func (x *ParkingBooking) Reset() {
 	*x = ParkingBooking{}
-	mi := &file_parking_proto_msgTypes[40]
+	mi := &file_parking_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2633,7 +2721,7 @@ func (x *ParkingBooking) String() string {
 func (*ParkingBooking) ProtoMessage() {}
 
 func (x *ParkingBooking) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[40]
+	mi := &file_parking_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2646,7 +2734,7 @@ func (x *ParkingBooking) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ParkingBooking.ProtoReflect.Descriptor instead.
 func (*ParkingBooking) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{40}
+	return file_parking_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *ParkingBooking) GetUserId() string {
@@ -2703,7 +2791,7 @@ type UpdateBookingVehicleRequest struct {
 
 func (x *UpdateBookingVehicleRequest) Reset() {
 	*x = UpdateBookingVehicleRequest{}
-	mi := &file_parking_proto_msgTypes[41]
+	mi := &file_parking_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2715,7 +2803,7 @@ func (x *UpdateBookingVehicleRequest) String() string {
 func (*UpdateBookingVehicleRequest) ProtoMessage() {}
 
 func (x *UpdateBookingVehicleRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[41]
+	mi := &file_parking_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2728,7 +2816,7 @@ func (x *UpdateBookingVehicleRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateBookingVehicleRequest.ProtoReflect.Descriptor instead.
 func (*UpdateBookingVehicleRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{41}
+	return file_parking_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *UpdateBookingVehicleRequest) GetBookingId() string {
@@ -2753,7 +2841,7 @@ type UpdateBookingVehicleResponse struct {
 
 func (x *UpdateBookingVehicleResponse) Reset() {
 	*x = UpdateBookingVehicleResponse{}
-	mi := &file_parking_proto_msgTypes[42]
+	mi := &file_parking_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2765,7 +2853,7 @@ func (x *UpdateBookingVehicleResponse) String() string {
 func (*UpdateBookingVehicleResponse) ProtoMessage() {}
 
 func (x *UpdateBookingVehicleResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[42]
+	mi := &file_parking_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2778,7 +2866,7 @@ func (x *UpdateBookingVehicleResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateBookingVehicleResponse.ProtoReflect.Descriptor instead.
 func (*UpdateBookingVehicleResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{42}
+	return file_parking_proto_rawDescGZIP(), []int{44}
 }
 
 type AddParkingBookingRequest struct {
@@ -2790,7 +2878,7 @@ type AddParkingBookingRequest struct {
 
 func (x *AddParkingBookingRequest) Reset() {
 	*x = AddParkingBookingRequest{}
-	mi := &file_parking_proto_msgTypes[43]
+	mi := &file_parking_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2802,7 +2890,7 @@ func (x *AddParkingBookingRequest) String() string {
 func (*AddParkingBookingRequest) ProtoMessage() {}
 
 func (x *AddParkingBookingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[43]
+	mi := &file_parking_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2815,7 +2903,7 @@ func (x *AddParkingBookingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddParkingBookingRequest.ProtoReflect.Descriptor instead.
 func (*AddParkingBookingRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{43}
+	return file_parking_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *AddParkingBookingRequest) GetBooking() *ParkingBooking {
@@ -2834,7 +2922,7 @@ type AddParkingBookingResponse struct {
 
 func (x *AddParkingBookingResponse) Reset() {
 	*x = AddParkingBookingResponse{}
-	mi := &file_parking_proto_msgTypes[44]
+	mi := &file_parking_proto_msgTypes[46]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2846,7 +2934,7 @@ func (x *AddParkingBookingResponse) String() string {
 func (*AddParkingBookingResponse) ProtoMessage() {}
 
 func (x *AddParkingBookingResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[44]
+	mi := &file_parking_proto_msgTypes[46]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2859,7 +2947,7 @@ func (x *AddParkingBookingResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddParkingBookingResponse.ProtoReflect.Descriptor instead.
 func (*AddParkingBookingResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{44}
+	return file_parking_proto_rawDescGZIP(), []int{46}
 }
 
 func (x *AddParkingBookingResponse) GetParkingLot() int64 {
@@ -2878,7 +2966,7 @@ type GetParkingBookingRequest struct {
 
 func (x *GetParkingBookingRequest) Reset() {
 	*x = GetParkingBookingRequest{}
-	mi := &file_parking_proto_msgTypes[45]
+	mi := &file_parking_proto_msgTypes[47]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2890,7 +2978,7 @@ func (x *GetParkingBookingRequest) String() string {
 func (*GetParkingBookingRequest) ProtoMessage() {}
 
 func (x *GetParkingBookingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[45]
+	mi := &file_parking_proto_msgTypes[47]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2903,7 +2991,7 @@ func (x *GetParkingBookingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParkingBookingRequest.ProtoReflect.Descriptor instead.
 func (*GetParkingBookingRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{45}
+	return file_parking_proto_rawDescGZIP(), []int{47}
 }
 
 func (x *GetParkingBookingRequest) GetParkingLot() int64 {
@@ -2922,7 +3010,7 @@ type GetParkingBookingResponse struct {
 
 func (x *GetParkingBookingResponse) Reset() {
 	*x = GetParkingBookingResponse{}
-	mi := &file_parking_proto_msgTypes[46]
+	mi := &file_parking_proto_msgTypes[48]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2934,7 +3022,7 @@ func (x *GetParkingBookingResponse) String() string {
 func (*GetParkingBookingResponse) ProtoMessage() {}
 
 func (x *GetParkingBookingResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[46]
+	mi := &file_parking_proto_msgTypes[48]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2947,7 +3035,7 @@ func (x *GetParkingBookingResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParkingBookingResponse.ProtoReflect.Descriptor instead.
 func (*GetParkingBookingResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{46}
+	return file_parking_proto_rawDescGZIP(), []int{48}
 }
 
 func (x *GetParkingBookingResponse) GetBooking() *ParkingBooking {
@@ -2968,7 +3056,7 @@ type GetParkingBookingsListRequest struct {
 
 func (x *GetParkingBookingsListRequest) Reset() {
 	*x = GetParkingBookingsListRequest{}
-	mi := &file_parking_proto_msgTypes[47]
+	mi := &file_parking_proto_msgTypes[49]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2980,7 +3068,7 @@ func (x *GetParkingBookingsListRequest) String() string {
 func (*GetParkingBookingsListRequest) ProtoMessage() {}
 
 func (x *GetParkingBookingsListRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[47]
+	mi := &file_parking_proto_msgTypes[49]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2993,7 +3081,7 @@ func (x *GetParkingBookingsListRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParkingBookingsListRequest.ProtoReflect.Descriptor instead.
 func (*GetParkingBookingsListRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{47}
+	return file_parking_proto_rawDescGZIP(), []int{49}
 }
 
 func (x *GetParkingBookingsListRequest) GetFilter() *Filter {
@@ -3029,7 +3117,7 @@ type Filter struct {
 
 func (x *Filter) Reset() {
 	*x = Filter{}
-	mi := &file_parking_proto_msgTypes[48]
+	mi := &file_parking_proto_msgTypes[50]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3041,7 +3129,7 @@ func (x *Filter) String() string {
 func (*Filter) ProtoMessage() {}
 
 func (x *Filter) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[48]
+	mi := &file_parking_proto_msgTypes[50]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3054,7 +3142,7 @@ func (x *Filter) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Filter.ProtoReflect.Descriptor instead.
 func (*Filter) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{48}
+	return file_parking_proto_rawDescGZIP(), []int{50}
 }
 
 func (x *Filter) GetOwnerId() string {
@@ -3095,7 +3183,7 @@ type GetParkingBookingsListResponse struct {
 
 func (x *GetParkingBookingsListResponse) Reset() {
 	*x = GetParkingBookingsListResponse{}
-	mi := &file_parking_proto_msgTypes[49]
+	mi := &file_parking_proto_msgTypes[51]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3107,7 +3195,7 @@ func (x *GetParkingBookingsListResponse) String() string {
 func (*GetParkingBookingsListResponse) ProtoMessage() {}
 
 func (x *GetParkingBookingsListResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[49]
+	mi := &file_parking_proto_msgTypes[51]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3120,7 +3208,7 @@ func (x *GetParkingBookingsListResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetParkingBookingsListResponse.ProtoReflect.Descriptor instead.
 func (*GetParkingBookingsListResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{49}
+	return file_parking_proto_rawDescGZIP(), []int{51}
 }
 
 func (x *GetParkingBookingsListResponse) GetBookings() []*ParkingBooking {
@@ -3155,7 +3243,7 @@ type UpdateUserRequest struct {
 
 func (x *UpdateUserRequest) Reset() {
 	*x = UpdateUserRequest{}
-	mi := &file_parking_proto_msgTypes[50]
+	mi := &file_parking_proto_msgTypes[52]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3167,7 +3255,7 @@ func (x *UpdateUserRequest) String() string {
 func (*UpdateUserRequest) ProtoMessage() {}
 
 func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[50]
+	mi := &file_parking_proto_msgTypes[52]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3180,7 +3268,7 @@ func (x *UpdateUserRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserRequest.ProtoReflect.Descriptor instead.
 func (*UpdateUserRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{50}
+	return file_parking_proto_rawDescGZIP(), []int{52}
 }
 
 func (x *UpdateUserRequest) GetId() string {
@@ -3233,7 +3321,7 @@ type UpdateUserResponse struct {
 
 func (x *UpdateUserResponse) Reset() {
 	*x = UpdateUserResponse{}
-	mi := &file_parking_proto_msgTypes[51]
+	mi := &file_parking_proto_msgTypes[53]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3245,7 +3333,7 @@ func (x *UpdateUserResponse) String() string {
 func (*UpdateUserResponse) ProtoMessage() {}
 
 func (x *UpdateUserResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[51]
+	mi := &file_parking_proto_msgTypes[53]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3258,7 +3346,7 @@ func (x *UpdateUserResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateUserResponse.ProtoReflect.Descriptor instead.
 func (*UpdateUserResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{51}
+	return file_parking_proto_rawDescGZIP(), []int{53}
 }
 
 type UpdateParkingLotRequest struct {
@@ -3276,7 +3364,7 @@ type UpdateParkingLotRequest struct {
 
 func (x *UpdateParkingLotRequest) Reset() {
 	*x = UpdateParkingLotRequest{}
-	mi := &file_parking_proto_msgTypes[52]
+	mi := &file_parking_proto_msgTypes[54]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3288,7 +3376,7 @@ func (x *UpdateParkingLotRequest) String() string {
 func (*UpdateParkingLotRequest) ProtoMessage() {}
 
 func (x *UpdateParkingLotRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[52]
+	mi := &file_parking_proto_msgTypes[54]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3301,7 +3389,7 @@ func (x *UpdateParkingLotRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateParkingLotRequest.ProtoReflect.Descriptor instead.
 func (*UpdateParkingLotRequest) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{52}
+	return file_parking_proto_rawDescGZIP(), []int{54}
 }
 
 func (x *UpdateParkingLotRequest) GetNumber() int64 {
@@ -3340,7 +3428,7 @@ type UpdateParkingLotResponse struct {
 
 func (x *UpdateParkingLotResponse) Reset() {
 	*x = UpdateParkingLotResponse{}
-	mi := &file_parking_proto_msgTypes[53]
+	mi := &file_parking_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3352,7 +3440,7 @@ func (x *UpdateParkingLotResponse) String() string {
 func (*UpdateParkingLotResponse) ProtoMessage() {}
 
 func (x *UpdateParkingLotResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[53]
+	mi := &file_parking_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3365,7 +3453,7 @@ func (x *UpdateParkingLotResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateParkingLotResponse.ProtoReflect.Descriptor instead.
 func (*UpdateParkingLotResponse) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{53}
+	return file_parking_proto_rawDescGZIP(), []int{55}
 }
 
 type Rental struct {
@@ -3382,7 +3470,7 @@ type Rental struct {
 
 func (x *Rental) Reset() {
 	*x = Rental{}
-	mi := &file_parking_proto_msgTypes[54]
+	mi := &file_parking_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3394,7 +3482,7 @@ func (x *Rental) String() string {
 func (*Rental) ProtoMessage() {}
 
 func (x *Rental) ProtoReflect() protoreflect.Message {
-	mi := &file_parking_proto_msgTypes[54]
+	mi := &file_parking_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3407,7 +3495,7 @@ func (x *Rental) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Rental.ProtoReflect.Descriptor instead.
 func (*Rental) Descriptor() ([]byte, []int) {
-	return file_parking_proto_rawDescGZIP(), []int{54}
+	return file_parking_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *Rental) GetRentalId() string {
@@ -3473,7 +3561,12 @@ const file_parking_proto_rawDesc = "" +
 	"\x06filter\x18\x01 \x01(\v2\v.api.FilterR\x06filter\"Q\n" +
 	"\x12GetRentalsResponse\x12%\n" +
 	"\arentals\x18\x01 \x03(\v2\v.api.RentalR\arentals\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\xeb\x01\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"3\n" +
+	"\x10GetRentalRequest\x12\x1f\n" +
+	"\vparking_lot\x18\x01 \x01(\x03R\n" +
+	"parkingLot\"8\n" +
+	"\x11GetRentalResponse\x12#\n" +
+	"\x06rental\x18\x01 \x01(\v2\v.api.RentalR\x06rental\"\xeb\x01\n" +
 	"\x14CreatePaymentRequest\x12\x1c\n" +
 	"\auser_id\x18\x01 \x01(\tB\x03\xe0A\x02R\x06userId\x12\x1f\n" +
 	"\n" +
@@ -3726,7 +3819,7 @@ const file_parking_proto_rawDesc = "" +
 	"\x13UNDEFINED_USER_TYPE\x10\x00\x12\x15\n" +
 	"\x11REGULAR_USER_TYPE\x10\x01\x12\x1e\n" +
 	"\x1aMANAGING_COMPANY_USER_TYPE\x10\x02\x12\x1b\n" +
-	"\x17ADMINISTRATOR_USER_TYPE\x10\x032\xc2\x0e\n" +
+	"\x17ADMINISTRATOR_USER_TYPE\x10\x032\x93\x0f\n" +
 	"\n" +
 	"ParkingAPI\x12\\\n" +
 	"\rGetParkingLot\x12\x19.api.GetParkingLotRequest\x1a\x1a.api.GetParkingLotResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/parking/get\x12\x82\x01\n" +
@@ -3748,7 +3841,8 @@ const file_parking_proto_rawDesc = "" +
 	"\tAddRental\x12\x15.api.AddRentalRequest\x1a\x16.api.AddRentalResponse\"\x16\x82\xd3\xe4\x93\x02\x10:\x01*\"\v/rental/add\x12i\n" +
 	"\x10GetMyParkingLots\x12\x1c.api.GetMyParkingLotsRequest\x1a\x1d.api.GetMyParkingLotsResponse\"\x18\x82\xd3\xe4\x93\x02\x12\x12\x10/my/parking/list\x12S\n" +
 	"\n" +
-	"GetRentals\x12\x16.api.GetRentalsRequest\x1a\x17.api.GetRentalsResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/rentals/get\x12h\n" +
+	"GetRentals\x12\x16.api.GetRentalsRequest\x1a\x17.api.GetRentalsResponse\"\x14\x82\xd3\xe4\x93\x02\x0e\x12\f/rentals/get\x12O\n" +
+	"\tGetRental\x12\x15.api.GetRentalRequest\x1a\x16.api.GetRentalResponse\"\x13\x82\xd3\xe4\x93\x02\r\x12\v/rental/get\x12h\n" +
 	"\x0fGetBookingPrice\x12\x1b.api.GetBookingPriceRequest\x1a\x1c.api.GetBookingPriceResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/booking/price/get2\x98\x04\n" +
 	"\n" +
 	"PaymentAPI\x12b\n" +
@@ -3771,7 +3865,7 @@ func file_parking_proto_rawDescGZIP() []byte {
 }
 
 var file_parking_proto_enumTypes = make([]protoimpl.EnumInfo, 6)
-var file_parking_proto_msgTypes = make([]protoimpl.MessageInfo, 55)
+var file_parking_proto_msgTypes = make([]protoimpl.MessageInfo, 57)
 var file_parking_proto_goTypes = []any{
 	(PaymentMethod)(0),                     // 0: api.PaymentMethod
 	(PaymentStatus)(0),                     // 1: api.PaymentStatus
@@ -3785,150 +3879,155 @@ var file_parking_proto_goTypes = []any{
 	(*EditParkingBookingResponse)(nil),     // 9: api.EditParkingBookingResponse
 	(*GetRentalsRequest)(nil),              // 10: api.GetRentalsRequest
 	(*GetRentalsResponse)(nil),             // 11: api.GetRentalsResponse
-	(*CreatePaymentRequest)(nil),           // 12: api.CreatePaymentRequest
-	(*CreatePaymentResponse)(nil),          // 13: api.CreatePaymentResponse
-	(*GetPaymentStatusRequest)(nil),        // 14: api.GetPaymentStatusRequest
-	(*GetPaymentStatusResponse)(nil),       // 15: api.GetPaymentStatusResponse
-	(*PaymentCallbackRequest)(nil),         // 16: api.PaymentCallbackRequest
-	(*PaymentCallbackResponse)(nil),        // 17: api.PaymentCallbackResponse
-	(*GetPaymentHistoryRequest)(nil),       // 18: api.GetPaymentHistoryRequest
-	(*GetPaymentHistoryResponse)(nil),      // 19: api.GetPaymentHistoryResponse
-	(*RefundPaymentRequest)(nil),           // 20: api.RefundPaymentRequest
-	(*RefundPaymentResponse)(nil),          // 21: api.RefundPaymentResponse
-	(*PaymentHistoryItem)(nil),             // 22: api.PaymentHistoryItem
-	(*AddRentalRequest)(nil),               // 23: api.AddRentalRequest
-	(*AddRentalResponse)(nil),              // 24: api.AddRentalResponse
-	(*GetMyParkingLotsRequest)(nil),        // 25: api.GetMyParkingLotsRequest
-	(*GetMyParkingLotsResponse)(nil),       // 26: api.GetMyParkingLotsResponse
-	(*GetUserByIDRequest)(nil),             // 27: api.GetUserByIDRequest
-	(*GetUserByIDResponse)(nil),            // 28: api.GetUserByIDResponse
-	(*GetUserByPhoneNumberRequest)(nil),    // 29: api.GetUserByPhoneNumberRequest
-	(*GetUserByPhoneNumberResponse)(nil),   // 30: api.GetUserByPhoneNumberResponse
-	(*RegisterRequest)(nil),                // 31: api.RegisterRequest
-	(*RegisterResponse)(nil),               // 32: api.RegisterResponse
-	(*LoginRequest)(nil),                   // 33: api.LoginRequest
-	(*LoginResponse)(nil),                  // 34: api.LoginResponse
-	(*IsAdminRequest)(nil),                 // 35: api.IsAdminRequest
-	(*IsAdminResponse)(nil),                // 36: api.IsAdminResponse
-	(*GetParkingLotRequest)(nil),           // 37: api.GetParkingLotRequest
-	(*GetParkingLotResponse)(nil),          // 38: api.GetParkingLotResponse
-	(*GetParkingLotsByUserIDRequest)(nil),  // 39: api.GetParkingLotsByUserIDRequest
-	(*GetParkingLotsByUserIDResponse)(nil), // 40: api.GetParkingLotsByUserIDResponse
-	(*ListParkingLotsRequest)(nil),         // 41: api.ListParkingLotsRequest
-	(*ListParkingLotsResponse)(nil),        // 42: api.ListParkingLotsResponse
-	(*ParkingLot)(nil),                     // 43: api.ParkingLot
-	(*User)(nil),                           // 44: api.User
-	(*Vehicle)(nil),                        // 45: api.Vehicle
-	(*ParkingBooking)(nil),                 // 46: api.ParkingBooking
-	(*UpdateBookingVehicleRequest)(nil),    // 47: api.UpdateBookingVehicleRequest
-	(*UpdateBookingVehicleResponse)(nil),   // 48: api.UpdateBookingVehicleResponse
-	(*AddParkingBookingRequest)(nil),       // 49: api.AddParkingBookingRequest
-	(*AddParkingBookingResponse)(nil),      // 50: api.AddParkingBookingResponse
-	(*GetParkingBookingRequest)(nil),       // 51: api.GetParkingBookingRequest
-	(*GetParkingBookingResponse)(nil),      // 52: api.GetParkingBookingResponse
-	(*GetParkingBookingsListRequest)(nil),  // 53: api.GetParkingBookingsListRequest
-	(*Filter)(nil),                         // 54: api.Filter
-	(*GetParkingBookingsListResponse)(nil), // 55: api.GetParkingBookingsListResponse
-	(*UpdateUserRequest)(nil),              // 56: api.UpdateUserRequest
-	(*UpdateUserResponse)(nil),             // 57: api.UpdateUserResponse
-	(*UpdateParkingLotRequest)(nil),        // 58: api.UpdateParkingLotRequest
-	(*UpdateParkingLotResponse)(nil),       // 59: api.UpdateParkingLotResponse
-	(*Rental)(nil),                         // 60: api.Rental
-	(*timestamppb.Timestamp)(nil),          // 61: google.protobuf.Timestamp
+	(*GetRentalRequest)(nil),               // 12: api.GetRentalRequest
+	(*GetRentalResponse)(nil),              // 13: api.GetRentalResponse
+	(*CreatePaymentRequest)(nil),           // 14: api.CreatePaymentRequest
+	(*CreatePaymentResponse)(nil),          // 15: api.CreatePaymentResponse
+	(*GetPaymentStatusRequest)(nil),        // 16: api.GetPaymentStatusRequest
+	(*GetPaymentStatusResponse)(nil),       // 17: api.GetPaymentStatusResponse
+	(*PaymentCallbackRequest)(nil),         // 18: api.PaymentCallbackRequest
+	(*PaymentCallbackResponse)(nil),        // 19: api.PaymentCallbackResponse
+	(*GetPaymentHistoryRequest)(nil),       // 20: api.GetPaymentHistoryRequest
+	(*GetPaymentHistoryResponse)(nil),      // 21: api.GetPaymentHistoryResponse
+	(*RefundPaymentRequest)(nil),           // 22: api.RefundPaymentRequest
+	(*RefundPaymentResponse)(nil),          // 23: api.RefundPaymentResponse
+	(*PaymentHistoryItem)(nil),             // 24: api.PaymentHistoryItem
+	(*AddRentalRequest)(nil),               // 25: api.AddRentalRequest
+	(*AddRentalResponse)(nil),              // 26: api.AddRentalResponse
+	(*GetMyParkingLotsRequest)(nil),        // 27: api.GetMyParkingLotsRequest
+	(*GetMyParkingLotsResponse)(nil),       // 28: api.GetMyParkingLotsResponse
+	(*GetUserByIDRequest)(nil),             // 29: api.GetUserByIDRequest
+	(*GetUserByIDResponse)(nil),            // 30: api.GetUserByIDResponse
+	(*GetUserByPhoneNumberRequest)(nil),    // 31: api.GetUserByPhoneNumberRequest
+	(*GetUserByPhoneNumberResponse)(nil),   // 32: api.GetUserByPhoneNumberResponse
+	(*RegisterRequest)(nil),                // 33: api.RegisterRequest
+	(*RegisterResponse)(nil),               // 34: api.RegisterResponse
+	(*LoginRequest)(nil),                   // 35: api.LoginRequest
+	(*LoginResponse)(nil),                  // 36: api.LoginResponse
+	(*IsAdminRequest)(nil),                 // 37: api.IsAdminRequest
+	(*IsAdminResponse)(nil),                // 38: api.IsAdminResponse
+	(*GetParkingLotRequest)(nil),           // 39: api.GetParkingLotRequest
+	(*GetParkingLotResponse)(nil),          // 40: api.GetParkingLotResponse
+	(*GetParkingLotsByUserIDRequest)(nil),  // 41: api.GetParkingLotsByUserIDRequest
+	(*GetParkingLotsByUserIDResponse)(nil), // 42: api.GetParkingLotsByUserIDResponse
+	(*ListParkingLotsRequest)(nil),         // 43: api.ListParkingLotsRequest
+	(*ListParkingLotsResponse)(nil),        // 44: api.ListParkingLotsResponse
+	(*ParkingLot)(nil),                     // 45: api.ParkingLot
+	(*User)(nil),                           // 46: api.User
+	(*Vehicle)(nil),                        // 47: api.Vehicle
+	(*ParkingBooking)(nil),                 // 48: api.ParkingBooking
+	(*UpdateBookingVehicleRequest)(nil),    // 49: api.UpdateBookingVehicleRequest
+	(*UpdateBookingVehicleResponse)(nil),   // 50: api.UpdateBookingVehicleResponse
+	(*AddParkingBookingRequest)(nil),       // 51: api.AddParkingBookingRequest
+	(*AddParkingBookingResponse)(nil),      // 52: api.AddParkingBookingResponse
+	(*GetParkingBookingRequest)(nil),       // 53: api.GetParkingBookingRequest
+	(*GetParkingBookingResponse)(nil),      // 54: api.GetParkingBookingResponse
+	(*GetParkingBookingsListRequest)(nil),  // 55: api.GetParkingBookingsListRequest
+	(*Filter)(nil),                         // 56: api.Filter
+	(*GetParkingBookingsListResponse)(nil), // 57: api.GetParkingBookingsListResponse
+	(*UpdateUserRequest)(nil),              // 58: api.UpdateUserRequest
+	(*UpdateUserResponse)(nil),             // 59: api.UpdateUserResponse
+	(*UpdateParkingLotRequest)(nil),        // 60: api.UpdateParkingLotRequest
+	(*UpdateParkingLotResponse)(nil),       // 61: api.UpdateParkingLotResponse
+	(*Rental)(nil),                         // 62: api.Rental
+	(*timestamppb.Timestamp)(nil),          // 63: google.protobuf.Timestamp
 }
 var file_parking_proto_depIdxs = []int32{
-	61, // 0: api.EditParkingBookingRequest.time_to:type_name -> google.protobuf.Timestamp
-	61, // 1: api.EditParkingBookingResponse.time_to:type_name -> google.protobuf.Timestamp
-	54, // 2: api.GetRentalsRequest.filter:type_name -> api.Filter
-	60, // 3: api.GetRentalsResponse.rentals:type_name -> api.Rental
-	0,  // 4: api.CreatePaymentRequest.payment_method:type_name -> api.PaymentMethod
-	1,  // 5: api.CreatePaymentResponse.status:type_name -> api.PaymentStatus
-	1,  // 6: api.GetPaymentStatusResponse.status:type_name -> api.PaymentStatus
-	61, // 7: api.GetPaymentStatusResponse.payment_date:type_name -> google.protobuf.Timestamp
-	1,  // 8: api.PaymentCallbackRequest.status:type_name -> api.PaymentStatus
-	61, // 9: api.GetPaymentHistoryRequest.from:type_name -> google.protobuf.Timestamp
-	61, // 10: api.GetPaymentHistoryRequest.to:type_name -> google.protobuf.Timestamp
-	22, // 11: api.GetPaymentHistoryResponse.payments:type_name -> api.PaymentHistoryItem
-	1,  // 12: api.RefundPaymentResponse.status:type_name -> api.PaymentStatus
-	1,  // 13: api.PaymentHistoryItem.status:type_name -> api.PaymentStatus
-	61, // 14: api.PaymentHistoryItem.created_at:type_name -> google.protobuf.Timestamp
-	0,  // 15: api.PaymentHistoryItem.payment_method:type_name -> api.PaymentMethod
-	60, // 16: api.AddRentalRequest.rental:type_name -> api.Rental
-	54, // 17: api.GetMyParkingLotsRequest.filter:type_name -> api.Filter
-	46, // 18: api.GetMyParkingLotsResponse.bookings:type_name -> api.ParkingBooking
-	60, // 19: api.GetMyParkingLotsResponse.rentals:type_name -> api.Rental
-	43, // 20: api.GetMyParkingLotsResponse.parking_lots:type_name -> api.ParkingLot
-	44, // 21: api.GetUserByIDResponse.user:type_name -> api.User
-	44, // 22: api.GetUserByPhoneNumberResponse.user:type_name -> api.User
-	43, // 23: api.GetParkingLotResponse.parking_lot:type_name -> api.ParkingLot
-	43, // 24: api.GetParkingLotsByUserIDResponse.parking_lot:type_name -> api.ParkingLot
-	43, // 25: api.ListParkingLotsResponse.parking_lot:type_name -> api.ParkingLot
-	2,  // 26: api.ParkingLot.kind:type_name -> api.ParkingKind
-	4,  // 27: api.ParkingLot.type:type_name -> api.ParkingType
-	3,  // 28: api.ParkingLot.status:type_name -> api.ParkingLotStatus
-	5,  // 29: api.User.user_type:type_name -> api.UserType
-	61, // 30: api.ParkingBooking.time_from:type_name -> google.protobuf.Timestamp
-	61, // 31: api.ParkingBooking.time_to:type_name -> google.protobuf.Timestamp
-	46, // 32: api.AddParkingBookingRequest.booking:type_name -> api.ParkingBooking
-	46, // 33: api.GetParkingBookingResponse.booking:type_name -> api.ParkingBooking
-	54, // 34: api.GetParkingBookingsListRequest.filter:type_name -> api.Filter
-	61, // 35: api.Filter.time_from:type_name -> google.protobuf.Timestamp
-	61, // 36: api.Filter.time_to:type_name -> google.protobuf.Timestamp
-	46, // 37: api.GetParkingBookingsListResponse.bookings:type_name -> api.ParkingBooking
-	2,  // 38: api.UpdateParkingLotRequest.kind:type_name -> api.ParkingKind
-	61, // 39: api.Rental.time_from:type_name -> google.protobuf.Timestamp
-	61, // 40: api.Rental.time_to:type_name -> google.protobuf.Timestamp
-	37, // 41: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
-	39, // 42: api.ParkingAPI.GetParkingLotsByUserID:input_type -> api.GetParkingLotsByUserIDRequest
-	41, // 43: api.ParkingAPI.ListParkingLots:input_type -> api.ListParkingLotsRequest
-	49, // 44: api.ParkingAPI.AddParkingBooking:input_type -> api.AddParkingBookingRequest
-	8,  // 45: api.ParkingAPI.EditParkingBooking:input_type -> api.EditParkingBookingRequest
-	47, // 46: api.ParkingAPI.UpdateBookingVehicle:input_type -> api.UpdateBookingVehicleRequest
-	51, // 47: api.ParkingAPI.GetParkingBooking:input_type -> api.GetParkingBookingRequest
-	53, // 48: api.ParkingAPI.GetParkingBookingsList:input_type -> api.GetParkingBookingsListRequest
-	31, // 49: api.ParkingAPI.Register:input_type -> api.RegisterRequest
-	33, // 50: api.ParkingAPI.Login:input_type -> api.LoginRequest
-	27, // 51: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
-	29, // 52: api.ParkingAPI.GetUserByPhoneNumber:input_type -> api.GetUserByPhoneNumberRequest
-	56, // 53: api.ParkingAPI.UpdateUser:input_type -> api.UpdateUserRequest
-	58, // 54: api.ParkingAPI.UpdateParkingLot:input_type -> api.UpdateParkingLotRequest
-	23, // 55: api.ParkingAPI.AddRental:input_type -> api.AddRentalRequest
-	25, // 56: api.ParkingAPI.GetMyParkingLots:input_type -> api.GetMyParkingLotsRequest
-	10, // 57: api.ParkingAPI.GetRentals:input_type -> api.GetRentalsRequest
-	6,  // 58: api.ParkingAPI.GetBookingPrice:input_type -> api.GetBookingPriceRequest
-	12, // 59: api.PaymentAPI.CreatePayment:input_type -> api.CreatePaymentRequest
-	14, // 60: api.PaymentAPI.GetPaymentStatus:input_type -> api.GetPaymentStatusRequest
-	16, // 61: api.PaymentAPI.PaymentCallback:input_type -> api.PaymentCallbackRequest
-	18, // 62: api.PaymentAPI.GetPaymentHistory:input_type -> api.GetPaymentHistoryRequest
-	20, // 63: api.PaymentAPI.RefundPayment:input_type -> api.RefundPaymentRequest
-	38, // 64: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
-	40, // 65: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
-	42, // 66: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
-	50, // 67: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
-	9,  // 68: api.ParkingAPI.EditParkingBooking:output_type -> api.EditParkingBookingResponse
-	48, // 69: api.ParkingAPI.UpdateBookingVehicle:output_type -> api.UpdateBookingVehicleResponse
-	52, // 70: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
-	55, // 71: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
-	32, // 72: api.ParkingAPI.Register:output_type -> api.RegisterResponse
-	34, // 73: api.ParkingAPI.Login:output_type -> api.LoginResponse
-	28, // 74: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
-	30, // 75: api.ParkingAPI.GetUserByPhoneNumber:output_type -> api.GetUserByPhoneNumberResponse
-	57, // 76: api.ParkingAPI.UpdateUser:output_type -> api.UpdateUserResponse
-	59, // 77: api.ParkingAPI.UpdateParkingLot:output_type -> api.UpdateParkingLotResponse
-	24, // 78: api.ParkingAPI.AddRental:output_type -> api.AddRentalResponse
-	26, // 79: api.ParkingAPI.GetMyParkingLots:output_type -> api.GetMyParkingLotsResponse
-	11, // 80: api.ParkingAPI.GetRentals:output_type -> api.GetRentalsResponse
-	7,  // 81: api.ParkingAPI.GetBookingPrice:output_type -> api.GetBookingPriceResponse
-	13, // 82: api.PaymentAPI.CreatePayment:output_type -> api.CreatePaymentResponse
-	15, // 83: api.PaymentAPI.GetPaymentStatus:output_type -> api.GetPaymentStatusResponse
-	17, // 84: api.PaymentAPI.PaymentCallback:output_type -> api.PaymentCallbackResponse
-	19, // 85: api.PaymentAPI.GetPaymentHistory:output_type -> api.GetPaymentHistoryResponse
-	21, // 86: api.PaymentAPI.RefundPayment:output_type -> api.RefundPaymentResponse
-	64, // [64:87] is the sub-list for method output_type
-	41, // [41:64] is the sub-list for method input_type
-	41, // [41:41] is the sub-list for extension type_name
-	41, // [41:41] is the sub-list for extension extendee
-	0,  // [0:41] is the sub-list for field type_name
+	63, // 0: api.EditParkingBookingRequest.time_to:type_name -> google.protobuf.Timestamp
+	63, // 1: api.EditParkingBookingResponse.time_to:type_name -> google.protobuf.Timestamp
+	56, // 2: api.GetRentalsRequest.filter:type_name -> api.Filter
+	62, // 3: api.GetRentalsResponse.rentals:type_name -> api.Rental
+	62, // 4: api.GetRentalResponse.rental:type_name -> api.Rental
+	0,  // 5: api.CreatePaymentRequest.payment_method:type_name -> api.PaymentMethod
+	1,  // 6: api.CreatePaymentResponse.status:type_name -> api.PaymentStatus
+	1,  // 7: api.GetPaymentStatusResponse.status:type_name -> api.PaymentStatus
+	63, // 8: api.GetPaymentStatusResponse.payment_date:type_name -> google.protobuf.Timestamp
+	1,  // 9: api.PaymentCallbackRequest.status:type_name -> api.PaymentStatus
+	63, // 10: api.GetPaymentHistoryRequest.from:type_name -> google.protobuf.Timestamp
+	63, // 11: api.GetPaymentHistoryRequest.to:type_name -> google.protobuf.Timestamp
+	24, // 12: api.GetPaymentHistoryResponse.payments:type_name -> api.PaymentHistoryItem
+	1,  // 13: api.RefundPaymentResponse.status:type_name -> api.PaymentStatus
+	1,  // 14: api.PaymentHistoryItem.status:type_name -> api.PaymentStatus
+	63, // 15: api.PaymentHistoryItem.created_at:type_name -> google.protobuf.Timestamp
+	0,  // 16: api.PaymentHistoryItem.payment_method:type_name -> api.PaymentMethod
+	62, // 17: api.AddRentalRequest.rental:type_name -> api.Rental
+	56, // 18: api.GetMyParkingLotsRequest.filter:type_name -> api.Filter
+	48, // 19: api.GetMyParkingLotsResponse.bookings:type_name -> api.ParkingBooking
+	62, // 20: api.GetMyParkingLotsResponse.rentals:type_name -> api.Rental
+	45, // 21: api.GetMyParkingLotsResponse.parking_lots:type_name -> api.ParkingLot
+	46, // 22: api.GetUserByIDResponse.user:type_name -> api.User
+	46, // 23: api.GetUserByPhoneNumberResponse.user:type_name -> api.User
+	45, // 24: api.GetParkingLotResponse.parking_lot:type_name -> api.ParkingLot
+	45, // 25: api.GetParkingLotsByUserIDResponse.parking_lot:type_name -> api.ParkingLot
+	45, // 26: api.ListParkingLotsResponse.parking_lot:type_name -> api.ParkingLot
+	2,  // 27: api.ParkingLot.kind:type_name -> api.ParkingKind
+	4,  // 28: api.ParkingLot.type:type_name -> api.ParkingType
+	3,  // 29: api.ParkingLot.status:type_name -> api.ParkingLotStatus
+	5,  // 30: api.User.user_type:type_name -> api.UserType
+	63, // 31: api.ParkingBooking.time_from:type_name -> google.protobuf.Timestamp
+	63, // 32: api.ParkingBooking.time_to:type_name -> google.protobuf.Timestamp
+	48, // 33: api.AddParkingBookingRequest.booking:type_name -> api.ParkingBooking
+	48, // 34: api.GetParkingBookingResponse.booking:type_name -> api.ParkingBooking
+	56, // 35: api.GetParkingBookingsListRequest.filter:type_name -> api.Filter
+	63, // 36: api.Filter.time_from:type_name -> google.protobuf.Timestamp
+	63, // 37: api.Filter.time_to:type_name -> google.protobuf.Timestamp
+	48, // 38: api.GetParkingBookingsListResponse.bookings:type_name -> api.ParkingBooking
+	2,  // 39: api.UpdateParkingLotRequest.kind:type_name -> api.ParkingKind
+	63, // 40: api.Rental.time_from:type_name -> google.protobuf.Timestamp
+	63, // 41: api.Rental.time_to:type_name -> google.protobuf.Timestamp
+	39, // 42: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
+	41, // 43: api.ParkingAPI.GetParkingLotsByUserID:input_type -> api.GetParkingLotsByUserIDRequest
+	43, // 44: api.ParkingAPI.ListParkingLots:input_type -> api.ListParkingLotsRequest
+	51, // 45: api.ParkingAPI.AddParkingBooking:input_type -> api.AddParkingBookingRequest
+	8,  // 46: api.ParkingAPI.EditParkingBooking:input_type -> api.EditParkingBookingRequest
+	49, // 47: api.ParkingAPI.UpdateBookingVehicle:input_type -> api.UpdateBookingVehicleRequest
+	53, // 48: api.ParkingAPI.GetParkingBooking:input_type -> api.GetParkingBookingRequest
+	55, // 49: api.ParkingAPI.GetParkingBookingsList:input_type -> api.GetParkingBookingsListRequest
+	33, // 50: api.ParkingAPI.Register:input_type -> api.RegisterRequest
+	35, // 51: api.ParkingAPI.Login:input_type -> api.LoginRequest
+	29, // 52: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
+	31, // 53: api.ParkingAPI.GetUserByPhoneNumber:input_type -> api.GetUserByPhoneNumberRequest
+	58, // 54: api.ParkingAPI.UpdateUser:input_type -> api.UpdateUserRequest
+	60, // 55: api.ParkingAPI.UpdateParkingLot:input_type -> api.UpdateParkingLotRequest
+	25, // 56: api.ParkingAPI.AddRental:input_type -> api.AddRentalRequest
+	27, // 57: api.ParkingAPI.GetMyParkingLots:input_type -> api.GetMyParkingLotsRequest
+	10, // 58: api.ParkingAPI.GetRentals:input_type -> api.GetRentalsRequest
+	12, // 59: api.ParkingAPI.GetRental:input_type -> api.GetRentalRequest
+	6,  // 60: api.ParkingAPI.GetBookingPrice:input_type -> api.GetBookingPriceRequest
+	14, // 61: api.PaymentAPI.CreatePayment:input_type -> api.CreatePaymentRequest
+	16, // 62: api.PaymentAPI.GetPaymentStatus:input_type -> api.GetPaymentStatusRequest
+	18, // 63: api.PaymentAPI.PaymentCallback:input_type -> api.PaymentCallbackRequest
+	20, // 64: api.PaymentAPI.GetPaymentHistory:input_type -> api.GetPaymentHistoryRequest
+	22, // 65: api.PaymentAPI.RefundPayment:input_type -> api.RefundPaymentRequest
+	40, // 66: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
+	42, // 67: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
+	44, // 68: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
+	52, // 69: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
+	9,  // 70: api.ParkingAPI.EditParkingBooking:output_type -> api.EditParkingBookingResponse
+	50, // 71: api.ParkingAPI.UpdateBookingVehicle:output_type -> api.UpdateBookingVehicleResponse
+	54, // 72: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
+	57, // 73: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
+	34, // 74: api.ParkingAPI.Register:output_type -> api.RegisterResponse
+	36, // 75: api.ParkingAPI.Login:output_type -> api.LoginResponse
+	30, // 76: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
+	32, // 77: api.ParkingAPI.GetUserByPhoneNumber:output_type -> api.GetUserByPhoneNumberResponse
+	59, // 78: api.ParkingAPI.UpdateUser:output_type -> api.UpdateUserResponse
+	61, // 79: api.ParkingAPI.UpdateParkingLot:output_type -> api.UpdateParkingLotResponse
+	26, // 80: api.ParkingAPI.AddRental:output_type -> api.AddRentalResponse
+	28, // 81: api.ParkingAPI.GetMyParkingLots:output_type -> api.GetMyParkingLotsResponse
+	11, // 82: api.ParkingAPI.GetRentals:output_type -> api.GetRentalsResponse
+	13, // 83: api.ParkingAPI.GetRental:output_type -> api.GetRentalResponse
+	7,  // 84: api.ParkingAPI.GetBookingPrice:output_type -> api.GetBookingPriceResponse
+	15, // 85: api.PaymentAPI.CreatePayment:output_type -> api.CreatePaymentResponse
+	17, // 86: api.PaymentAPI.GetPaymentStatus:output_type -> api.GetPaymentStatusResponse
+	19, // 87: api.PaymentAPI.PaymentCallback:output_type -> api.PaymentCallbackResponse
+	21, // 88: api.PaymentAPI.GetPaymentHistory:output_type -> api.GetPaymentHistoryResponse
+	23, // 89: api.PaymentAPI.RefundPayment:output_type -> api.RefundPaymentResponse
+	66, // [66:90] is the sub-list for method output_type
+	42, // [42:66] is the sub-list for method input_type
+	42, // [42:42] is the sub-list for extension type_name
+	42, // [42:42] is the sub-list for extension extendee
+	0,  // [0:42] is the sub-list for field type_name
 }
 
 func init() { file_parking_proto_init() }
@@ -3936,25 +4035,25 @@ func file_parking_proto_init() {
 	if File_parking_proto != nil {
 		return
 	}
-	file_parking_proto_msgTypes[6].OneofWrappers = []any{
+	file_parking_proto_msgTypes[8].OneofWrappers = []any{
 		(*CreatePaymentRequest_BookingId)(nil),
 		(*CreatePaymentRequest_RentalId)(nil),
 	}
-	file_parking_proto_msgTypes[16].OneofWrappers = []any{
+	file_parking_proto_msgTypes[18].OneofWrappers = []any{
 		(*PaymentHistoryItem_BookingId)(nil),
 		(*PaymentHistoryItem_RentalId)(nil),
 	}
-	file_parking_proto_msgTypes[37].OneofWrappers = []any{}
-	file_parking_proto_msgTypes[38].OneofWrappers = []any{}
-	file_parking_proto_msgTypes[50].OneofWrappers = []any{}
+	file_parking_proto_msgTypes[39].OneofWrappers = []any{}
+	file_parking_proto_msgTypes[40].OneofWrappers = []any{}
 	file_parking_proto_msgTypes[52].OneofWrappers = []any{}
+	file_parking_proto_msgTypes[54].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_parking_proto_rawDesc), len(file_parking_proto_rawDesc)),
 			NumEnums:      6,
-			NumMessages:   55,
+			NumMessages:   57,
 			NumExtensions: 0,
 			NumServices:   2,
 		},
