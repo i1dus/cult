@@ -189,7 +189,9 @@ message CreatePaymentRequest {
     string booking_id = 2;  // For parking bookings
     string rental_id = 3;   // For rentals
   }
-  PaymentMethod payment_method = 4 [(google.api.field_behavior) = REQUIRED];
+  int64 payment_amount  = 4;
+
+  PaymentMethod payment_method = 5 [(google.api.field_behavior) = REQUIRED];
 }
 
 message CreatePaymentResponse {
@@ -254,7 +256,7 @@ message PaymentHistoryItem {
     string booking_id = 6;
     string rental_id = 7;
   }
-  PaymentMethod payment_method = 8;
+  PaymentMethod payment_method = 9;
 }
 
 enum PaymentMethod {

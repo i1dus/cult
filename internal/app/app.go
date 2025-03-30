@@ -31,7 +31,7 @@ func New(
 	bookingRepository := booking_repository.NewBookingRepository(conn, log)
 	rentalRepository := rental_repository.NewRentalRepository(conn, log)
 	paymentRepository := payment_repository.NewRepository()
-	paymentProccessor := payment.NewSberProcessor(
+	paymentProcessor := payment.NewSberProcessor(
 		"https://3dsec.sberbank.ru",
 		"admin",
 		"password",
@@ -41,7 +41,7 @@ func New(
 	parkingLotService := parking_lot.NewParkingLotService(log, parkingLotRepository, bookingRepository, userRepository)
 	bookingService := booking.NewBookingService(log, bookingRepository)
 	rentalService := rental.NewRentalService(log, rentalRepository)
-	paymentService := payment.NewService(paymentRepository, paymentProccessor)
+	paymentService := payment.NewService(paymentRepository, paymentProcessor)
 
 	grpcApp := grpcapp.New(log, authService, parkingLotService, bookingService, rentalService, paymentService, grpcPort)
 

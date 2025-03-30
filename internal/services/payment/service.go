@@ -51,7 +51,7 @@ func (s *Service) CreatePayment(ctx context.Context, req *desc.CreatePaymentRequ
 		UserID:    req.UserId,
 		Status:    domain.PaymentStatus_PENDING,
 		CreatedAt: time.Now(),
-		Amount:    0, // !!
+		Amount:    req.GetPaymentAmount(), // !! копейки
 		Currency:  "RUB",
 	}
 
@@ -122,8 +122,6 @@ func (s *Service) PaymentCallback(ctx context.Context, req *desc.PaymentCallback
 	if err := s.repo.UpdatePayment(ctx, existing); err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to update payment: %v", err)
 	}
-
-	// Здесь можно добавить уведомление других сервисов об изменении статуса платежа
 
 	return &desc.PaymentCallbackResponse{Success: true}, nil
 }

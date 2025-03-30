@@ -594,6 +594,8 @@ func (m *CreatePaymentRequest) validate(all bool) error {
 
 	// no validation rules for UserId
 
+	// no validation rules for PaymentAmount
+
 	// no validation rules for PaymentMethod
 
 	switch v := m.PaymentType.(type) {

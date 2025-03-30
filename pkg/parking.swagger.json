@@ -886,6 +886,10 @@
           "type": "string",
           "title": "For rentals"
         },
+        "paymentAmount": {
+          "type": "string",
+          "format": "int64"
+        },
         "paymentMethod": {
           "$ref": "#/definitions/apiPaymentMethod"
         }

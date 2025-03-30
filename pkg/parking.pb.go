@@ -572,7 +572,8 @@ type CreatePaymentRequest struct {
 	//	*CreatePaymentRequest_BookingId
 	//	*CreatePaymentRequest_RentalId
 	PaymentType   isCreatePaymentRequest_PaymentType `protobuf_oneof:"payment_type"`
-	PaymentMethod PaymentMethod                      `protobuf:"varint,4,opt,name=payment_method,json=paymentMethod,proto3,enum=api.PaymentMethod" json:"payment_method,omitempty"`
+	PaymentAmount int64                              `protobuf:"varint,4,opt,name=payment_amount,json=paymentAmount,proto3" json:"payment_amount,omitempty"`
+	PaymentMethod PaymentMethod                      `protobuf:"varint,5,opt,name=payment_method,json=paymentMethod,proto3,enum=api.PaymentMethod" json:"payment_method,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -637,6 +638,13 @@ func (x *CreatePaymentRequest) GetRentalId() string {
 		}
 	}
 	return ""
+}
+
+func (x *CreatePaymentRequest) GetPaymentAmount() int64 {
+	if x != nil {
+		return x.PaymentAmount
+	}
+	return 0
 }
 
 func (x *CreatePaymentRequest) GetPaymentMethod() PaymentMethod {
@@ -1191,7 +1199,7 @@ type PaymentHistoryItem struct {
 	//	*PaymentHistoryItem_BookingId
 	//	*PaymentHistoryItem_RentalId
 	PaymentType   isPaymentHistoryItem_PaymentType `protobuf_oneof:"payment_type"`
-	PaymentMethod PaymentMethod                    `protobuf:"varint,8,opt,name=payment_method,json=paymentMethod,proto3,enum=api.PaymentMethod" json:"payment_method,omitempty"`
+	PaymentMethod PaymentMethod                    `protobuf:"varint,9,opt,name=payment_method,json=paymentMethod,proto3,enum=api.PaymentMethod" json:"payment_method,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -3372,13 +3380,14 @@ const file_parking_proto_rawDesc = "" +
 	"\x06filter\x18\x01 \x01(\v2\v.api.FilterR\x06filter\"Q\n" +
 	"\x12GetRentalsResponse\x12%\n" +
 	"\arentals\x18\x01 \x03(\v2\v.api.RentalR\arentals\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\xc4\x01\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xeb\x01\n" +
 	"\x14CreatePaymentRequest\x12\x1c\n" +
 	"\auser_id\x18\x01 \x01(\tB\x03\xe0A\x02R\x06userId\x12\x1f\n" +
 	"\n" +
 	"booking_id\x18\x02 \x01(\tH\x00R\tbookingId\x12\x1d\n" +
-	"\trental_id\x18\x03 \x01(\tH\x00R\brentalId\x12>\n" +
-	"\x0epayment_method\x18\x04 \x01(\x0e2\x12.api.PaymentMethodB\x03\xe0A\x02R\rpaymentMethodB\x0e\n" +
+	"\trental_id\x18\x03 \x01(\tH\x00R\brentalId\x12%\n" +
+	"\x0epayment_amount\x18\x04 \x01(\x03R\rpaymentAmount\x12>\n" +
+	"\x0epayment_method\x18\x05 \x01(\x0e2\x12.api.PaymentMethodB\x03\xe0A\x02R\rpaymentMethodB\x0e\n" +
 	"\fpayment_type\"\x83\x01\n" +
 	"\x15CreatePaymentResponse\x12\x1d\n" +
 	"\n" +
@@ -3430,7 +3439,7 @@ const file_parking_proto_rawDesc = "" +
 	"\n" +
 	"booking_id\x18\x06 \x01(\tH\x00R\tbookingId\x12\x1d\n" +
 	"\trental_id\x18\a \x01(\tH\x00R\brentalId\x129\n" +
-	"\x0epayment_method\x18\b \x01(\x0e2\x12.api.PaymentMethodR\rpaymentMethodB\x0e\n" +
+	"\x0epayment_method\x18\t \x01(\x0e2\x12.api.PaymentMethodR\rpaymentMethodB\x0e\n" +
 	"\fpayment_type\"7\n" +
 	"\x10AddRentalRequest\x12#\n" +
 	"\x06rental\x18\x01 \x01(\v2\v.api.RentalR\x06rental\"9\n" +
