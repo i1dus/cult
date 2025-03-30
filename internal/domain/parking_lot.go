@@ -118,6 +118,7 @@ func ParkingTypeFromPB(pbType sso.ParkingType) ParkingType {
 type Booking struct {
 	UserID      uuid.UUID
 	RentalID    uuid.UUID
+	ParkingLot  int64
 	From        time.Time
 	To          time.Time
 	Vehicle     string

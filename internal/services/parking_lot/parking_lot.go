@@ -132,7 +132,7 @@ func (s *ParkingLotService) calculateTypeAndStatus(ctx context.Context, lot doma
 	// Является ли юзер владельцем
 	var isOwner bool
 
-	if lot.OwnerID == nil {
+	if lot.OwnerID != nil {
 		hasOwner = true
 		if *lot.OwnerID == userID {
 			isOwner = true

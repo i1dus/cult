@@ -64,7 +64,6 @@ func (r *ParkingLotRepo) GetAllParkingLots(ctx context.Context) ([]domain.Parkin
 	if err := rows.Err(); err != nil {
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
-
 	return lots, nil
 }
 

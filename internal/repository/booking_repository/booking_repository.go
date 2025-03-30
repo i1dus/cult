@@ -94,7 +94,6 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (*
     `
 
 	var booking domain.Booking
-	fmt.Println(query, rentalID)
 	err = r.db.QueryRow(ctx, query, rentalID).Scan(
 		&booking.UserID,
 		&booking.Vehicle,
@@ -103,7 +102,6 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (*
 		&booking.From,
 		&booking.To,
 	)
-	fmt.Println("ok", err.Error())
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			return nil, nil
@@ -111,7 +109,9 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (*
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
+	booking.ParkingLot = parkingLot
 	booking.RentalID = rentalID
+
 	return &booking, nil
 }
 
