@@ -36,8 +36,11 @@ type BookingService interface {
 
 type RentalService interface {
 	GetRentalsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Rental, error)
-	//GetRental(ctx context.Context, parkingLot int64) (*domain.Rental, error)
+	GetRental(ctx context.Context, parkingLot int64) (*domain.Rental, error)
 	AddRental(ctx context.Context, rental domain.Rental) error
+}
+
+type PaymentService interface {
 }
 
 type serverAPI struct {
@@ -47,8 +50,9 @@ type serverAPI struct {
 	parkingLot ParkingLotService
 	booking    BookingService
 	rental     RentalService
+	payment    PaymentService
 }
 
-func Register(gRPCServer *grpc.Server, auth AuthService, parkingLot ParkingLotService, booking BookingService, rental RentalService) {
-	sso.RegisterParkingAPIServer(gRPCServer, &serverAPI{auth: auth, parkingLot: parkingLot, booking: booking, rental: rental})
+func Register(gRPCServer *grpc.Server, auth AuthService, parkingLot ParkingLotService, booking BookingService, rental RentalService, payment PaymentService) {
+	sso.RegisterParkingAPIServer(gRPCServer, &serverAPI{auth: auth, parkingLot: parkingLot, booking: booking, rental: rental, payment: payment})
 }

@@ -40,6 +40,7 @@ func New(
 	parkingLotService authgrpc.ParkingLotService,
 	bookingService authgrpc.BookingService,
 	rentalService authgrpc.RentalService,
+	paymentService authgrpc.PaymentService,
 	port int,
 ) *App {
 	loggingOpts := []logging.Option{
@@ -60,7 +61,7 @@ func New(
 		logging.UnaryServerInterceptor(InterceptorLogger(log), loggingOpts...),
 	))
 
-	authgrpc.Register(gRPCServer, authService, parkingLotService, bookingService, rentalService)
+	authgrpc.Register(gRPCServer, authService, parkingLotService, bookingService, rentalService, paymentService)
 
 	return &App{
 		log:        log,

@@ -55,7 +55,7 @@ func (r *Repository) UpdatePayment(ctx context.Context, payment *domain.Payment)
 	return nil
 }
 
-func (r *Repository) ListPayments(ctx context.Context, userID string, from, to time.Time, limit, offset int) ([]*Payment, int, error) {
+func (r *Repository) ListPayments(ctx context.Context, userID string, from, to time.Time, limit, offset int) ([]*domain.Payment, int, error) {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 

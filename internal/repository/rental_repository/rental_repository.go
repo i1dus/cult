@@ -4,10 +4,13 @@ import (
 	"context"
 	"cult/internal/domain"
 	"cult/internal/repository"
+	"math"
+	"time"
 
 	"fmt"
 	"log/slog"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"github.com/lib/pq"
 )
@@ -152,4 +155,70 @@ func (r *RentalRepository) GetRentalsByFilter(ctx context.Context, filter domain
 	}
 
 	return rentals, nil
+}
+
+// GetBookingPriceByID implements
+func (r *RentalRepository) GetBookingPriceByID(ctx context.Context, id uuid.UUID) (int64, error) {
+	const op = "RentalRepository.GetBookingPriceByID"
+	price := int64(0)
+
+	rows, err := r.db.Query(ctx, `
+        SELECT rental_id, is_short_term FROM bookings WHERE id = $1`,
+		id,
+	)
+	if err != nil {
+		return 0, fmt.Errorf("failed to get booking price: %w", err)
+	}
+	defer rows.Close()
+
+	if !rows.Next() {
+		return 0, fmt.Errorf("no booking found with id %s", id)
+	}
+
+	var rentalID uuid.UUID
+	var isShortTerm bool
+
+	err = rows.Scan(&rentalID, &isShortTerm)
+
+	query := `
+        SELECT 
+            r.id,
+            r.parking_lot_id,
+            r.start_at,
+            r.end_at,
+            r.cost_per_hour,
+            r.cost_per_day
+        FROM rentals r
+        WHERE r.id = $1`
+
+	var rental domain.Rental
+
+	resRow := r.db.QueryRow(ctx, query, rentalID).Scan(&rental)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query rentals: %w", err)
+	}
+	
+	domain.Rental{
+		ID:          rentalID,
+		ParkingLot:  0,
+		From:        time.Time{},
+		To:          time.Time{},
+		CostPerHour: 0,
+		CostPerDay:  0,
+	}
+
+	duration := rental.To.Sub(rental.From)
+
+
+
+	if isShortTerm {
+		hours := int(math.Ceil(duration.Minutes()) * 10)
+
+		price = rental.CostPerHour * hours
+	} else {
+		days := int(math.Ceil(duration.Hours()) / 24)
+		price = rental.CostPerDay *
+	}
+	
+	return price, nil
 }

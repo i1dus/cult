@@ -51,7 +51,7 @@ func (s *Service) CreatePayment(ctx context.Context, req *desc.CreatePaymentRequ
 		UserID:    req.UserId,
 		Status:    domain.PaymentStatus_PENDING,
 		CreatedAt: time.Now(),
-		Amount:    calculateAmount(req), // функция расчета суммы
+		Amount:    calculateAmount(req),
 		Currency:  "RUB",
 	}
 
@@ -78,7 +78,7 @@ func (s *Service) CreatePayment(ctx context.Context, req *desc.CreatePaymentRequ
 	return &desc.CreatePaymentResponse{
 		PaymentId:  payment.ID,
 		PaymentUrl: paymentURL,
-		Status:     payment.Status,
+		Status:     toApiStatus(payment.Status),
 	}, nil
 }
 
@@ -94,7 +94,7 @@ func (s *Service) GetPaymentStatus(ctx context.Context, req *desc.GetPaymentStat
 	}
 
 	return &desc.GetPaymentStatusResponse{
-		Status:      payment.Status,
+		Status:      toApiStatus(payment.Status),
 		PaymentDate: timestamppb.New(payment.PaidAt),
 		Amount:      payment.Amount,
 		Currency:    payment.Currency,
@@ -156,9 +156,9 @@ func (s *Service) GetPaymentHistory(ctx context.Context, req *desc.GetPaymentHis
 			PaymentId:     p.ID,
 			Amount:        p.Amount,
 			Currency:      p.Currency,
-			Status:        p.Status,
+			Status:        toApiStatus(p.Status),
 			CreatedAt:     timestamppb.New(p.CreatedAt),
-			PaymentMethod: p.Method,
+			PaymentMethod: toApiMethod(p.Method),
 		}
 
 		switch p.PaymentType {
@@ -185,7 +185,7 @@ func (s *Service) RefundPayment(ctx context.Context, req *desc.RefundPaymentRequ
 		return nil, status.Errorf(codes.NotFound, "payment not found: %v", err)
 	}
 
-	if payment.Status != desc.PaymentStatus_COMPLETED {
+	if payment.Status != domain.PaymentStatus_COMPLETED {
 		return nil, status.Errorf(codes.FailedPrecondition, "only completed payments can be refunded")
 	}
 
@@ -194,20 +194,54 @@ func (s *Service) RefundPayment(ctx context.Context, req *desc.RefundPaymentRequ
 		return nil, status.Errorf(codes.Internal, "failed to process refund: %v", err)
 	}
 
-	payment.Status = desc.PaymentStatus_REFUNDED
+	payment.Status = domain.PaymentStatus_REFUNDED
 	if err := s.repo.UpdatePayment(ctx, payment); err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to update payment status: %v", err)
 	}
 
 	return &desc.RefundPaymentResponse{
 		RefundId: refundID,
-		Status:   payment.Status,
+		Status:   toApiStatus(payment.Status),
 	}, nil
 }
 
 func calculateAmount(req *desc.CreatePaymentRequest) int64 {
-	// Здесь должна быть логика расчета суммы платежа
+	id, err := uuid.Parse(req.GetRentalId())
+	if err != nil {
+		return 0
+	}
+
 	// В зависимости от типа (бронирование или аренда)
 	// и других параметров
 	return 1000 // Пример фиксированной суммы
+}
+
+func toApiStatus(status domain.PaymentStatus) desc.PaymentStatus {
+	switch status {
+	case domain.PaymentStatus_PENDING, domain.PaymentStatus_PROCESSING:
+		return desc.PaymentStatus_PROCESSING
+	case domain.PaymentStatus_COMPLETED:
+		return desc.PaymentStatus_COMPLETED
+	case domain.PaymentStatus_FAILED, domain.PaymentStatus_CANCELLED:
+		return desc.PaymentStatus_FAILED
+	case domain.PaymentStatus_REFUNDED, domain.PaymentStatus_PARTIALLY_REFUNDED:
+		return desc.PaymentStatus_REFUNDED
+	default:
+		return desc.PaymentStatus_UNDEFINED_PAYMENT_STATUS
+	}
+}
+
+func toApiMethod(status domain.PaymentMethod) desc.PaymentMethod {
+	switch status {
+	case domain.PaymentMethod_BANK_TRANSFER:
+		return desc.PaymentMethod_BANK_TRANSFER
+	case domain.PaymentMethod_CREDIT_CARD:
+		return desc.PaymentMethod_CREDIT_CARD
+	case domain.PaymentMethod_ELECTRONIC_WALLET:
+		return desc.PaymentMethod_ELECTRONIC_WALLET
+	case domain.PaymentMethod_MOBILE_PAYMENT:
+		return desc.PaymentMethod_MOBILE_PAYMENT
+	default:
+		return desc.PaymentMethod_UNDEFINED_PAYMENT_METHOD
+	}
 }
