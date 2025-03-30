@@ -14,6 +14,7 @@ require (
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgx/v5 v5.7.4
 	github.com/lib/pq v1.10.9
+	github.com/rs/cors v1.11.1
 	github.com/samber/lo v1.49.1
 	github.com/swaggo/http-swagger v1.3.4
 	golang.org/x/crypto v0.33.0

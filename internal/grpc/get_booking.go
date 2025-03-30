@@ -5,7 +5,7 @@ import (
 	desc "cult/pkg"
 )
 
-func (s *serverAPI) GetBooking(ctx context.Context, in *desc.GetParkingBookingRequest) (*desc.GetParkingBookingResponse, error) {
+func (s *serverAPI) GetParkingBooking(ctx context.Context, in *desc.GetParkingBookingRequest) (*desc.GetParkingBookingResponse, error) {
 
 	booking, err := s.booking.GetBooking(ctx, in.GetParkingLot())
 	if err != nil {

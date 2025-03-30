@@ -6,10 +6,10 @@ import (
 	"cult/internal/repository"
 	"errors"
 	"fmt"
+	"log/slog"
+
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
-	"github.com/samber/lo"
-	"log/slog"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -67,15 +67,14 @@ func (r *UserRepository) UserByID(ctx context.Context, userID uuid.UUID) (domain
     `
 
 	var user domain.User
-	var patronymic, address *string
 
 	err := r.db.QueryRow(ctx, query, userID).Scan(
 		&user.ID,
 		&user.Phone,
 		&user.Name,
 		&user.Surname,
-		&patronymic,
-		&address,
+		&user.Patronymic,
+		&user.Address,
 		&user.UserType,
 		&user.PassHash,
 	)
@@ -86,9 +85,6 @@ func (r *UserRepository) UserByID(ctx context.Context, userID uuid.UUID) (domain
 		}
 		return domain.User{}, fmt.Errorf("%s: %w", op, err)
 	}
-
-	user.Patronymic = lo.FromPtr(patronymic)
-	user.Address = lo.FromPtr(address)
 
 	return user, nil
 }
@@ -111,15 +107,14 @@ func (r *UserRepository) UserByPhone(ctx context.Context, phoneNumber string) (d
     `
 
 	var user domain.User
-	var patronymic, address *string
 
 	err := r.db.QueryRow(ctx, query, phoneNumber).Scan(
 		&user.ID,
 		&user.Phone,
 		&user.Name,
 		&user.Surname,
-		&patronymic,
-		&address,
+		&user.Patronymic,
+		&user.Address,
 		&user.UserType,
 		&user.PassHash,
 	)
@@ -130,9 +125,6 @@ func (r *UserRepository) UserByPhone(ctx context.Context, phoneNumber string) (d
 		}
 		return domain.User{}, fmt.Errorf("%s: %w", op, err)
 	}
-
-	user.Patronymic = lo.FromPtr(patronymic)
-	user.Address = lo.FromPtr(address)
 
 	return user, nil
 }

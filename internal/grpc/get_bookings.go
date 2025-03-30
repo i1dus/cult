@@ -9,7 +9,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func (s *serverAPI) GetBookings(ctx context.Context, in *desc.GetParkingBookingsListRequest) (*desc.GetParkingBookingsListResponse, error) {
+func (s *serverAPI) GetParkingBookingsList(ctx context.Context, in *desc.GetParkingBookingsListRequest) (*desc.GetParkingBookingsListResponse, error) {
 
 	bookings, err := s.booking.GetBookingsByFilter(ctx, apiToFilter(in.Filter))
 	if err != nil {

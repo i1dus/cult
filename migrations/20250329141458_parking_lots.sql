@@ -2,9 +2,9 @@
 -- +goose StatementBegin
 CREATE TABLE IF NOT EXISTS parking_lots
 (
-    id             TEXT PRIMARY KEY,
+    id             INTEGER PRIMARY KEY,
     parking_type   TEXT NOT NULL,
-    vehicle_id     UUID,
+    vehicle_id     TEXT,
     owner_id       UUID
 );
 
@@ -14,21 +14,22 @@ WITH
 -- First 100 lots: 80% Permanent (80), 20% Rent (20) in random order
 permanent_rent AS (
     SELECT
-        seq::text AS id,
-        CASE WHEN row_number() OVER (ORDER BY random()) <= 80
+        generate_series(1, 100) AS id,
+        CASE WHEN random() < 0.8
                  THEN 'PERMANENT_PARKING_TYPE'
              ELSE 'RENT_PARKING_TYPE' END AS parking_type
-    FROM generate_series(1, 100) AS seq
 ),
 -- Next 10 lots: Special
 special AS (
-    SELECT generate_series(101, 110)::text AS id,
-           'SPECIAL_PARKING_TYPE' AS parking_type
+    SELECT
+        generate_series(101, 110) AS id,
+        'SPECIAL_PARKING_TYPE' AS parking_type
 ),
 -- Last 10 lots: Inclusive
 inclusive AS (
-    SELECT generate_series(111, 120)::text AS id,
-           'INCLUSIVE_PARKING_TYPE' AS parking_type
+    SELECT
+        generate_series(111, 120) AS id,
+        'INCLUSIVE_PARKING_TYPE' AS parking_type
 ),
 -- Combine all lots
 all_lots AS (
@@ -37,23 +38,17 @@ all_lots AS (
     SELECT * FROM special
     UNION ALL
     SELECT * FROM inclusive
-),
--- Add random UUID flags (50% chance to populate)
-lots_with_uuids AS (
-    SELECT *,
-           random() < 0.3 AS populate_uuid
-    FROM all_lots
 )
 SELECT
     id,
     parking_type,
-    CASE WHEN populate_uuid THEN gen_random_uuid() END AS vehicle_id,
-    CASE WHEN populate_uuid THEN gen_random_uuid() END AS owner_id
-FROM lots_with_uuids
-ORDER BY id::integer;
+    CASE WHEN random() < 0.3 THEN gen_random_uuid()::TEXT END AS vehicle_id,
+    CASE WHEN random() < 0.3 THEN gen_random_uuid() END AS owner_id
+FROM all_lots
+ORDER BY id;
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
-DROP TABLE parking_lots;
+DROP TABLE IF EXISTS parking_lots;
 -- +goose StatementEnd

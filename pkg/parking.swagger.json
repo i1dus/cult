@@ -125,20 +125,20 @@
           {
             "name": "filter.ownerId",
             "in": "query",
-            "required": false,
+            "required": true,
             "type": "string"
           },
           {
             "name": "filter.timeFrom",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string",
             "format": "date-time"
           },
           {
             "name": "filter.timeTo",
             "in": "query",
-            "required": true,
+            "required": false,
             "type": "string",
             "format": "date-time"
           },
@@ -205,7 +205,37 @@
         ]
       }
     },
-    "/parking/list/get": {
+    "/parking/get_by_user_id": {
+      "get": {
+        "operationId": "ParkingAPI_GetParkingLotsByUserID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetParkingLotsByUserIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
+    "/parking/list": {
       "get": {
         "operationId": "ParkingAPI_ListParkingLots",
         "responses": {
@@ -386,8 +416,7 @@
         }
       },
       "required": [
-        "timeFrom",
-        "timeTo"
+        "ownerId"
       ]
     },
     "apiGetParkingBookingResponse": {
@@ -422,6 +451,18 @@
         }
       }
     },
+    "apiGetParkingLotsByUserIDResponse": {
+      "type": "object",
+      "properties": {
+        "parkingLot": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiParkingLot"
+          }
+        }
+      }
+    },
     "apiIsAdminResponse": {
       "type": "object",
       "properties": {
@@ -452,6 +493,9 @@
         "token": {
           "type": "string",
           "title": "Авторизационный токен"
+        },
+        "userID": {
+          "type": "string"
         }
       }
     },

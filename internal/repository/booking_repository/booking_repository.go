@@ -31,17 +31,43 @@ func NewBookingRepository(db *pgx.Conn, log *slog.Logger) *BookingRepository {
 func (r *BookingRepository) AddBooking(ctx context.Context, booking domain.Booking) error {
 	const op = "BookingRepository.AddBooking"
 
-	query := `
-		INSERT INTO bookings (parking_lot_id, user_id, vehicle_id, start_at, end_at)
-		VALUES ($1, $2, $3, $4, $5)
-	`
+	if booking.To.Before(booking.From) {
+		return fmt.Errorf("%s: %w", op, repository.ErrInvalidTimeRange)
+	}
 
-	err := r.db.QueryRow(ctx, query, booking.ParkingLot, booking.UserID, booking.Vehicle, booking.From, booking.To).Scan()
+	var exists bool
+	err := r.db.QueryRow(ctx,
+		"SELECT EXISTS(SELECT 1 FROM parking_lots WHERE id = $1)",
+		booking.ParkingLot,
+	).Scan(&exists)
 	if err != nil {
-		if isUniqueViolation(err) {
-			return fmt.Errorf("%s: %w", op, repository.ErrBookingExists)
-		}
 		return fmt.Errorf("%s: %w", op, err)
+	}
+	if !exists {
+		return fmt.Errorf("%s: %w", op, "parking_lots does not exist")
+	}
+
+	query := `
+        INSERT INTO bookings (parking_lot_id, user_id, vehicle_id, start_at, end_at)
+        VALUES ($1, $2, $3, $4, $5)
+        ON CONFLICT (parking_lot_id, start_at, end_at) 
+        DO NOTHING
+    `
+	res, err := r.db.Exec(
+		ctx,
+		query,
+		booking.ParkingLot,
+		booking.UserID,
+		booking.Vehicle,
+		booking.From,
+		booking.To,
+	)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	if res.RowsAffected() == 0 {
+		return fmt.Errorf("%s: %w", op, repository.ErrBookingConflict)
 	}
 
 	return nil
@@ -80,13 +106,13 @@ func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, filter doma
 	query := `
         SELECT b.parking_lot_id, b.user_id, b.vehicle_id, b.start_at, b.end_at
         FROM bookings b
-        JOIN parking_lots pl ON b.parking_lot_id = pl.id::TEXT
-        WHERE pl.owner_id = $1 OR $2 IS NULL
+        JOIN parking_lots pl ON b.parking_lot_id = pl.id
+        WHERE pl.owner_id = $1 OR $1 IS NULL
           AND (
-              ($3::timestamp IS NULL AND $4::timestamp IS NULL) OR
-              (b.start_at <= $4 AND b.end_at >= $3)
+              ($2::timestamp IS NULL AND $3::timestamp IS NULL) OR
+              (b.start_at <= $3 AND b.end_at >= $2)
           )
-          AND ($5::int[] IS NULL OR b.parking_lot_id::int = ANY($5::int[]))
+          AND ($4::int[] IS NULL OR b.parking_lot_id::int = ANY($4::int[]))
         ORDER BY b.start_at
     `
 

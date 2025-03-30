@@ -5,14 +5,16 @@ import (
 	"cult/internal/domain"
 
 	"github.com/google/uuid"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 import desc "cult/pkg"
 
-func (s *serverAPI) AddBooking(ctx context.Context, in *desc.AddParkingBookingRequest) (*desc.AddParkingBookingResponse, error) {
+func (s *serverAPI) AddParkingBooking(ctx context.Context, in *desc.AddParkingBookingRequest) (*desc.AddParkingBookingResponse, error) {
 
 	err := s.booking.AddBooking(ctx, apiToBooking(in.GetBooking()))
 	if err != nil {
-		return nil, err
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
 	return &desc.AddParkingBookingResponse{

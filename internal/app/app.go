@@ -31,7 +31,7 @@ func New(
 	parkingLotService := parking_lot.NewParkingLotService(log, parkingLotRepository)
 	bookingService := booking.NewBookingService(log, bookingRepository)
 
-	grpcApp := grpcapp.New(log, authService, parkingLotService, grpcPort)
+	grpcApp := grpcapp.New(log, authService, parkingLotService, bookingService, grpcPort)
 
 	return &App{
 		GRPCServer: grpcApp,
