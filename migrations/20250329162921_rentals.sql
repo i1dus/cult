@@ -6,8 +6,7 @@ CREATE TABLE rentals
     start_at       TIMESTAMP,
     end_at         TIMESTAMP,
     cost_per_hour  integer NOT NULL,
-    created_at     TIMESTAMP DEFAULT now(),
-    updated_at     TIMESTAMP DEFAULT now()
+    cost_per_day  integer NOT NULL
 );
 -- +goose StatementEnd
 

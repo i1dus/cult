@@ -144,7 +144,7 @@ message ParkingLot {
   // Машина на парковочном месте
   optional Vehicle vehicle = 4;
   // Владелец парковочного места
-  optional User owner = 5;
+  optional string owner_id = 5;
 }
 
 enum ParkingLotStatus {

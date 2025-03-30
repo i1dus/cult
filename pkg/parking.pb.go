@@ -849,7 +849,7 @@ type ParkingLot struct {
 	// Машина на парковочном месте
 	Vehicle *Vehicle `protobuf:"bytes,4,opt,name=vehicle,proto3,oneof" json:"vehicle,omitempty"`
 	// Владелец парковочного места
-	Owner         *User `protobuf:"bytes,5,opt,name=owner,proto3,oneof" json:"owner,omitempty"`
+	OwnerId       *string `protobuf:"bytes,5,opt,name=owner_id,json=ownerId,proto3,oneof" json:"owner_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -912,11 +912,11 @@ func (x *ParkingLot) GetVehicle() *Vehicle {
 	return nil
 }
 
-func (x *ParkingLot) GetOwner() *User {
-	if x != nil {
-		return x.Owner
+func (x *ParkingLot) GetOwnerId() string {
+	if x != nil && x.OwnerId != nil {
+		return *x.OwnerId
 	}
-	return nil
+	return ""
 }
 
 type User struct {
@@ -1549,17 +1549,17 @@ const file_parking_proto_rawDesc = "" +
 	"\x17ListParkingLotsResponse\x120\n" +
 	"\vparking_lot\x18\x01 \x03(\v2\x0f.api.ParkingLotR\n" +
 	"parkingLot\x12\x14\n" +
-	"\x05total\x18\x02 \x01(\x03R\x05total\"\xe2\x01\n" +
+	"\x05total\x18\x02 \x01(\x03R\x05total\"\xdf\x01\n" +
 	"\n" +
 	"ParkingLot\x12\x16\n" +
 	"\x06number\x18\x01 \x01(\x03R\x06number\x12$\n" +
 	"\x04type\x18\x02 \x01(\x0e2\x10.api.ParkingTypeR\x04type\x12-\n" +
 	"\x06status\x18\x03 \x01(\x0e2\x15.api.ParkingLotStatusR\x06status\x12+\n" +
-	"\avehicle\x18\x04 \x01(\v2\f.api.VehicleH\x00R\avehicle\x88\x01\x01\x12$\n" +
-	"\x05owner\x18\x05 \x01(\v2\t.api.UserH\x01R\x05owner\x88\x01\x01B\n" +
+	"\avehicle\x18\x04 \x01(\v2\f.api.VehicleH\x00R\avehicle\x88\x01\x01\x12\x1e\n" +
+	"\bowner_id\x18\x05 \x01(\tH\x01R\aownerId\x88\x01\x01B\n" +
 	"\n" +
-	"\b_vehicleB\b\n" +
-	"\x06_owner\"\x91\x02\n" +
+	"\b_vehicleB\v\n" +
+	"\t_owner_id\"\x91\x02\n" +
 	"\x04User\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x17\n" +
 	"\x04name\x18\x02 \x01(\tH\x00R\x04name\x88\x01\x01\x12\x1d\n" +
@@ -1691,39 +1691,38 @@ var file_parking_proto_depIdxs = []int32{
 	1,  // 4: api.ParkingLot.type:type_name -> api.ParkingType
 	0,  // 5: api.ParkingLot.status:type_name -> api.ParkingLotStatus
 	19, // 6: api.ParkingLot.vehicle:type_name -> api.Vehicle
-	18, // 7: api.ParkingLot.owner:type_name -> api.User
-	2,  // 8: api.User.user_type:type_name -> api.UserType
-	28, // 9: api.ParkingBooking.time_from:type_name -> google.protobuf.Timestamp
-	28, // 10: api.ParkingBooking.time_to:type_name -> google.protobuf.Timestamp
-	20, // 11: api.AddParkingBookingRequest.booking:type_name -> api.ParkingBooking
-	20, // 12: api.GetParkingBookingResponse.booking:type_name -> api.ParkingBooking
-	26, // 13: api.GetParkingBookingsListRequest.filter:type_name -> api.Filter
-	28, // 14: api.Filter.time_from:type_name -> google.protobuf.Timestamp
-	28, // 15: api.Filter.time_to:type_name -> google.protobuf.Timestamp
-	20, // 16: api.GetParkingBookingsListResponse.bookings:type_name -> api.ParkingBooking
-	11, // 17: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
-	13, // 18: api.ParkingAPI.GetParkingLotsByUserID:input_type -> api.GetParkingLotsByUserIDRequest
-	15, // 19: api.ParkingAPI.ListParkingLots:input_type -> api.ListParkingLotsRequest
-	21, // 20: api.ParkingAPI.AddParkingBooking:input_type -> api.AddParkingBookingRequest
-	23, // 21: api.ParkingAPI.GetParkingBooking:input_type -> api.GetParkingBookingRequest
-	25, // 22: api.ParkingAPI.GetParkingBookingsList:input_type -> api.GetParkingBookingsListRequest
-	5,  // 23: api.ParkingAPI.Register:input_type -> api.RegisterRequest
-	7,  // 24: api.ParkingAPI.Login:input_type -> api.LoginRequest
-	3,  // 25: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
-	12, // 26: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
-	14, // 27: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
-	16, // 28: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
-	22, // 29: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
-	24, // 30: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
-	27, // 31: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
-	6,  // 32: api.ParkingAPI.Register:output_type -> api.RegisterResponse
-	8,  // 33: api.ParkingAPI.Login:output_type -> api.LoginResponse
-	4,  // 34: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
-	26, // [26:35] is the sub-list for method output_type
-	17, // [17:26] is the sub-list for method input_type
-	17, // [17:17] is the sub-list for extension type_name
-	17, // [17:17] is the sub-list for extension extendee
-	0,  // [0:17] is the sub-list for field type_name
+	2,  // 7: api.User.user_type:type_name -> api.UserType
+	28, // 8: api.ParkingBooking.time_from:type_name -> google.protobuf.Timestamp
+	28, // 9: api.ParkingBooking.time_to:type_name -> google.protobuf.Timestamp
+	20, // 10: api.AddParkingBookingRequest.booking:type_name -> api.ParkingBooking
+	20, // 11: api.GetParkingBookingResponse.booking:type_name -> api.ParkingBooking
+	26, // 12: api.GetParkingBookingsListRequest.filter:type_name -> api.Filter
+	28, // 13: api.Filter.time_from:type_name -> google.protobuf.Timestamp
+	28, // 14: api.Filter.time_to:type_name -> google.protobuf.Timestamp
+	20, // 15: api.GetParkingBookingsListResponse.bookings:type_name -> api.ParkingBooking
+	11, // 16: api.ParkingAPI.GetParkingLot:input_type -> api.GetParkingLotRequest
+	13, // 17: api.ParkingAPI.GetParkingLotsByUserID:input_type -> api.GetParkingLotsByUserIDRequest
+	15, // 18: api.ParkingAPI.ListParkingLots:input_type -> api.ListParkingLotsRequest
+	21, // 19: api.ParkingAPI.AddParkingBooking:input_type -> api.AddParkingBookingRequest
+	23, // 20: api.ParkingAPI.GetParkingBooking:input_type -> api.GetParkingBookingRequest
+	25, // 21: api.ParkingAPI.GetParkingBookingsList:input_type -> api.GetParkingBookingsListRequest
+	5,  // 22: api.ParkingAPI.Register:input_type -> api.RegisterRequest
+	7,  // 23: api.ParkingAPI.Login:input_type -> api.LoginRequest
+	3,  // 24: api.ParkingAPI.GetUserByID:input_type -> api.GetUserByIDRequest
+	12, // 25: api.ParkingAPI.GetParkingLot:output_type -> api.GetParkingLotResponse
+	14, // 26: api.ParkingAPI.GetParkingLotsByUserID:output_type -> api.GetParkingLotsByUserIDResponse
+	16, // 27: api.ParkingAPI.ListParkingLots:output_type -> api.ListParkingLotsResponse
+	22, // 28: api.ParkingAPI.AddParkingBooking:output_type -> api.AddParkingBookingResponse
+	24, // 29: api.ParkingAPI.GetParkingBooking:output_type -> api.GetParkingBookingResponse
+	27, // 30: api.ParkingAPI.GetParkingBookingsList:output_type -> api.GetParkingBookingsListResponse
+	6,  // 31: api.ParkingAPI.Register:output_type -> api.RegisterResponse
+	8,  // 32: api.ParkingAPI.Login:output_type -> api.LoginResponse
+	4,  // 33: api.ParkingAPI.GetUserByID:output_type -> api.GetUserByIDResponse
+	25, // [25:34] is the sub-list for method output_type
+	16, // [16:25] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_parking_proto_init() }

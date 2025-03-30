@@ -1665,37 +1665,8 @@ func (m *ParkingLot) validate(all bool) error {
 
 	}
 
-	if m.Owner != nil {
-
-		if all {
-			switch v := interface{}(m.GetOwner()).(type) {
-			case interface{ ValidateAll() error }:
-				if err := v.ValidateAll(); err != nil {
-					errors = append(errors, ParkingLotValidationError{
-						field:  "Owner",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			case interface{ Validate() error }:
-				if err := v.Validate(); err != nil {
-					errors = append(errors, ParkingLotValidationError{
-						field:  "Owner",
-						reason: "embedded message failed validation",
-						cause:  err,
-					})
-				}
-			}
-		} else if v, ok := interface{}(m.GetOwner()).(interface{ Validate() error }); ok {
-			if err := v.Validate(); err != nil {
-				return ParkingLotValidationError{
-					field:  "Owner",
-					reason: "embedded message failed validation",
-					cause:  err,
-				}
-			}
-		}
-
+	if m.OwnerId != nil {
+		// no validation rules for OwnerId
 	}
 
 	if len(errors) > 0 {
