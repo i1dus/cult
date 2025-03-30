@@ -151,6 +151,7 @@
     },
     "/parking/get": {
       "get": {
+        "summary": "Получение парковочного места по его числу",
         "operationId": "ParkingAPI_GetParkingLot",
         "responses": {
           "200": {
@@ -173,6 +174,12 @@
             "required": false,
             "type": "string",
             "format": "int64"
+          },
+          {
+            "name": "clientId",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -182,6 +189,7 @@
     },
     "/parking/get_by_user_id": {
       "get": {
+        "summary": "Получение парковочного места по client id (owner id)",
         "operationId": "ParkingAPI_GetParkingLotsByUserID",
         "responses": {
           "200": {
@@ -212,6 +220,7 @@
     },
     "/parking/list": {
       "get": {
+        "summary": "Получение всех парковочных мест для отрисовки карты",
         "operationId": "ParkingAPI_ListParkingLots",
         "responses": {
           "200": {
@@ -227,20 +236,27 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "ParkingAPI"
         ]
       }
     },
-    "/sso/get/user": {
-      "get": {
-        "summary": "IsAdmin checks whether a user is an admin.",
-        "operationId": "ParkingAPI_GetUserByID",
+    "/parking/update": {
+      "post": {
+        "operationId": "ParkingAPI_UpdateParkingLot",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiGetUserByIDResponse"
+              "$ref": "#/definitions/apiUpdateParkingLotResponse"
             }
           },
           "default": {
@@ -252,10 +268,12 @@
         },
         "parameters": [
           {
-            "name": "userId",
-            "in": "query",
+            "name": "body",
+            "in": "body",
             "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/apiUpdateParkingLotRequest"
+            }
           }
         ],
         "tags": [
@@ -319,6 +337,68 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/apiRegisterRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
+    "/user/get": {
+      "get": {
+        "operationId": "ParkingAPI_GetUserByID",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetUserByIDResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
+    "/user/update": {
+      "post": {
+        "operationId": "ParkingAPI_UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateUserRequest"
             }
           }
         ],
@@ -496,24 +576,39 @@
         "timeTo"
       ]
     },
+    "apiParkingKind": {
+      "type": "string",
+      "enum": [
+        "UNDEFINED_PARKING_KIND",
+        "REGULAR_PARKING_KIND",
+        "SPECIAL_PARKING_KIND",
+        "INCLUSIVE_PARKING_KIND"
+      ],
+      "default": "UNDEFINED_PARKING_KIND"
+    },
     "apiParkingLot": {
       "type": "object",
       "properties": {
         "number": {
           "type": "string",
-          "format": "int64"
+          "format": "int64",
+          "title": "Номер парковочного места"
+        },
+        "kind": {
+          "$ref": "#/definitions/apiParkingKind",
+          "title": "Вид парковочного места (обычное, спец., ОВЗ)"
         },
         "type": {
           "$ref": "#/definitions/apiParkingType",
-          "description": "Тип парковочного места: для инвалидов, спец. назначения и др."
+          "title": "Занятость парковочного места"
         },
         "status": {
           "$ref": "#/definitions/apiParkingLotStatus",
-          "title": "Статус парковочного места (забронировано, доступно)"
+          "title": "Статус парковочного места"
         },
         "vehicle": {
-          "$ref": "#/definitions/apiVehicle",
-          "title": "Машина на парковочном месте"
+          "type": "string",
+          "title": "Гос. номер машины на парковочном месте"
         },
         "ownerId": {
           "type": "string",
@@ -525,9 +620,10 @@
       "type": "string",
       "enum": [
         "UNDEFINED_PARKING_LOT_STATUS",
-        "AVAILABLE_PARKING_LOT_STATUS",
-        "BOOKED_PARKING_LOT_STATUS",
-        "BOOKED_BY_ME_PARKING_LOT_STATUS"
+        "FREE_PARKING_LOT_STATUS",
+        "BUSY_PARKING_LOT_STATUS",
+        "MINE_PARKING_LOT_STATUS",
+        "EXPIRED_PARKING_LOT_STATUS"
       ],
       "default": "UNDEFINED_PARKING_LOT_STATUS"
     },
@@ -535,14 +631,13 @@
       "type": "string",
       "enum": [
         "UNDEFINED_PARKING_TYPE",
-        "PERMANENT_PARKING_TYPE",
-        "RENT_PARKING_TYPE",
-        "SPECIAL_PARKING_TYPE",
-        "INCLUSIVE_PARKING_TYPE"
+        "OWNED_PARKING_TYPE",
+        "LONG_TERM_RENT_BY_ME_PARKING_TYPE",
+        "SHORT_TERM_RENT_BY_ME_PARKING_TYPE",
+        "LONG_TERM_RENT_BY_OTHER_PARKING_TYPE",
+        "SHORT_TERM_RENT_BY_OTHER_PARKING_TYPE"
       ],
-      "default": "UNDEFINED_PARKING_TYPE",
-      "description": "etc",
-      "title": "- UNDEFINED_PARKING_TYPE: Неизвестный тип парковочного места\n - PERMANENT_PARKING_TYPE: Тип постоянного парковочного места\n - RENT_PARKING_TYPE: Тип временного парковочного места\n - SPECIAL_PARKING_TYPE: Тип парковочного места для спец. назначения (скорая, пожарные и т.д.)\n - INCLUSIVE_PARKING_TYPE: Тип парковочного места для инвалидов"
+      "default": "UNDEFINED_PARKING_TYPE"
     },
     "apiRegisterRequest": {
       "type": "object",
@@ -565,6 +660,60 @@
           "title": "ID пользователя в формате UUID"
         }
       }
+    },
+    "apiUpdateParkingLotRequest": {
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "string",
+          "format": "int64"
+        },
+        "kind": {
+          "$ref": "#/definitions/apiParkingKind",
+          "title": "Тип парковочного места: обычное, для лиц с ОВЗ, спец. назначения"
+        },
+        "ownerId": {
+          "type": "string",
+          "title": "Владелец парковочного места. UUID"
+        },
+        "ownerVehicle": {
+          "type": "string",
+          "title": "Гос. номер Т/С"
+        }
+      }
+    },
+    "apiUpdateParkingLotResponse": {
+      "type": "object"
+    },
+    "apiUpdateUserRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "UUID клиента у которого изменить данные"
+        },
+        "name": {
+          "type": "string",
+          "title": "Имя"
+        },
+        "surname": {
+          "type": "string",
+          "title": "Фамилия"
+        },
+        "patronymic": {
+          "type": "string",
+          "title": "Отчество"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "address": {
+          "type": "string"
+        }
+      }
+    },
+    "apiUpdateUserResponse": {
+      "type": "object"
     },
     "apiUser": {
       "type": "object",
@@ -607,23 +756,6 @@
       ],
       "default": "UNDEFINED_USER_TYPE",
       "title": "- UNDEFINED_USER_TYPE: Неизвестный\n - REGULAR_USER_TYPE: Обычный пользователь (Владелец+Арендатор)\n - MANAGING_COMPANY_USER_TYPE: Управляющая компания\n - ADMINISTRATOR_USER_TYPE: Администратор"
-    },
-    "apiVehicle": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "title": "UUID"
-        },
-        "number": {
-          "type": "string",
-          "title": "Гос. номер машины"
-        },
-        "userId": {
-          "type": "string",
-          "title": "ID владельца машины"
-        }
-      }
     },
     "protobufAny": {
       "type": "object",

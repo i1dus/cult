@@ -32,6 +32,7 @@ type UserRepository interface {
 	SaveUser(ctx context.Context, id uuid.UUID, phone string, passHash []byte) (uuid.UUID, error)
 	UserByPhone(ctx context.Context, phoneNumber string) (domain.User, error)
 	UserByID(ctx context.Context, userID uuid.UUID) (domain.User, error)
+	UpdateUser(ctx context.Context, userID uuid.UUID, update domain.UserUpdate) error
 }
 
 func New(log *slog.Logger, userRepo UserRepository, tokenTTL time.Duration, secret string) *Auth {
@@ -130,4 +131,8 @@ func (a *Auth) RegisterNewUser(ctx context.Context, phoneNumber string, pass str
 	}
 
 	return id, nil
+}
+
+func (a *Auth) UpdateUser(ctx context.Context, userID uuid.UUID, update domain.UserUpdate) error {
+	return a.userRepository.UpdateUser(ctx, userID, update)
 }

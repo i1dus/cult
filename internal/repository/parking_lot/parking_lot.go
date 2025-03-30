@@ -3,11 +3,13 @@ package parking_lot
 import (
 	"context"
 	"cult/internal/domain"
+	"cult/internal/repository"
 	"errors"
 	"fmt"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
 	"log/slog"
+	"strings"
 )
 
 var ErrNotFound = errors.New("parking lot not found")
@@ -28,7 +30,7 @@ func (r *ParkingLotRepo) GetAllParkingLots(ctx context.Context) ([]domain.Parkin
 	const op = "parkingLotRepo.GetAllParkingLots"
 
 	query := `
-		SELECT id, parking_type, vehicle_id, owner_id
+		SELECT id, parking_kind, owner_id, owner_vehicle
 		FROM parking_lots
 		ORDER BY id::integer
 	`
@@ -43,18 +45,18 @@ func (r *ParkingLotRepo) GetAllParkingLots(ctx context.Context) ([]domain.Parkin
 	for rows.Next() {
 		var lot domain.ParkingLot
 
-		var parkingLotType string
+		var parkingLotKind string
 		err := rows.Scan(
 			&lot.ID,
-			&parkingLotType,
+			&parkingLotKind,
 			&lot.OwnerID,
-			&lot.VehicleID,
+			&lot.OwnerVehicle,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", op, err)
 		}
 
-		lot.ParkingType = domain.ParkingType(parkingLotType)
+		lot.ParkingKind = domain.ParkingKind(parkingLotKind)
 
 		lots = append(lots, lot)
 	}
@@ -70,18 +72,19 @@ func (r *ParkingLotRepo) GetParkingLotByNumber(ctx context.Context, number strin
 	const op = "parkingLotRepo.GetParkingLotByNumber"
 
 	query := `
-        SELECT id, parking_type, owner_id
+        SELECT id, parking_kind, owner_id, owner_vehicle
         FROM parking_lots
         WHERE id = $1
     `
 
 	var lot domain.ParkingLot
-	var parkingLotType string
+	var parkingLotKind string
 
 	err := r.db.QueryRow(ctx, query, number).Scan(
 		&lot.ID,
-		&parkingLotType,
+		&parkingLotKind,
 		&lot.OwnerID,
+		&lot.OwnerVehicle,
 	)
 
 	if err != nil {
@@ -91,7 +94,7 @@ func (r *ParkingLotRepo) GetParkingLotByNumber(ctx context.Context, number strin
 		return domain.ParkingLot{}, fmt.Errorf("%s: %w", op, err)
 	}
 
-	lot.ParkingType = domain.ParkingType(parkingLotType)
+	lot.ParkingKind = domain.ParkingKind(parkingLotKind)
 
 	return lot, nil
 }
@@ -100,7 +103,7 @@ func (r *ParkingLotRepo) GetParkingLotsByOwnerID(ctx context.Context, ownerID uu
 	const op = "parkingLotRepo.GetParkingLotsByOwnerID"
 
 	query := `
-        SELECT id, parking_type, owner_id
+        SELECT id, parking_kind, owner_id, owner_vehicle
         FROM parking_lots
         WHERE owner_id = $1
         ORDER BY id::integer
@@ -115,18 +118,19 @@ func (r *ParkingLotRepo) GetParkingLotsByOwnerID(ctx context.Context, ownerID uu
 	var lots []domain.ParkingLot
 	for rows.Next() {
 		var lot domain.ParkingLot
-		var parkingLotType string
+		var parkingLotKind string
 
 		err := rows.Scan(
 			&lot.ID,
-			&parkingLotType,
+			&parkingLotKind,
 			&lot.OwnerID,
+			&lot.OwnerVehicle,
 		)
 		if err != nil {
 			return nil, fmt.Errorf("%s: %w", op, err)
 		}
 
-		lot.ParkingType = domain.ParkingType(parkingLotType)
+		lot.ParkingKind = domain.ParkingKind(parkingLotKind)
 
 		lots = append(lots, lot)
 	}
@@ -136,4 +140,52 @@ func (r *ParkingLotRepo) GetParkingLotsByOwnerID(ctx context.Context, ownerID uu
 	}
 
 	return lots, nil
+}
+
+func (r *ParkingLotRepo) UpdateParkingLot(ctx context.Context, parkingLotID string, update domain.ParkingLotUpdate) error {
+	const op = "ParkingLotRepo.UpdateParkingLot"
+
+	// Build dynamic update query
+	query := "UPDATE parking_lots SET "
+	params := []interface{}{}
+	setClauses := []string{}
+	paramCount := 1
+
+	if update.ParkingKind != nil {
+		setClauses = append(setClauses, fmt.Sprintf("parking_kind = $%d", paramCount))
+		params = append(params, update.ParkingKind.String())
+		paramCount++
+	}
+
+	if update.OwnerID != nil {
+		setClauses = append(setClauses, fmt.Sprintf("owner_id = $%d", paramCount))
+		params = append(params, *update.OwnerID)
+		paramCount++
+	}
+
+	if update.OwnerVehicle != nil {
+		setClauses = append(setClauses, fmt.Sprintf("owner_vehicle = $%d", paramCount))
+		params = append(params, *update.OwnerVehicle)
+		paramCount++
+	}
+
+	if len(setClauses) == 0 {
+		return fmt.Errorf("%s: %w", op, repository.ErrNoFieldsToUpdate)
+	}
+
+	// Add WHERE clause
+	query += strings.Join(setClauses, ", ") + fmt.Sprintf(" WHERE id = $%d", paramCount)
+	params = append(params, parkingLotID)
+
+	// Execute query
+	tag, err := r.db.Exec(ctx, query, params...)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	if tag.RowsAffected() == 0 {
+		return fmt.Errorf("%s: %w", op, repository.ErrParkingLotNotFound)
+	}
+
+	return nil
 }

@@ -3,6 +3,7 @@
 CREATE TABLE IF NOT EXISTS parking_lots
 (
     id             INTEGER PRIMARY KEY,
+    parking_kind   TEXT NOT NULL,
     owner_vehicle  TEXT,
     owner_id       UUID
 );

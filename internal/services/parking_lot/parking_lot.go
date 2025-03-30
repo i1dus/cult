@@ -23,6 +23,7 @@ type ParkingLotRepository interface {
 	GetAllParkingLots(ctx context.Context) ([]domain.ParkingLot, error)
 	GetParkingLotByNumber(ctx context.Context, number string) (domain.ParkingLot, error)
 	GetParkingLotsByOwnerID(ctx context.Context, ownerID uuid.UUID) ([]domain.ParkingLot, error)
+	UpdateParkingLot(ctx context.Context, parkingLotID string, update domain.ParkingLotUpdate) error
 }
 
 func NewParkingLotService(log *slog.Logger, repo ParkingLotRepository) *ParkingLotService {
@@ -89,8 +90,20 @@ func (s *ParkingLotService) GetParkingLotsByOwner(ctx context.Context, ownerID u
 		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
+	//for i, lot := range lots {
+	//	s.calculateTypeAndStatus(ctx, lot.ID, ownerID)
+	//}
+
 	log.Info("successfully retrieved parking lots by owner",
 		slog.Int("count", len(lots)),
 	)
 	return lots, nil
+}
+
+func (s *ParkingLotService) UpdateParkingLot(ctx context.Context, parkingLot string, update domain.ParkingLotUpdate) error {
+	return s.parkingLotRepo.UpdateParkingLot(ctx, parkingLot, update)
+}
+
+func (s *ParkingLotService) calculateTypeAndStatus(ctx context.Context, parkingLot string, userID uuid.UUID) (domain.ParkingType, domain.ParkingLotStatus) {
+	return "", ""
 }

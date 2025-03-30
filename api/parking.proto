@@ -9,18 +9,21 @@ import "google/api/field_behavior.proto";
 import "google/protobuf/timestamp.proto";
 
 service ParkingAPI {
+  // Получение парковочного места по его числу
   rpc GetParkingLot (GetParkingLotRequest) returns (GetParkingLotResponse) {
     option (google.api.http) = {
       get: "/parking/get"
     };
   };
 
+  // Получение парковочного места по client id (owner id)
   rpc GetParkingLotsByUserID (GetParkingLotsByUserIDRequest) returns (GetParkingLotsByUserIDResponse) {
     option (google.api.http) = {
       get: "/parking/get_by_user_id"
     };
   };
 
+  // Получение всех парковочных мест для отрисовки карты
   rpc ListParkingLots (ListParkingLotsRequest) returns (ListParkingLotsResponse) {
     option (google.api.http) = {
       get: "/parking/list"
@@ -59,13 +62,25 @@ service ParkingAPI {
     };
   };
 
-  // IsAdmin checks whether a user is an admin.
   rpc GetUserByID (GetUserByIDRequest) returns (GetUserByIDResponse) {
     option (google.api.http) = {
-      get: "/sso/get/user"
+      get: "/user/get"
     };
   };
 
+  rpc UpdateUser (UpdateUserRequest) returns (UpdateUserResponse) {
+    option (google.api.http) = {
+      post: "/user/update"
+      body: "*"
+    };
+  };
+
+  rpc UpdateParkingLot (UpdateParkingLotRequest) returns (UpdateParkingLotResponse) {
+    option (google.api.http) = {
+      post: "/parking/update"
+      body: "*"
+    };
+  };
 }
 
 message GetUserByIDRequest {
@@ -114,6 +129,7 @@ message IsAdminResponse {
 
 message GetParkingLotRequest {
   int64 number = 1;
+  string client_id = 2;
 }
 
 message GetParkingLotResponse {
@@ -128,7 +144,9 @@ message GetParkingLotsByUserIDResponse {
   repeated ParkingLot parking_lot = 1;
 }
 
-message ListParkingLotsRequest {}
+message ListParkingLotsRequest {
+  string user_id = 1;
+}
 
 message ListParkingLotsResponse {
   repeated ParkingLot parking_lot = 1;
@@ -136,36 +154,42 @@ message ListParkingLotsResponse {
 }
 
 message ParkingLot {
+  // Номер парковочного места
   int64 number = 1;
-  // Тип парковочного места: для инвалидов, спец. назначения и др.
-  ParkingType type = 2;
-  // Статус парковочного места (забронировано, доступно)
-  ParkingLotStatus status = 3;
-  // Машина на парковочном месте
-  optional Vehicle vehicle = 4;
+  // Вид парковочного места (обычное, спец., ОВЗ)
+  ParkingKind kind = 2;
+  // Занятость парковочного места
+  ParkingType type = 3;
+  // Статус парковочного места
+  ParkingLotStatus status = 4;
+  // Гос. номер машины на парковочном месте
+  optional string vehicle = 5;
   // Владелец парковочного места
-  optional string owner_id = 5;
+  optional string owner_id = 6;
+}
+
+enum ParkingKind {
+  UNDEFINED_PARKING_KIND = 0;
+  REGULAR_PARKING_KIND = 1;
+  SPECIAL_PARKING_KIND = 2;
+  INCLUSIVE_PARKING_KIND = 3;
 }
 
 enum ParkingLotStatus {
   UNDEFINED_PARKING_LOT_STATUS = 0;
-  AVAILABLE_PARKING_LOT_STATUS = 1;
-  BOOKED_PARKING_LOT_STATUS = 2;
-  BOOKED_BY_ME_PARKING_LOT_STATUS = 3;
+  FREE_PARKING_LOT_STATUS = 1;
+  BUSY_PARKING_LOT_STATUS = 2;
+  MINE_PARKING_LOT_STATUS = 3;
+  EXPIRED_PARKING_LOT_STATUS = 4;
 }
 
 enum ParkingType {
-  // Неизвестный тип парковочного места
   UNDEFINED_PARKING_TYPE = 0;
-  // Тип постоянного парковочного места
-  PERMANENT_PARKING_TYPE = 1;
-  // Тип временного парковочного места
-  RENT_PARKING_TYPE = 2;
-  // Тип парковочного места для спец. назначения (скорая, пожарные и т.д.)
-  SPECIAL_PARKING_TYPE = 3;
-  // Тип парковочного места для инвалидов
-  INCLUSIVE_PARKING_TYPE = 4;
-  // etc
+  OWNED_PARKING_TYPE = 1;
+  LONG_TERM_RENT_BY_ME_PARKING_TYPE = 2;
+  SHORT_TERM_RENT_BY_ME_PARKING_TYPE = 3;
+  LONG_TERM_RENT_BY_OTHER_PARKING_TYPE = 4;
+  SHORT_TERM_RENT_BY_OTHER_PARKING_TYPE = 5;
 }
 
 message User {
@@ -244,6 +268,33 @@ message GetParkingBookingsListResponse {
   repeated ParkingBooking bookings = 1;
   int64 total = 2;
 }
+
+message UpdateUserRequest {
+  // UUID клиента у которого изменить данные
+  string id = 1;
+  // Имя
+  optional string name = 2;
+  // Фамилия
+  optional string surname = 3;
+  // Отчество
+  optional string patronymic = 4;
+  optional string phone_number = 5;
+  optional string address = 6;
+}
+
+message UpdateUserResponse {}
+
+message UpdateParkingLotRequest {
+  int64 number = 1;
+  // Тип парковочного места: обычное, для лиц с ОВЗ, спец. назначения
+  optional ParkingKind kind = 2;
+  // Владелец парковочного места. UUID
+  optional string owner_id = 3;
+  // Гос. номер Т/С
+  optional string owner_vehicle = 4;
+}
+
+message UpdateParkingLotResponse {}
 
 message Rental {
   string rental_id = 1;

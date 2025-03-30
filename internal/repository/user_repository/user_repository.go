@@ -10,6 +10,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 )
@@ -129,30 +130,68 @@ func (r *UserRepository) UserByPhone(ctx context.Context, phoneNumber string) (d
 	return user, nil
 }
 
-func (r *UserRepository) IsAdmin(ctx context.Context, userID uuid.UUID) (bool, error) {
-	const op = "UserRepository.IsAdmin"
-
-	query := `
-		SELECT EXISTS (
-			SELECT 1 FROM users
-			WHERE id = $1 AND user_type = 'admin'
-		)
-	`
-
-	var isAdmin bool
-	err := r.db.QueryRow(ctx, query, userID).Scan(&isAdmin)
-	if err != nil {
-		return false, fmt.Errorf("%s: %w", op, err)
-	}
-
-	return isAdmin, nil
-}
-
-// helper function to check for unique violation
 func isUniqueViolation(err error) bool {
 	var pgErr *pgconn.PgError
 	if errors.As(err, &pgErr) {
 		return pgErr.Code == "23505" // unique_violation
 	}
 	return false
+}
+
+// UpdateUser updates user information with optional fields
+func (r *UserRepository) UpdateUser(ctx context.Context, userID uuid.UUID, update domain.UserUpdate) error {
+	const op = "UserRepository.UpdateUser"
+
+	query := "UPDATE users SET "
+	params := []interface{}{}
+	setClauses := []string{}
+	paramCount := 1
+
+	// Build SET clauses for provided fields
+	if update.Name != nil {
+		setClauses = append(setClauses, fmt.Sprintf("name = $%d", paramCount+1))
+		params = append(params, *update.Name)
+		paramCount++
+	}
+	if update.Surname != nil {
+		setClauses = append(setClauses, fmt.Sprintf("surname = $%d", paramCount+1))
+		params = append(params, *update.Surname)
+		paramCount++
+	}
+	if update.Patronymic != nil {
+		setClauses = append(setClauses, fmt.Sprintf("patronymic = $%d", paramCount+1))
+		params = append(params, *update.Patronymic)
+		paramCount++
+	}
+	if update.Phone != nil {
+		setClauses = append(setClauses, fmt.Sprintf("phone = $%d", paramCount+1))
+		params = append(params, *update.Phone)
+		paramCount++
+	}
+	if update.Address != nil {
+		setClauses = append(setClauses, fmt.Sprintf("address = $%d", paramCount+1))
+		params = append(params, *update.Address)
+		paramCount++
+	}
+
+	if len(setClauses) == 0 {
+		return fmt.Errorf("%s: %w", op, repository.ErrNoFieldsToUpdate)
+	}
+
+	query += strings.Join(setClauses, ", ") + " WHERE id = $1"
+	params = append([]interface{}{userID}, params...)
+
+	tag, err := r.db.Exec(ctx, query, params...)
+	if err != nil {
+		if isUniqueViolation(err) {
+			return fmt.Errorf("%s: %w", op, repository.ErrUserExists)
+		}
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	if tag.RowsAffected() == 0 {
+		return fmt.Errorf("%s: %w", op, repository.ErrUserNotFound)
+	}
+
+	return nil
 }

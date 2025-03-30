@@ -27,3 +27,11 @@ const (
 func (u UserType) String() string {
 	return string(u)
 }
+
+type UserUpdate struct {
+	Name       *string
+	Surname    *string
+	Patronymic *string
+	Phone      *string
+	Address    *string
+}
