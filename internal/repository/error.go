@@ -13,4 +13,6 @@ var (
 	ErrInvalidTimeRange = errors.New("invalid time range")
 	ErrBookingConflict  = errors.New("booking conflict")
 	ErrNoActiveRental   = errors.New("no active rental")
+
+	ErrRentalConflict = errors.New("rental conflict")
 )

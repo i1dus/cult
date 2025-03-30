@@ -76,7 +76,7 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (d
 
 	var rentalID int
 	err := r.db.QueryRow(ctx,
-		`SELECT parking_lot_id FROM rentals 
+		`SELECT id FROM rentals 
          WHERE parking_lot_id = $1 
          AND NOW() BETWEEN start_at AND end_at`,
 		parkingLot,
@@ -96,7 +96,7 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (d
           AND NOW() BETWEEN start_at AND end_at
     `
 	var booking domain.Booking
-	err = r.db.QueryRow(ctx, query, parkingLot).Scan(
+	err = r.db.QueryRow(ctx, query, rentalID).Scan(
 		&booking.UserID,
 		&booking.Vehicle,
 		&booking.From,
@@ -185,4 +185,53 @@ func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, filter doma
 	}
 
 	return bookings, nil
+}
+
+// GetParkingLotsByFilter implements
+func (r *BookingRepository) GetParkingLotsByFilter(ctx context.Context, filter domain.Filter) ([]domain.ParkingLot, error) {
+	const op = "BookingRepository.GetBookingsByFilter"
+
+	query := `
+        SELECT p.id, p.owner_vehicle
+        FROM parking_lots p
+        JOIN rentals r ON p.id = r.parking_lot_id
+        WHERE NOT EXISTS (
+            SELECT 1 FROM rentals r
+            WHERE r.parking_lot_id = p.id
+            AND (
+                ($1 BETWEEN r.start_at AND r.end_at) OR  -- New booking starts during existing rental
+                ($2 BETWEEN r.start_at AND r.end_at) OR  -- New booking ends during existing rental
+                (r.start_at BETWEEN $1 AND $2) OR        -- Existing rental starts during new booking
+                (r.end_at BETWEEN $1 AND $2)             -- Existing rental ends during new booking
+            )
+        )`
+
+	args := []interface{}{filter.From, filter.To}
+
+	// Add optional filters
+	if filter.UserID != uuid.Nil {
+		query += " AND p.user_id = $3"
+		args = append(args, filter.UserID)
+	}
+
+	rows, err := r.db.Query(ctx, query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("failed to query available parking lots: %w", err)
+	}
+	defer rows.Close()
+
+	var parkingLots []domain.ParkingLot
+	for rows.Next() {
+		var lot domain.ParkingLot
+		err := rows.Scan(
+			&lot.ID,
+			&lot.OwnerVehicle,
+		)
+		if err != nil {
+			return nil, fmt.Errorf("failed to scan parking lot: %w", err)
+		}
+		parkingLots = append(parkingLots, lot)
+	}
+
+	return parkingLots, nil
 }

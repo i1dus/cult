@@ -106,7 +106,7 @@ func (s *serverAPI) UpdateParkingLot(ctx context.Context, req *sso.UpdateParking
 
 func ConvertParkingLotPbToDomain(item domain.ParkingLot, index int) *sso.ParkingLot {
 	return &sso.ParkingLot{
-		Number: int64(lo.Must(strconv.Atoi(item.ID))),
+		Number: item.ID,
 		Type:   item.ParkingType.GetPBType(),
 		Status: getRandomParkingStatus(index),
 		OwnerId: func(id *uuid.UUID) *string {

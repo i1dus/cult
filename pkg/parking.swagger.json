@@ -247,6 +247,36 @@
         "tags": [
           "ParkingAPI"
         ]
+      },
+      "post": {
+        "operationId": "ParkingAPI_GetMyParkingLots",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetMyParkingLotsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiGetMyParkingLotsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
       }
     },
     "/parking/update": {
@@ -273,6 +303,38 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/apiUpdateParkingLotRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
+    "/rental/add": {
+      "post": {
+        "operationId": "ParkingAPI_AddRental",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiAddRentalResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiAddRentalRequest"
             }
           }
         ],
@@ -429,6 +491,23 @@
         }
       }
     },
+    "apiAddRentalRequest": {
+      "type": "object",
+      "properties": {
+        "rental": {
+          "$ref": "#/definitions/apiRental"
+        }
+      }
+    },
+    "apiAddRentalResponse": {
+      "type": "object",
+      "properties": {
+        "parkingLotId": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
     "apiFilter": {
       "type": "object",
       "properties": {
@@ -453,6 +532,44 @@
       "required": [
         "ownerId"
       ]
+    },
+    "apiGetMyParkingLotsRequest": {
+      "type": "object",
+      "properties": {
+        "filter": {
+          "$ref": "#/definitions/apiFilter"
+        }
+      }
+    },
+    "apiGetMyParkingLotsResponse": {
+      "type": "object",
+      "properties": {
+        "bookings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiParkingBooking"
+          }
+        },
+        "rentals": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiRental"
+          }
+        },
+        "parkingLots": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/apiParkingLot"
+          }
+        },
+        "total": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
     },
     "apiGetParkingBookingResponse": {
       "type": "object",
@@ -660,6 +777,38 @@
           "title": "ID пользователя в формате UUID"
         }
       }
+    },
+    "apiRental": {
+      "type": "object",
+      "properties": {
+        "rentalId": {
+          "type": "string"
+        },
+        "parkingLot": {
+          "type": "string",
+          "format": "int64"
+        },
+        "timeFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timeTo": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "costPerHour": {
+          "type": "string",
+          "format": "int64"
+        },
+        "costPerDay": {
+          "type": "string",
+          "format": "int64"
+        }
+      },
+      "required": [
+        "timeFrom",
+        "timeTo"
+      ]
     },
     "apiUpdateParkingLotRequest": {
       "type": "object",

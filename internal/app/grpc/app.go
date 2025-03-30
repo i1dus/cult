@@ -6,12 +6,13 @@ import (
 	authgrpc "cult/internal/grpc"
 	api "cult/pkg"
 	"fmt"
-	"github.com/rs/cors"
 	"log/slog"
 	"net"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/rs/cors"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -38,6 +39,7 @@ func New(
 	authService authgrpc.AuthService,
 	parkingLotService authgrpc.ParkingLotService,
 	bookingService authgrpc.BookingService,
+	rentalService authgrpc.RentalService,
 	port int,
 ) *App {
 	loggingOpts := []logging.Option{
@@ -58,7 +60,7 @@ func New(
 		logging.UnaryServerInterceptor(InterceptorLogger(log), loggingOpts...),
 	))
 
-	authgrpc.Register(gRPCServer, authService, parkingLotService, bookingService)
+	authgrpc.Register(gRPCServer, authService, parkingLotService, bookingService, rentalService)
 
 	return &App{
 		log:        log,

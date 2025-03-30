@@ -8,7 +8,7 @@ import (
 )
 
 type ParkingLot struct {
-	ID             string
+	ID             int64
 	ParkingKind    ParkingKind
 	ParkingType    ParkingType
 	ParkingStatus  ParkingLotStatus
@@ -121,6 +121,15 @@ type Booking struct {
 	From       time.Time
 	To         time.Time
 	Vehicle    string
+}
+
+type Rental struct {
+	ID          uuid.UUID
+	ParkingLot  int64
+	From        time.Time
+	To          time.Time
+	CostPerHour int64
+	CostPerDay  int64
 }
 
 type Filter struct {

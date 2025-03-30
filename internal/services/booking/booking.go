@@ -20,6 +20,7 @@ type Repository interface {
 	AddBooking(ctx context.Context, booking domain.Booking) error
 	GetBooking(ctx context.Context, parkingLot int64) (domain.Booking, error)
 	GetBookingsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Booking, error)
+	GetParkingLotsByFilter(ctx context.Context, filter domain.Filter) ([]domain.ParkingLot, error)
 }
 
 func NewBookingService(log *slog.Logger, repo Repository) *BookingService {
@@ -44,6 +45,23 @@ func (s *BookingService) GetBookingsByFilter(ctx context.Context, filter domain.
 
 	log.Info("successfully retrieved bookings", slog.Int("count", len(bookings)))
 	return bookings, nil
+}
+
+func (s *BookingService) GetParkingLotsByFilter(ctx context.Context, filter domain.Filter) ([]domain.ParkingLot, error) {
+	const op = "BookingService.GetParkingLotsByFilter"
+
+	log := s.log.With(slog.String("op", op))
+
+	log.Info("fetching all parking lots")
+
+	lots, err := s.bookingRepo.GetParkingLotsByFilter(ctx, filter)
+	if err != nil {
+		log.Error("failed to get bookings", sl.Err(err))
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
+	log.Info("successfully retrieved bookings", slog.Int("count", len(lots)))
+	return lots, nil
 }
 
 func (s *BookingService) GetBooking(ctx context.Context, parkingLot int64) (*domain.Booking, error) {

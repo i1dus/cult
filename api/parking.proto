@@ -81,6 +81,39 @@ service ParkingAPI {
       body: "*"
     };
   };
+
+  rpc AddRental (AddRentalRequest) returns (AddRentalResponse) {
+    option (google.api.http) = {
+      post: "/rental/add"
+      body: "*"
+    };
+  }
+
+  rpc GetMyParkingLots (GetMyParkingLotsRequest) returns (GetMyParkingLotsResponse) {
+    option (google.api.http) = {
+      post: "/parking/list"
+      body: "*"
+    };
+  }
+}
+
+message AddRentalRequest {
+  Rental rental = 1;
+}
+
+message AddRentalResponse {
+  int64 parking_lot_id = 1;
+}
+
+message GetMyParkingLotsRequest {
+  Filter filter = 1;
+}
+
+message GetMyParkingLotsResponse {
+  repeated ParkingBooking bookings = 1;
+  repeated Rental rentals = 2;
+  repeated ParkingLot parking_lots = 3;
+  int64 total = 5;
 }
 
 message GetUserByIDRequest {
