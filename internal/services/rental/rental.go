@@ -29,6 +29,22 @@ func NewRentalService(log *slog.Logger, repo Repository) *RentalService {
 	}
 }
 
+func (s *RentalService) GetBookingPriceByID(ctx context.Context, bookingID uuid.UUID) (int64, error) {
+	const op = "RentalService.GetBookingPriceByID"
+
+	log := s.log.With(slog.String("op", op))
+
+	log.Info("fetching price")
+	price, err := s.rentalRepo.GetBookingPriceByID(ctx, bookingID)
+	if err != nil {
+		log.Error("failed to get price", sl.Err(err))
+		return 0, fmt.Errorf("%s: %w", op, err)
+	}
+
+	log.Info("successfully retrieved rentals")
+	return price, nil
+}
+
 func (s *RentalService) GetRentalsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Rental, error) {
 	const op = "RentalService.GetRentalsByFilter"
 
