@@ -233,7 +233,7 @@
             "format": "int64"
           },
           {
-            "name": "clientId",
+            "name": "userId",
             "in": "query",
             "required": false,
             "type": "string"

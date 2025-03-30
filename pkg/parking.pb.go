@@ -1784,7 +1784,7 @@ func (x *IsAdminResponse) GetIsAdmin() bool {
 type GetParkingLotRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Number        int64                  `protobuf:"varint,1,opt,name=number,proto3" json:"number,omitempty"`
-	ClientId      string                 `protobuf:"bytes,2,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	UserId        string                 `protobuf:"bytes,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1826,9 +1826,9 @@ func (x *GetParkingLotRequest) GetNumber() int64 {
 	return 0
 }
 
-func (x *GetParkingLotRequest) GetClientId() string {
+func (x *GetParkingLotRequest) GetUserId() string {
 	if x != nil {
-		return x.ClientId
+		return x.UserId
 	}
 	return ""
 }
@@ -3155,10 +3155,10 @@ const file_parking_proto_rawDesc = "" +
 	"\x0eIsAdminRequest\x12\x17\n" +
 	"\auser_id\x18\x01 \x01(\tR\x06userId\",\n" +
 	"\x0fIsAdminResponse\x12\x19\n" +
-	"\bis_admin\x18\x01 \x01(\bR\aisAdmin\"K\n" +
+	"\bis_admin\x18\x01 \x01(\bR\aisAdmin\"G\n" +
 	"\x14GetParkingLotRequest\x12\x16\n" +
-	"\x06number\x18\x01 \x01(\x03R\x06number\x12\x1b\n" +
-	"\tclient_id\x18\x02 \x01(\tR\bclientId\"I\n" +
+	"\x06number\x18\x01 \x01(\x03R\x06number\x12\x17\n" +
+	"\auser_id\x18\x02 \x01(\tR\x06userId\"I\n" +
 	"\x15GetParkingLotResponse\x120\n" +
 	"\vparking_lot\x18\x01 \x01(\v2\x0f.api.ParkingLotR\n" +
 	"parkingLot\"8\n" +

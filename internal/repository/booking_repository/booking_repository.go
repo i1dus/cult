@@ -6,11 +6,9 @@ import (
 	"cult/internal/repository"
 	"errors"
 	"fmt"
-	"log/slog"
-
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5"
-	"github.com/lib/pq"
+	"log/slog"
 )
 
 type BookingRepository struct {
@@ -45,8 +43,8 @@ func (r *BookingRepository) AddBooking(ctx context.Context, booking domain.Booki
 	).Scan(&rentalID)
 
 	query := `
-        INSERT INTO bookings (rental_id, user_id, vehicle, start_at, end_at)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO bookings (rental_id, user_id, vehicle, start_at, end_at, is_short_term)
+        VALUES ($1, $2, $3, $4, $5, $6)
         ON CONFLICT (rental_id, start_at, end_at) 
         DO NOTHING
     `
@@ -58,6 +56,7 @@ func (r *BookingRepository) AddBooking(ctx context.Context, booking domain.Booki
 		booking.Vehicle,
 		booking.From,
 		booking.To,
+		booking.IsShortTerm,
 	)
 	if err != nil {
 		return fmt.Errorf("%s: %w", op, err)
@@ -71,7 +70,7 @@ func (r *BookingRepository) AddBooking(ctx context.Context, booking domain.Booki
 }
 
 // GetBooking implements
-func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (domain.Booking, error) {
+func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (*domain.Booking, error) {
 	const op = "BookingRepository.GetBooking"
 
 	var rentalID uuid.UUID
@@ -81,37 +80,37 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (d
          AND NOW() BETWEEN start_at AND end_at`,
 		parkingLot,
 	).Scan(&rentalID)
-
-	if err != nil || rentalID == uuid.Nil {
+	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return domain.Booking{}, fmt.Errorf("%s: %w", op, repository.ErrNoActiveRental)
+			return nil, nil
 		}
-		return domain.Booking{}, fmt.Errorf("%s: %w", op, err)
+		return nil, fmt.Errorf("%s: %w", op, err)
 	}
-
 	query := `
-        SELECT user_id, vehicle, start_at, end_at
+        SELECT user_id, vehicle, is_short_term, is_present, start_at, end_at
         FROM bookings
         WHERE rental_id = $1
-          AND NOW() BETWEEN start_at AND end_at
+          AND is_present
     `
+
 	var booking domain.Booking
 	err = r.db.QueryRow(ctx, query, rentalID).Scan(
 		&booking.UserID,
 		&booking.Vehicle,
+		&booking.IsShortTerm,
+		&booking.IsPresent,
 		&booking.From,
 		&booking.To,
 	)
 	if err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
-			return domain.Booking{}, fmt.Errorf("%s: %w", op, repository.ErrBookingNotFound)
+			return nil, nil
 		}
-		return domain.Booking{}, fmt.Errorf("%s: %w", op, err)
+		return nil, fmt.Errorf("%s: %w", op, err)
 	}
 
-	booking.ParkingLot = parkingLot
-
-	return booking, nil
+	booking.RentalID = rentalID
+	return &booking, nil
 }
 
 // GetBookingsByFilter implements

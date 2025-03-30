@@ -18,7 +18,7 @@ type BookingService struct {
 
 type Repository interface {
 	AddBooking(ctx context.Context, booking domain.Booking) error
-	GetBooking(ctx context.Context, parkingLot int64) (domain.Booking, error)
+	GetBooking(ctx context.Context, parkingLot int64) (*domain.Booking, error)
 	GetBookingsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Booking, error)
 	GetParkingLotsByFilter(ctx context.Context, filter domain.Filter) ([]domain.ParkingLot, error)
 }
@@ -76,7 +76,7 @@ func (s *BookingService) GetBooking(ctx context.Context, parkingLot int64) (*dom
 	}
 
 	log.Info("successfully retrieved booking")
-	return &booking, nil
+	return booking, nil
 }
 
 func (s *BookingService) AddBooking(ctx context.Context, booking domain.Booking) error {

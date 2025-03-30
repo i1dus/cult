@@ -16,7 +16,16 @@ import (
 )
 
 func (s *serverAPI) ListParkingLots(ctx context.Context, in *sso.ListParkingLotsRequest) (*sso.ListParkingLotsResponse, error) {
-	lots, err := s.parkingLot.GetAllParkingLots(ctx)
+	if in.UserId == "" {
+		return nil, status.Error(codes.InvalidArgument, "user ID is empty")
+	}
+
+	userID, err := uuid.Parse(in.UserId)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "cannot parse user ID: %s", err.Error())
+	}
+
+	lots, err := s.parkingLot.GetAllParkingLots(ctx, userID)
 	if err != nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get list parking lots: %s", err.Error()))
 	}
@@ -30,9 +39,18 @@ func (s *serverAPI) ListParkingLots(ctx context.Context, in *sso.ListParkingLots
 }
 
 func (s *serverAPI) GetParkingLot(ctx context.Context, req *sso.GetParkingLotRequest) (*sso.GetParkingLotResponse, error) {
+	if req.UserId == "" {
+		return nil, status.Error(codes.InvalidArgument, "user ID is empty")
+	}
+
+	userID, err := uuid.Parse(req.UserId)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, "cannot parse user ID: %s", err.Error())
+	}
+
 	parkingNumber := strconv.FormatInt(req.Number, 10)
 
-	lot, err := s.parkingLot.GetParkingLotByNumber(ctx, parkingNumber)
+	lot, err := s.parkingLot.GetParkingLotByNumber(ctx, userID, parkingNumber)
 	if err != nil {
 		return nil, status.Error(codes.Internal, fmt.Sprintf("failed to get parking lot: %v", err))
 	}
@@ -105,32 +123,24 @@ func (s *serverAPI) UpdateParkingLot(ctx context.Context, req *sso.UpdateParking
 }
 
 func ConvertParkingLotPbToDomain(item domain.ParkingLot, index int) *sso.ParkingLot {
+	var vehicle *string
+	if item.CurrentVehicle != nil {
+		vehicle = item.CurrentVehicle
+	} else if item.OwnerVehicle != nil {
+		vehicle = item.OwnerVehicle
+	}
+
+	var ownerID *string
+	if item.OwnerID != nil {
+		ownerID = lo.ToPtr(item.OwnerID.String())
+	}
+
 	return &sso.ParkingLot{
 		Number: item.ID,
-		Type:   item.ParkingType.GetPBType(),
-		Status: getRandomParkingStatus(index),
-		OwnerId: func(id *uuid.UUID) *string {
-			if id == nil {
-				return nil
-			}
-			return lo.ToPtr(id.String())
-		}(item.OwnerID),
-		Vehicle: item.OwnerVehicle,
+		Kind:    item.ParkingKind.GetPBType(),
+		Type:    item.ParkingType.GetPBType(),
+		Status:  item.ParkingStatus.ParkingLotStatusToPB(),
+		OwnerId: ownerID,
+		Vehicle: vehicle,
 	}
-}
-
-func getRandomParkingStatus(index int) sso.ParkingLotStatus {
-	switch index % 4 {
-	case 0:
-		return sso.ParkingLotStatus_FREE_PARKING_LOT_STATUS
-	case 1:
-		return sso.ParkingLotStatus_BUSY_PARKING_LOT_STATUS
-	case 2:
-		return sso.ParkingLotStatus_MINE_PARKING_LOT_STATUS
-	case 3:
-		return sso.ParkingLotStatus_EXPIRED_PARKING_LOT_STATUS
-
-	}
-
-	panic("undefined parking lot status")
 }

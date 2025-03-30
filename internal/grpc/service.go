@@ -18,8 +18,8 @@ type AuthService interface {
 }
 
 type ParkingLotService interface {
-	GetAllParkingLots(ctx context.Context) ([]domain.ParkingLot, error)
-	GetParkingLotByNumber(ctx context.Context, number string) (domain.ParkingLot, error)
+	GetAllParkingLots(ctx context.Context, userID uuid.UUID) ([]domain.ParkingLot, error)
+	GetParkingLotByNumber(ctx context.Context, userID uuid.UUID, number string) (domain.ParkingLot, error)
 	GetParkingLotsByOwner(ctx context.Context, ownerID uuid.UUID) ([]domain.ParkingLot, error)
 	UpdateParkingLot(ctx context.Context, parkingLot string, update domain.ParkingLotUpdate) error
 }

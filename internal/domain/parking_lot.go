@@ -116,11 +116,13 @@ func ParkingTypeFromPB(pbType sso.ParkingType) ParkingType {
 }
 
 type Booking struct {
-	UserID     uuid.UUID
-	ParkingLot int64
-	From       time.Time
-	To         time.Time
-	Vehicle    string
+	UserID      uuid.UUID
+	RentalID    uuid.UUID
+	From        time.Time
+	To          time.Time
+	Vehicle     string
+	IsPresent   bool
+	IsShortTerm bool
 }
 
 type Rental struct {
@@ -174,5 +176,19 @@ func ParkingKindFromPB(pbKind sso.ParkingKind) ParkingKind {
 		return InclusiveParkingKind
 	default:
 		return UndefinedParkingKind
+	}
+}
+
+// GetPBType - domain to proto
+func (p ParkingKind) GetPBType() sso.ParkingKind {
+	switch p {
+	case RegularParkingKind:
+		return sso.ParkingKind_REGULAR_PARKING_KIND
+	case SpecialParkingKind:
+		return sso.ParkingKind_SPECIAL_PARKING_KIND
+	case InclusiveParkingKind:
+		return sso.ParkingKind_INCLUSIVE_PARKING_KIND
+	default:
+		return sso.ParkingKind_UNDEFINED_PARKING_KIND
 	}
 }

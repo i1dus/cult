@@ -3102,7 +3102,7 @@ func (m *GetParkingLotRequest) validate(all bool) error {
 
 	// no validation rules for Number
 
-	// no validation rules for ClientId
+	// no validation rules for UserId
 
 	if len(errors) > 0 {
 		return GetParkingLotRequestMultiError(errors)
