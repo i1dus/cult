@@ -108,7 +108,6 @@ func (s *serverAPI) GetUserByPhoneNumber(ctx context.Context, in *sso.GetUserByP
 			Patronymic:  user.Patronymic,
 			PhoneNumber: user.Phone,
 			Address:     user.Address,
-			UserType:    userType(user.UserType),
 		},
 	}, nil
 }
