@@ -30,7 +30,7 @@ func New(
 	rentalRepository := rental_repository.NewRentalRepository(conn, log)
 
 	authService := auth.New(log, userRepository, tokenTTL, secret)
-	parkingLotService := parking_lot.NewParkingLotService(log, parkingLotRepository, bookingRepository)
+	parkingLotService := parking_lot.NewParkingLotService(log, parkingLotRepository, bookingRepository, userRepository)
 	bookingService := booking.NewBookingService(log, bookingRepository)
 	rentalService := rental.NewRentalService(log, rentalRepository)
 

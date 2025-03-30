@@ -17,6 +17,7 @@ type ParkingLotService struct {
 	log            *slog.Logger
 	parkingLotRepo ParkingLotRepository
 	bookingRepo    BookingRepository
+	userRepo       UserRepository
 	bookingTimeout time.Duration
 }
 
@@ -31,11 +32,16 @@ type BookingRepository interface {
 	GetBooking(ctx context.Context, parkingLot int64) (*domain.Booking, error)
 }
 
-func NewParkingLotService(log *slog.Logger, repo ParkingLotRepository, bookingRepo BookingRepository) *ParkingLotService {
+type UserRepository interface {
+	UserByID(ctx context.Context, userID uuid.UUID) (domain.User, error)
+}
+
+func NewParkingLotService(log *slog.Logger, repo ParkingLotRepository, bookingRepo BookingRepository, userRepo UserRepository) *ParkingLotService {
 	return &ParkingLotService{
 		log:            log,
 		bookingRepo:    bookingRepo,
 		parkingLotRepo: repo,
+		userRepo:       userRepo,
 	}
 }
 
@@ -46,6 +52,12 @@ func (s *ParkingLotService) GetAllParkingLots(ctx context.Context, userID uuid.U
 
 	log.Info("fetching all parking lots")
 
+	user, err := s.userRepo.UserByID(ctx, userID)
+	if err != nil {
+		log.Error("failed to get user", sl.Err(err))
+		return nil, fmt.Errorf("%s: %w", op, err)
+	}
+
 	lots, err := s.parkingLotRepo.GetAllParkingLots(ctx)
 	if err != nil {
 		log.Error("failed to get parking lots", sl.Err(err))
@@ -54,6 +66,12 @@ func (s *ParkingLotService) GetAllParkingLots(ctx context.Context, userID uuid.U
 
 	for i, lot := range lots {
 		pType, pStatus := s.calculateTypeAndStatus(ctx, lot, userID)
+
+		if user.UserType == domain.ManagingCompanyUserType {
+			if pStatus == domain.FreeParkingLotStatus {
+				pStatus = domain.MineParkingLotStatus
+			}
+		}
 		lots[i].ParkingType = pType
 		lots[i].ParkingStatus = pStatus
 	}

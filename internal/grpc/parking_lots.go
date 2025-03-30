@@ -31,8 +31,8 @@ func (s *serverAPI) ListParkingLots(ctx context.Context, in *sso.ListParkingLots
 	}
 
 	return &sso.ListParkingLotsResponse{
-		ParkingLot: lo.Map(lots, func(item domain.ParkingLot, index int) *sso.ParkingLot {
-			return ConvertParkingLotPbToDomain(item, index)
+		ParkingLot: lo.Map(lots, func(item domain.ParkingLot, _ int) *sso.ParkingLot {
+			return ConvertParkingLotPbToDomain(item)
 		}),
 		Total: int64(len(lots)),
 	}, nil
@@ -56,7 +56,7 @@ func (s *serverAPI) GetParkingLot(ctx context.Context, req *sso.GetParkingLotReq
 	}
 
 	return &sso.GetParkingLotResponse{
-		ParkingLot: ConvertParkingLotPbToDomain(lot, 0),
+		ParkingLot: ConvertParkingLotPbToDomain(lot),
 	}, nil
 }
 
@@ -73,7 +73,7 @@ func (s *serverAPI) GetParkingLotsByUserID(ctx context.Context, req *sso.GetPark
 
 	return &sso.GetParkingLotsByUserIDResponse{
 		ParkingLot: lo.Map(lots, func(item domain.ParkingLot, index int) *sso.ParkingLot {
-			return ConvertParkingLotPbToDomain(item, index)
+			return ConvertParkingLotPbToDomain(item)
 		}),
 	}, nil
 }
@@ -122,12 +122,12 @@ func (s *serverAPI) UpdateParkingLot(ctx context.Context, req *sso.UpdateParking
 	return &sso.UpdateParkingLotResponse{}, nil
 }
 
-func ConvertParkingLotPbToDomain(item domain.ParkingLot, index int) *sso.ParkingLot {
-	var vehicle *string
-	if item.CurrentVehicle != nil {
+func ConvertParkingLotPbToDomain(item domain.ParkingLot) *sso.ParkingLot {
+	var vehicle = item.OwnerVehicle
+
+	switch item.ParkingType {
+	case domain.LongTermRentByOtherParkingType, domain.ShortTermRentByOtherParkingType:
 		vehicle = item.CurrentVehicle
-	} else if item.OwnerVehicle != nil {
-		vehicle = item.OwnerVehicle
 	}
 
 	var ownerID *string
