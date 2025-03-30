@@ -4759,6 +4759,8 @@ func (m *ParkingBooking) validate(all bool) error {
 		}
 	}
 
+	// no validation rules for BookingId
+
 	if len(errors) > 0 {
 		return ParkingBookingMultiError(errors)
 	}
@@ -4836,6 +4838,216 @@ var _ interface {
 	Cause() error
 	ErrorName() string
 } = ParkingBookingValidationError{}
+
+// Validate checks the field values on UpdateBookingVehicleRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateBookingVehicleRequest) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateBookingVehicleRequest with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateBookingVehicleRequestMultiError, or nil if none found.
+func (m *UpdateBookingVehicleRequest) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateBookingVehicleRequest) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	// no validation rules for BookingId
+
+	// no validation rules for Vehicle
+
+	if len(errors) > 0 {
+		return UpdateBookingVehicleRequestMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateBookingVehicleRequestMultiError is an error wrapping multiple
+// validation errors returned by UpdateBookingVehicleRequest.ValidateAll() if
+// the designated constraints aren't met.
+type UpdateBookingVehicleRequestMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateBookingVehicleRequestMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateBookingVehicleRequestMultiError) AllErrors() []error { return m }
+
+// UpdateBookingVehicleRequestValidationError is the validation error returned
+// by UpdateBookingVehicleRequest.Validate if the designated constraints
+// aren't met.
+type UpdateBookingVehicleRequestValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateBookingVehicleRequestValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateBookingVehicleRequestValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateBookingVehicleRequestValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateBookingVehicleRequestValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateBookingVehicleRequestValidationError) ErrorName() string {
+	return "UpdateBookingVehicleRequestValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateBookingVehicleRequestValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateBookingVehicleRequest.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateBookingVehicleRequestValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateBookingVehicleRequestValidationError{}
+
+// Validate checks the field values on UpdateBookingVehicleResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the first error encountered is returned, or nil if there are no violations.
+func (m *UpdateBookingVehicleResponse) Validate() error {
+	return m.validate(false)
+}
+
+// ValidateAll checks the field values on UpdateBookingVehicleResponse with the
+// rules defined in the proto definition for this message. If any rules are
+// violated, the result is a list of violation errors wrapped in
+// UpdateBookingVehicleResponseMultiError, or nil if none found.
+func (m *UpdateBookingVehicleResponse) ValidateAll() error {
+	return m.validate(true)
+}
+
+func (m *UpdateBookingVehicleResponse) validate(all bool) error {
+	if m == nil {
+		return nil
+	}
+
+	var errors []error
+
+	if len(errors) > 0 {
+		return UpdateBookingVehicleResponseMultiError(errors)
+	}
+
+	return nil
+}
+
+// UpdateBookingVehicleResponseMultiError is an error wrapping multiple
+// validation errors returned by UpdateBookingVehicleResponse.ValidateAll() if
+// the designated constraints aren't met.
+type UpdateBookingVehicleResponseMultiError []error
+
+// Error returns a concatenation of all the error messages it wraps.
+func (m UpdateBookingVehicleResponseMultiError) Error() string {
+	msgs := make([]string, 0, len(m))
+	for _, err := range m {
+		msgs = append(msgs, err.Error())
+	}
+	return strings.Join(msgs, "; ")
+}
+
+// AllErrors returns a list of validation violation errors.
+func (m UpdateBookingVehicleResponseMultiError) AllErrors() []error { return m }
+
+// UpdateBookingVehicleResponseValidationError is the validation error returned
+// by UpdateBookingVehicleResponse.Validate if the designated constraints
+// aren't met.
+type UpdateBookingVehicleResponseValidationError struct {
+	field  string
+	reason string
+	cause  error
+	key    bool
+}
+
+// Field function returns field value.
+func (e UpdateBookingVehicleResponseValidationError) Field() string { return e.field }
+
+// Reason function returns reason value.
+func (e UpdateBookingVehicleResponseValidationError) Reason() string { return e.reason }
+
+// Cause function returns cause value.
+func (e UpdateBookingVehicleResponseValidationError) Cause() error { return e.cause }
+
+// Key function returns key value.
+func (e UpdateBookingVehicleResponseValidationError) Key() bool { return e.key }
+
+// ErrorName returns error name.
+func (e UpdateBookingVehicleResponseValidationError) ErrorName() string {
+	return "UpdateBookingVehicleResponseValidationError"
+}
+
+// Error satisfies the builtin error interface
+func (e UpdateBookingVehicleResponseValidationError) Error() string {
+	cause := ""
+	if e.cause != nil {
+		cause = fmt.Sprintf(" | caused by: %v", e.cause)
+	}
+
+	key := ""
+	if e.key {
+		key = "key for "
+	}
+
+	return fmt.Sprintf(
+		"invalid %sUpdateBookingVehicleResponse.%s: %s%s",
+		key,
+		e.field,
+		e.reason,
+		cause)
+}
+
+var _ error = UpdateBookingVehicleResponseValidationError{}
+
+var _ interface {
+	Field() string
+	Reason() string
+	Key() bool
+	Cause() error
+	ErrorName() string
+} = UpdateBookingVehicleResponseValidationError{}
 
 // Validate checks the field values on AddParkingBookingRequest with the rules
 // defined in the proto definition for this message. If any rules are

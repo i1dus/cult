@@ -26,10 +26,13 @@ func bookingsToApi(bookings []domain.Booking) []*desc.ParkingBooking {
 
 	for _, booking := range bookings {
 		out = append(out, &desc.ParkingBooking{
+			UserId:     booking.UserID.String(),
+			ParkingLot: booking.ParkingLot,
+			Vehicle:    booking.Vehicle,
+			TimeFrom:   timestamppb.New(booking.From),
+			TimeTo:     timestamppb.New(booking.To),
 			//ParkingLot: booking.ParkingLot,
-			Vehicle:  booking.Vehicle,
-			TimeFrom: timestamppb.New(booking.From),
-			TimeTo:   timestamppb.New(booking.To),
+			BookingId: booking.ID.String(),
 		})
 	}
 
@@ -47,9 +50,12 @@ func apiToFilter(in *desc.Filter) domain.Filter {
 
 func bookingToApi(booking *domain.Booking) *desc.ParkingBooking {
 	return &desc.ParkingBooking{
+		UserId:     booking.UserID.String(),
+		ParkingLot: booking.ParkingLot,
+		Vehicle:    booking.Vehicle,
+		TimeFrom:   timestamppb.New(booking.From),
+		TimeTo:     timestamppb.New(booking.To),
 		//ParkingLot: booking.ParkingLot,
-		Vehicle:  booking.Vehicle,
-		TimeFrom: timestamppb.New(booking.From),
-		TimeTo:   timestamppb.New(booking.To),
+		BookingId: booking.ID.String(),
 	}
 }

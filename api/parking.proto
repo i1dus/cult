@@ -43,6 +43,13 @@ service ParkingAPI {
     };
   }
 
+  rpc UpdateBookingVehicle (UpdateBookingVehicleRequest) returns (UpdateBookingVehicleResponse) {
+    option (google.api.http) = {
+      post: "/booking/vehicle/change"
+      body: "*"
+    };
+  }
+
   rpc GetParkingBooking (GetParkingBookingRequest) returns (GetParkingBookingResponse) {
     option (google.api.http) = {
       get: "/booking/get"
@@ -447,7 +454,17 @@ message ParkingBooking {
   string vehicle = 3  [(google.api.field_behavior) = REQUIRED];
   google.protobuf.Timestamp time_from = 4  [(google.api.field_behavior) = REQUIRED];
   google.protobuf.Timestamp time_to = 5  [(google.api.field_behavior) = REQUIRED];
+  string booking_id = 6;
 }
+
+message UpdateBookingVehicleRequest {
+  // ID занятости
+  string booking_id = 1;
+  // Гос. номер
+  string vehicle = 2  [(google.api.field_behavior) = REQUIRED];
+}
+
+message UpdateBookingVehicleResponse {}
 
 message AddParkingBookingRequest {
   ParkingBooking booking = 1 [(google.api.field_behavior) = REQUIRED];

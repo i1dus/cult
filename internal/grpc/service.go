@@ -31,6 +31,7 @@ type BookingService interface {
 	AddBooking(ctx context.Context, booking domain.Booking) error
 	GetParkingLotsByFilter(ctx context.Context, filter domain.Filter) ([]domain.ParkingLot, error)
 	EditBooking(ctx context.Context, bookingID uuid.UUID, to time.Time) error
+	UpdateBookingVehicle(ctx context.Context, bookingID uuid.UUID, vehicle string) error
 }
 
 type RentalService interface {

@@ -22,3 +22,17 @@ func (s *serverAPI) EditParkingBooking(ctx context.Context, in *desc.EditParking
 
 	return &desc.EditParkingBookingResponse{}, nil
 }
+
+func (s *serverAPI) UpdateBookingVehicle(ctx context.Context, in *desc.UpdateBookingVehicleRequest) (*desc.UpdateBookingVehicleResponse, error) {
+	id, err := uuid.Parse(in.GetBookingId())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	err = s.booking.UpdateBookingVehicle(ctx, id, in.Vehicle)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &desc.UpdateBookingVehicleResponse{}, nil
+}

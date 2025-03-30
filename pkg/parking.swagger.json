@@ -184,6 +184,38 @@
         ]
       }
     },
+    "/booking/vehicle/change": {
+      "post": {
+        "operationId": "ParkingAPI_UpdateBookingVehicle",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiUpdateBookingVehicleResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateBookingVehicleRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ParkingAPI"
+        ]
+      }
+    },
     "/my/parking/list": {
       "get": {
         "operationId": "ParkingAPI_GetMyParkingLots",
@@ -1138,6 +1170,9 @@
         "timeTo": {
           "type": "string",
           "format": "date-time"
+        },
+        "bookingId": {
+          "type": "string"
         }
       },
       "required": [
@@ -1370,6 +1405,25 @@
         "timeFrom",
         "timeTo"
       ]
+    },
+    "apiUpdateBookingVehicleRequest": {
+      "type": "object",
+      "properties": {
+        "bookingId": {
+          "type": "string",
+          "title": "ID занятости"
+        },
+        "vehicle": {
+          "type": "string",
+          "title": "Гос. номер"
+        }
+      },
+      "required": [
+        "vehicle"
+      ]
+    },
+    "apiUpdateBookingVehicleResponse": {
+      "type": "object"
     },
     "apiUpdateParkingLotRequest": {
       "type": "object",

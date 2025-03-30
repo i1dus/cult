@@ -24,6 +24,7 @@ type Repository interface {
 	GetBookingsByFilter(ctx context.Context, filter domain.Filter) ([]domain.Booking, error)
 	GetParkingLotsByFilter(ctx context.Context, filter domain.Filter) ([]domain.ParkingLot, error)
 	EditBooking(ctx context.Context, bookingID uuid.UUID, to time.Time) error
+	UpdateBookingVehicle(ctx context.Context, bookingID uuid.UUID, vehicle string) error
 }
 
 func NewBookingService(log *slog.Logger, repo Repository) *BookingService {
@@ -105,6 +106,20 @@ func (s *BookingService) EditBooking(ctx context.Context, bookingID uuid.UUID, t
 
 	log.Info("editing a booking")
 	err := s.bookingRepo.EditBooking(ctx, bookingID, to)
+	if err != nil {
+		log.Error("failed to edit booking", sl.Err(err))
+		return fmt.Errorf("%s: %w", op, err)
+	}
+	return nil
+}
+
+func (s *BookingService) UpdateBookingVehicle(ctx context.Context, bookingID uuid.UUID, vehicle string) error {
+	const op = "BookingService.UpdateBookingVehicle"
+
+	log := s.log.With(slog.String("op", op))
+
+	log.Info("editing a booking")
+	err := s.bookingRepo.UpdateBookingVehicle(ctx, bookingID, vehicle)
 	if err != nil {
 		log.Error("failed to edit booking", sl.Err(err))
 		return fmt.Errorf("%s: %w", op, err)

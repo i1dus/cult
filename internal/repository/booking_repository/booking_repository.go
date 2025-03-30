@@ -109,7 +109,7 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (*
 	}
 
 	query := `
-        SELECT user_id, vehicle, is_short_term, is_present, start_at, end_at
+        SELECT id, user_id, vehicle, is_short_term, is_present, start_at, end_at
         FROM bookings
         WHERE rental_id = $1
           AND is_present
@@ -117,6 +117,7 @@ func (r *BookingRepository) GetBooking(ctx context.Context, parkingLot int64) (*
 
 	var booking domain.Booking
 	err = r.db.QueryRow(ctx, query, rentalID).Scan(
+		&booking.ID,
 		&booking.UserID,
 		&booking.Vehicle,
 		&booking.IsShortTerm,
@@ -142,7 +143,7 @@ func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, filter doma
 	const op = "BookingRepository.GetBookingsByFilter"
 
 	query := `
-        SELECT r.parking_lot_id, b.user_id, b.vehicle, b.start_at, b.end_at
+        SELECT b.id, r.parking_lot_id, b.user_id, b.vehicle, b.start_at, b.end_at
         FROM bookings b
         JOIN rentals r ON b.rental_id = r.id
         WHERE ($1::uuid IS NULL OR b.user_id = $1)
@@ -191,6 +192,7 @@ func (r *BookingRepository) GetBookingsByFilter(ctx context.Context, filter doma
 	for rows.Next() {
 		var b domain.Booking
 		err := rows.Scan(
+			&b.ID,
 			&b.ParkingLot,
 			&b.UserID,
 			&b.Vehicle,
@@ -257,4 +259,23 @@ func (r *BookingRepository) GetParkingLotsByFilter(ctx context.Context, filter d
 	}
 
 	return parkingLots, nil
+}
+
+func (r *BookingRepository) UpdateBookingVehicle(ctx context.Context, bookingID uuid.UUID, vehicle string) error {
+	const op = "BookingRepository.UpdateBookingVehicle"
+	fmt.Println(bookingID, vehicle)
+	res, err := r.db.Exec(ctx,
+		`UPDATE bookings SET vehicle = $1 WHERE id = $2`,
+		vehicle,
+		bookingID,
+	)
+	if err != nil {
+		return fmt.Errorf("%s: %w", op, err)
+	}
+
+	if res.RowsAffected() == 0 {
+		return fmt.Errorf("%s: %w", op, repository.ErrBookingNotFound)
+	}
+
+	return nil
 }

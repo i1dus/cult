@@ -116,6 +116,7 @@ func ParkingTypeFromPB(pbType sso.ParkingType) ParkingType {
 }
 
 type Booking struct {
+	ID          uuid.UUID
 	UserID      uuid.UUID
 	RentalID    uuid.UUID
 	ParkingLot  int64
